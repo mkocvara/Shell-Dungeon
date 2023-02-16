@@ -6,12 +6,13 @@
 
 
 #pragma once
+#include <vector>
 #include "errortype.h"
 #include "windows.h"
-#include "mydrawengine.h"
-#include "mysoundengine.h"
-#include "myinputs.h"
 #include "gametimer.h"
+
+// #include "GameObject.h"
+class GameObject;
 
 // This is a hack for reading keyboard in situations where you don't want to
 // use a full input system.
@@ -41,11 +42,7 @@ private:
 	Game(Game& other);             // Copy constructor disabled
 
 	GameTimer gameTimer;
-	MyDrawEngine* pDrawEngine; // Reference to the draw engine.
-	MySoundEngine* pSoundEngine; // Reference to the sound engine.
-	MyInputs* pInputs; // Reference to the inputs engine.
-
-	PictureIndex shipImage;
+	std::vector<GameObject*> GameObjects;
 
 public:
 	static Game instance;          // Singleton instance

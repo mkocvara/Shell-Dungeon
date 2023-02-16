@@ -10,7 +10,7 @@
 #include "errorlogger.h"
 #include <math.h>
 #include "shapes.h"
-
+#include "Spaceship.h";
 
 Game::Game()
 {
@@ -34,21 +34,18 @@ ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 		ErrorLogger::Writeln(L"Failed to start MyDrawEngine");
 		return FAILURE;
 	}
-	pDrawEngine = MyDrawEngine::GetInstance();
 
 	if (FAILED(MySoundEngine::Start(hwnd)))
 	{
 		ErrorLogger::Writeln(L"Failed to start MySoundEngine");
 		return FAILURE;
 	}
-	pSoundEngine = MySoundEngine::GetInstance();
 
 	if (FAILED(MyInputs::Start(hinstance, hwnd)))
 	{
 		ErrorLogger::Writeln(L"Failed to start MyInputs");
 		return FAILURE;
 	}
-	pInputs = MyInputs::GetInstance();
 
 	return (SUCCESS);
 }
@@ -58,6 +55,11 @@ ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 // game state
 ErrorType Game::Main()
 {
+	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
+
+	if (!pDrawEngine)
+		return FAILURE;
+
 	//Flip and clear the back buffer
 	pDrawEngine->Flip();
 	pDrawEngine->ClearBackBuffer();
@@ -126,12 +128,8 @@ void Game::ChangeState(GameState newState)
 // Terminates the game engines - Draw Engine, Sound Engine, Input Engine
 // This is called just before the program exits
 void Game::Shutdown()
-
 {
-   // Any clean up code here 
-
-
-
+	// Any clean up code here 
 
 
 	// (engines must be terminated last)
@@ -150,6 +148,11 @@ void Game::Shutdown()
 ErrorType Game::PauseMenu()
 {
 	// Code for a basic pause menu
+	MyInputs* pInputs = MyInputs::GetInstance();
+	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
+
+	if (!pDrawEngine || !pInputs)
+		return FAILURE;
 
 	pDrawEngine->WriteText(450,220, L"Paused", MyDrawEngine::WHITE);
 
@@ -209,6 +212,12 @@ ErrorType Game::PauseMenu()
 // which is currently a basic placeholder
 ErrorType Game::MainMenu()
 {
+	MyInputs* pInputs = MyInputs::GetInstance();
+	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
+
+	if (!pDrawEngine || !pInputs)
+		return FAILURE;
+
 	pDrawEngine->WriteText(450,220, L"Main menu", MyDrawEngine::WHITE);
 
 	const int NUMOPTIONS = 2;
@@ -271,8 +280,20 @@ ErrorType Game::MainMenu()
 // Use this to initialise the core game
 ErrorType Game::StartOfGame()
 {
-   // Code to set up your game *********************************************
-	shipImage = pDrawEngine->LoadPicture(L"Assets/ship.bmp");
+	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
+	if (!pDrawEngine)
+		return FAILURE;
+
+	Spaceship* playerShip = new Spaceship();
+	playerShip->Initialise(Vector2D(-10,-10));
+	GameObjects.push_back(playerShip);
+
+	Spaceship* enemyShip = new Spaceship();
+	enemyShip->Initialise(Vector2D(10,10));
+	GameObjects.push_back(enemyShip);
+	
+	
+	//pDrawEngine->RED
 
 	gameTimer.begin();
 
@@ -286,8 +307,13 @@ ErrorType Game::StartOfGame()
 // Gameplay programmer will develop this to create an actual game
 ErrorType Game::Update()
 {
-	HandleInput();
-	DrawGame();
+	if(FAILED(HandleInput()))
+		return FAILURE;
+
+	for (GameObject* go : GameObjects)
+	{
+		go->Update();
+	}
 
 	// Mark the frame before returning.
 	gameTimer.mark();
@@ -302,17 +328,6 @@ ErrorType Game::HandleInput()
 		ChangeState(PAUSED);
 	}
 
-	return SUCCESS;
-}
-
-ErrorType Game::DrawGame()
-{
-	if (!pDrawEngine)
-		return FAILURE;
-
-	Vector2D shipPos(300, 300);
-	pDrawEngine->DrawAt(shipPos, shipImage);
-	
 	return SUCCESS;
 }
 
