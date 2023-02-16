@@ -1,6 +1,0 @@
-﻿  Character.cpp
-  KF6017.cpp
-C:\Users\student.HAL\source\repos\KF6017\KF6017\KF6017.cpp(88,9): warning C4101: 'a': unreferenced local variable
-C:\Users\student.HAL\source\repos\KF6017\KF6017\KF6017.cpp(217,20): warning C4476: 'printf' : unknown type field character '\n' in format specifier
-  Generating Code...
-  KF6017.vcxproj -> C:\Users\student.HAL\source\repos\KF6017\Debug\KF6017.exe
