@@ -11,13 +11,14 @@ public:
 	typedef GameObject Super;
 
 	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0) override;
-	virtual void Update() override;
+	virtual ErrorType Update() override;
 
 protected:
 	Vector2D velocity;
-	int sprite;
 
 	virtual void Move();
-	virtual void Render() override;
+
+private:
+	const wchar_t* renderSpritePath = L"Assets/basic.bmp";
 };
 

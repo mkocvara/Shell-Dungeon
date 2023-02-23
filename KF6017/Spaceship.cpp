@@ -1,5 +1,5 @@
 #include "Spaceship.h"
-#include "mydrawengine.h"
+#include "winerror.h"
 
 // PUBLIC
 
@@ -11,33 +11,24 @@ void Spaceship::Initialise(Vector2D position, float angle)
 {
 	Super::Initialise(position, angle);
 
-	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
-
-	if (!pDrawEngine)
-	{
-		ErrorLogger::Writeln(L"Spaceship::Initialise(); MyDrawEngine instance is null");
-		return;
-	}
-
-	sprite = pDrawEngine->LoadPicture(L"Assets/basic.bmp");
-
-	if (!sprite)
-	{
-		ErrorLogger::Writeln(L"Spaceship::Initialise(); MyDrawEngine instance is null");
-		return;
-	}
+	SetRenderSprite(renderSpritePath);
 
 	return;
 }
 
-void Spaceship::Update()
+ErrorType Spaceship::Update()
 {
 	if (!IsActive())
 		return;
 
-	Super::Update();
+	if (FAILED(Super::Update()))
+	{
+		return FAILURE;
+	}
 
 	Move();
+
+	return SUCCESS;
 }
 
 
@@ -46,17 +37,4 @@ void Spaceship::Update()
 void Spaceship::Move()
 {
 	position += velocity;
-}
-
-void Spaceship::Render()
-{
-	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
-
-	if (!pDrawEngine)
-	{
-		ErrorLogger::Writeln(L"Spaceship::Render(); MyDrawEngine instance is null");
-		return;
-	}
-
-	pDrawEngine->DrawAt(position, sprite);
 }
