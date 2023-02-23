@@ -12,7 +12,6 @@ enum class GameObjectState
 class GameObject
 {
 public:
-	GameObject();
 	virtual ~GameObject();
 
 	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1);
@@ -25,15 +24,16 @@ public:
 	bool IsRemoved() const;
 
 protected:
+	GameObject(); // make it essentially abstract
 	Vector2D position;
 	float rotationAngle;	
 
-	int renderSprite = -1;
 	float renderScale;
 
 	virtual ErrorType Render();
 
-private:
+private: 
 	GameObjectState state;
+	int renderSprite = -1;
 };
 

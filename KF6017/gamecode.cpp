@@ -11,6 +11,8 @@
 #include <math.h>
 #include "shapes.h"
 #include "Spaceship.h";
+#include "RandUtil.h"
+#include "SpaceRock.h"
 
 Game::Game()
 {
@@ -288,9 +290,21 @@ ErrorType Game::StartOfGame()
 	playerShip->Initialise(Vector2D(-10,-10));
 	GameObjects.push_back(playerShip);
 
-	/*Spaceship* enemyShip = new Spaceship();
-	enemyShip->Initialise(Vector2D(10,10));
-	GameObjects.push_back(enemyShip);*/
+	SpaceRock* rock1 = new SpaceRock();
+	rock1->Initialise();
+	GameObjects.push_back(rock1);
+
+	SpaceRock* rock2 = new SpaceRock();
+	rock2->Initialise();
+	GameObjects.push_back(rock2);
+
+	SpaceRock* rock3 = new SpaceRock();
+	rock3->Initialise();
+	GameObjects.push_back(rock3);
+
+	SpaceRock* rock4= new SpaceRock();
+	rock4->Initialise();
+	GameObjects.push_back(rock4);
 	
 	//pDrawEngine->RED
 

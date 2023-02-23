@@ -1,12 +1,13 @@
 #include "GameObject.h"
 #include "mydrawengine.h"
 
-// PUBLIC
 
 GameObject::GameObject()
 {
 	SetActive(false);
 }
+
+// PUBLIC
 
 GameObject::~GameObject()
 {

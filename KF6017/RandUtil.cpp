@@ -13,7 +13,7 @@ int RandUtil::randRangeInt(int min, int max)
     return distr(gen);
 }
 
-float RandUtil::randRangeFloat(float min, float max)
+float RandUtil::randRangeDouble(double min, double max)
 {
     static std::mt19937 gen = getGenerator();
     std::uniform_real_distribution<> distr(min, max); // define the range

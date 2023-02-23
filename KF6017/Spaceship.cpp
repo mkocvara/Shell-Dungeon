@@ -1,5 +1,5 @@
 #include "Spaceship.h"
-#include "winerror.h"
+//#include "winerror.h"
 #include "myinputs.h"
 #include "errorlogger.h"
 
@@ -20,20 +20,18 @@ void Spaceship::Initialise(Vector2D position, float angle, float scale)
 	return;
 }
 
-ErrorType Spaceship::Update(float deltaTime)
-{
-	if (!IsActive())
-		return SUCCESS;
-
-	if (FAILED(Super::Update(deltaTime)))
-	{
-		return FAILURE;
-	}
-
-	Move(deltaTime);
-
-	return SUCCESS;
-}
+//ErrorType Spaceship::Update(float deltaTime)
+//{
+//	if (!IsActive())
+//		return SUCCESS;
+//
+//	if (FAILED(Super::Update(deltaTime)))
+//	{
+//		return FAILURE;
+//	}
+//
+//	return SUCCESS;
+//}
 
 
 // PROTECTED
