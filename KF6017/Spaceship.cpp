@@ -19,7 +19,7 @@ void Spaceship::Initialise(Vector2D position, float angle)
 ErrorType Spaceship::Update()
 {
 	if (!IsActive())
-		return;
+		return SUCCESS;
 
 	if (FAILED(Super::Update()))
 	{

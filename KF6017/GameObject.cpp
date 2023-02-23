@@ -24,9 +24,9 @@ void GameObject::Initialise(Vector2D position, float angle)
 ErrorType GameObject::Update()
 {
 	if (!IsActive())
-		return;
+		return SUCCESS;
 
-	Render();
+	return Render();
 }
 
 void GameObject::SetRenderSprite(const wchar_t* imagePath)
