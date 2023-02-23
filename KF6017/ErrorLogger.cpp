@@ -21,14 +21,18 @@ ErrorLogger::ErrorLogger()
 	GetSystemTime(time);
 
 	std::wstring timeLog = L"Game Ran on " +
+		std::wstring((time->wDay <= 9) ? L"0" : L"") + // for some reason the construction here is necessary, but not elsewhere.
 		std::to_wstring(time->wDay) + L'/' +
+		((time->wMonth <= 9) ? L"0" : L"") +
 		std::to_wstring(time->wMonth) + L'/' +
 		std::to_wstring(time->wYear) + L", " +
+		((time->wHour <= 9) ? L"0" : L"") +
 		std::to_wstring(time->wHour) + L":" +
+		((time->wMinute <= 9) ? L"0" : L"") +
 		std::to_wstring(time->wMinute);
-	
+
 	Writeln(timeLog.c_str());
-	std::wstring separator(L"===================================");
+	std::wstring separator(L"====================================");
 	separator.resize(timeLog.length());
 	Writeln(separator.c_str());
 	delete time;
