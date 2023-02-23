@@ -288,10 +288,9 @@ ErrorType Game::StartOfGame()
 	playerShip->Initialise(Vector2D(-10,-10));
 	GameObjects.push_back(playerShip);
 
-	Spaceship* enemyShip = new Spaceship();
+	/*Spaceship* enemyShip = new Spaceship();
 	enemyShip->Initialise(Vector2D(10,10));
-	GameObjects.push_back(enemyShip);
-	
+	GameObjects.push_back(enemyShip);*/
 	
 	//pDrawEngine->RED
 
@@ -307,16 +306,16 @@ ErrorType Game::StartOfGame()
 // Gameplay programmer will develop this to create an actual game
 ErrorType Game::Update()
 {
+	gameTimer.mark();
+
 	if(FAILED(HandleInput()))
 		return FAILURE;
 
 	for (GameObject* go : GameObjects)
 	{
-		go->Update();
+		go->Update(gameTimer.mdFrameTime);
 	}
 
-	// Mark the frame before returning.
-	gameTimer.mark();
 	return SUCCESS;
 }
 
@@ -338,7 +337,10 @@ ErrorType Game::HandleInput()
 ErrorType Game::EndOfGame()
 // called when the game ends by returning to main menu
 {
-   // Add code here to tidy up ********************************************
+	for (GameObject* go : GameObjects)
+	{
+		delete go;
+	}
 
 	return SUCCESS;
 }

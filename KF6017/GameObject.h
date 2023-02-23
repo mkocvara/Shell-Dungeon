@@ -13,10 +13,10 @@ class GameObject
 {
 public:
 	GameObject();
-	~GameObject();
+	virtual ~GameObject();
 
-	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0);
-	virtual ErrorType Update();
+	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1);
+	virtual ErrorType Update(float deltaTime);
 	virtual void SetRenderSprite(const wchar_t* imagePath);
 	Vector2D GetForwardVector() const;
 	virtual void SetActive(bool newActive);
@@ -26,8 +26,10 @@ public:
 
 protected:
 	Vector2D position;
-	float directionAngle;	
+	float rotationAngle;	
+
 	int renderSprite = -1;
+	float renderScale;
 
 	virtual ErrorType Render();
 

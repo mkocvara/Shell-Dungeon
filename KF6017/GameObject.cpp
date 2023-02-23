@@ -10,18 +10,19 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	SetActive(false);
+	Remove();
 }
 
-void GameObject::Initialise(Vector2D position, float angle)
+void GameObject::Initialise(Vector2D position, float angle, float scale)
 {
 	this->position = position;
-	this->directionAngle = angle;
+	this->rotationAngle = angle;
+	this->renderScale = scale;
 
 	SetActive(true);
 }
 
-ErrorType GameObject::Update()
+ErrorType GameObject::Update(float deltaTime)
 {
 	if (!IsActive())
 		return SUCCESS;
@@ -31,21 +32,20 @@ ErrorType GameObject::Update()
 
 void GameObject::SetRenderSprite(const wchar_t* imagePath)
 {
-	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
-
-	if (!pDrawEngine)
+	if (!imagePath)
 	{
-		ErrorLogger::Writeln(L"GameObject::SetRenderSprite(); MyDrawEngine instance is null");
+		ErrorLogger::Writeln(L"GameObject::SetRenderSprite(); Provided image path is null.");
 		return;
 	}
 
+	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
 	renderSprite = pDrawEngine->LoadPicture(imagePath);
 }
 
 Vector2D GameObject::GetForwardVector() const
 {
 	Vector2D forward(0, 0);
-	forward.setBearing(directionAngle, 1);
+	forward.setBearing(rotationAngle, 1);
 	return forward;
 }
 
@@ -80,14 +80,7 @@ ErrorType GameObject::Render()
 	}
 
 	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
-
-	if (!pDrawEngine)
-	{
-		ErrorLogger::Writeln(L"GameObject::Render(); MyDrawEngine instance is null.");
-		return FAILURE;
-	}
-
-	return pDrawEngine->DrawAt(position, renderSprite);
+	return pDrawEngine->DrawAt(position, renderSprite, renderScale, rotationAngle);
 }
 
 

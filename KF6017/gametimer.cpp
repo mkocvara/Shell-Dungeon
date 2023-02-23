@@ -67,7 +67,7 @@ void GameTimer::mark()
 		}
 
 		// Gradually ease off the throttling
-		mdThrottledFrameTime *= 0.95;
+		mdThrottledFrameTime *= 0.5;
 
 		// Don't let throttle go faster than requested speed
 		if (mdThrottledFrameTime < mdMinimumFrameTime)
