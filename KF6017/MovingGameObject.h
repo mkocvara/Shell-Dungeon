@@ -8,11 +8,11 @@ public:
 
 	typedef GameObject Super;
 
-	virtual ErrorType Update(float deltaTime) override;
+	virtual ErrorType Update(double deltaTime) override;
 
 protected:
 	MovingGameObject();
 	Vector2D velocity;
-	virtual void Move(float deltaTime) =0;
+	virtual void Move(double deltaTime) =0;
 };
 

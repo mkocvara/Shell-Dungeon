@@ -37,7 +37,7 @@ void SpaceRock::Initialise()
 
 // PROTECTED
 
-void SpaceRock::Move(float deltaTime)
+void SpaceRock::Move(double deltaTime)
 {
 	position += velocity;
 }

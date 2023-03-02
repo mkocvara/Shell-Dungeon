@@ -15,7 +15,7 @@ public:
 	virtual ~GameObject();
 
 	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1);
-	virtual ErrorType Update(float deltaTime);
+	virtual ErrorType Update(double deltaTime);
 	virtual void SetRenderSprite(const wchar_t* imagePath);
 	Vector2D GetForwardVector() const;
 	virtual void SetActive(bool newActive);

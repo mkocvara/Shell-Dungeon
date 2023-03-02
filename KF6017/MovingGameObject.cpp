@@ -8,7 +8,7 @@ MovingGameObject::~MovingGameObject()
 {
 }
 
-ErrorType MovingGameObject::Update(float deltaTime)
+ErrorType MovingGameObject::Update(double deltaTime)
 {
 	if (!IsActive())
 		return SUCCESS;

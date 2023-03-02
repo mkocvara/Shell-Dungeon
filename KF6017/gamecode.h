@@ -6,13 +6,10 @@
 
 
 #pragma once
-#include <vector>
 #include "errortype.h"
 #include "windows.h"
 #include "gametimer.h"
-
-// #include "GameObject.h"
-class GameObject;
+#include "ObjectManager.h"
 
 // This is a hack for reading keyboard in situations where you don't want to
 // use a full input system.
@@ -27,23 +24,6 @@ class GameObject;
 // a few separate classes, but this keeps it simple.
 class Game
 {
-private:
-	enum GameState{MENU, PAUSED, RUNNING, GAMEOVER};
-	GameState m_currentState;      // Current state of the game 
-                                  // Menu = start menu
-                                  // Paused = paused
-                                  // Running = the main game loop
-                                  // GAMEOVER = setting this state causes the program to close
-                                  //            after tidying up
-	void ChangeState(GameState newState);  // Use to change the state of the game to one of the states above
-	int m_menuOption;              // Tracks the currently selected menu option, during main or pause menu
-	Game();                        // Constructor
-	~Game();                       // Destructor
-	Game(Game& other);             // Copy constructor disabled
-
-	GameTimer gameTimer;
-	std::vector<GameObject*> GameObjects;
-
 public:
 	static Game instance;          // Singleton instance
 
@@ -89,6 +69,23 @@ public:
 
 	// Called from Update() to draw game to the screen.
 	ErrorType DrawGame();
+
+private:
+	enum GameState { MENU, PAUSED, RUNNING, GAMEOVER };
+	GameState m_currentState;      // Current state of the game 
+								  // Menu = start menu
+								  // Paused = paused
+								  // Running = the main game loop
+								  // GAMEOVER = setting this state causes the program to close
+								  //            after tidying up
+	void ChangeState(GameState newState);  // Use to change the state of the game to one of the states above
+	int m_menuOption;              // Tracks the currently selected menu option, during main or pause menu
+	Game();                        // Constructor
+	~Game();                       // Destructor
+	Game(Game& other);             // Copy constructor disabled
+
+	GameTimer m_gameTimer;
+	ObjectManager objectManager;
 };
 
 

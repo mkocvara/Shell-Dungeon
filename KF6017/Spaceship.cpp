@@ -36,7 +36,7 @@ void Spaceship::Initialise(Vector2D position, float angle, float scale)
 
 // PROTECTED
 
-void Spaceship::Move(float deltaTime)
+void Spaceship::Move(double deltaTime)
 {
 	MyInputs* pInputs = MyInputs::GetInstance();
 	pInputs->SampleKeyboard();
@@ -48,7 +48,7 @@ void Spaceship::Move(float deltaTime)
 	else if (pInputs->KeyPressed(DIK_RIGHT) || pInputs->KeyPressed(DIK_D))
 		rotDir = +1;
 
-	rotationAngle += rotDir * rotationSpeed * deltaTime;
+	rotationAngle += rotDir * rotationSpeed * static_cast<float>(deltaTime);
 
 	// Movement
 	if (pInputs->KeyPressed(DIK_UP) || pInputs->KeyPressed(DIK_W))

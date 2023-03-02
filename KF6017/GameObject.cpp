@@ -23,7 +23,7 @@ void GameObject::Initialise(Vector2D position, float angle, float scale)
 	SetActive(true);
 }
 
-ErrorType GameObject::Update(float deltaTime)
+ErrorType GameObject::Update(double deltaTime)
 {
 	if (!IsActive())
 		return SUCCESS;

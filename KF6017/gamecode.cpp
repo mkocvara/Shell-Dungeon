@@ -10,7 +10,7 @@
 #include "errorlogger.h"
 #include <math.h>
 #include "shapes.h"
-#include "Spaceship.h";
+#include "Spaceship.h"
 #include "RandUtil.h"
 #include "SpaceRock.h"
 
@@ -290,27 +290,27 @@ ErrorType Game::StartOfGame()
 
 	Spaceship* playerShip = new Spaceship();
 	playerShip->Initialise(Vector2D(-10,-10));
-	GameObjects.push_back(playerShip);
+	objectManager.AddObject(playerShip);
 
 	SpaceRock* rock1 = new SpaceRock();
 	rock1->Initialise();
-	GameObjects.push_back(rock1);
+	objectManager.AddObject(rock1);
 
 	SpaceRock* rock2 = new SpaceRock();
 	rock2->Initialise();
-	GameObjects.push_back(rock2);
+	objectManager.AddObject(rock2);
 
 	SpaceRock* rock3 = new SpaceRock();
 	rock3->Initialise();
-	GameObjects.push_back(rock3);
+	objectManager.AddObject(rock3);
 
 	SpaceRock* rock4= new SpaceRock();
 	rock4->Initialise();
-	GameObjects.push_back(rock4);
+	objectManager.AddObject(rock4);
 	
 	//pDrawEngine->RED
 
-	gameTimer.begin();
+	m_gameTimer.begin();
 
 	return SUCCESS;
 }
@@ -322,15 +322,12 @@ ErrorType Game::StartOfGame()
 // Gameplay programmer will develop this to create an actual game
 ErrorType Game::Update()
 {
-	gameTimer.mark();
+	m_gameTimer.mark();
 
 	if(FAILED(HandleInput()))
 		return FAILURE;
 
-	for (GameObject* go : GameObjects)
-	{
-		go->Update(gameTimer.mdFrameTime);
-	}
+	objectManager.UpdateAll(m_gameTimer.mdFrameTime);
 
 	return SUCCESS;
 }
@@ -353,10 +350,6 @@ ErrorType Game::HandleInput()
 ErrorType Game::EndOfGame()
 // called when the game ends by returning to main menu
 {
-	for (GameObject* go : GameObjects)
-	{
-		delete go;
-	}
 
 	return SUCCESS;
 }

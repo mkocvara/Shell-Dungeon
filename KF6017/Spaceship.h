@@ -17,7 +17,7 @@ protected:
 	const float acceleration = 5.f;
 	const float friction = -0.5f;
 
-	virtual void Move(float deltaTime) override;
+	virtual void Move(double deltaTime) override;
 
 private:
 	const wchar_t* renderSpritePath = L"Assets/basic.bmp";

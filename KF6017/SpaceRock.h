@@ -13,7 +13,7 @@ public:
 	virtual void Initialise();
 
 protected:
-	virtual void Move(float deltaTime) override;
+	virtual void Move(double deltaTime) override;
 
 private:
 	std::vector<const wchar_t*> _renderSpritePaths = {
