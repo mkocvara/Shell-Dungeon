@@ -134,10 +134,12 @@ void Game::Shutdown()
 	// Any clean up code here 
 
 
+	/*/ DO NOT TERMINATE - unnecessary with smart pointers
 	// (engines must be terminated last)
 	MyDrawEngine::Terminate();
 	MySoundEngine::Terminate();
 	MyInputs::Terminate();
+	/*/
 }
 
 

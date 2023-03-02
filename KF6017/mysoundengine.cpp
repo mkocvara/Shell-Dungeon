@@ -6,7 +6,7 @@
 #include "errorlogger.h"
 
 
-MySoundEngine* MySoundEngine::instance=nullptr;
+std::unique_ptr<MySoundEngine> MySoundEngine::instance=nullptr;
 
 MySoundEngine::MySoundEngine(HWND hwnd)
 {
@@ -58,9 +58,9 @@ ErrorType MySoundEngine::Start(HWND hwnd)
 {
 	if(instance)
 	{
-		instance->Terminate();
+		instance.reset();
 	}
-	instance = new MySoundEngine(hwnd);
+	instance = std::make_unique<MySoundEngine>(hwnd);
 	if (instance)
 		return SUCCESS;
 	else
@@ -69,9 +69,13 @@ ErrorType MySoundEngine::Start(HWND hwnd)
 
 MySoundEngine* MySoundEngine::GetInstance()
 {
-	return instance;
+	if (!instance)
+		ErrorLogger::Writeln(L"Attempted to retrieve an instance of MySoundEngine, but it hasn't been started.");
+
+	return instance.get();
 }
 
+/*/ DEPRECATED - using unique_ptr now
 ErrorType MySoundEngine::Terminate()
 {
 	if(instance)
@@ -83,6 +87,7 @@ ErrorType MySoundEngine::Terminate()
 	else
 		return FAILURE;
 }
+/*/
 
 const wchar_t* MySoundEngine::ErrorString(HRESULT err)
 {

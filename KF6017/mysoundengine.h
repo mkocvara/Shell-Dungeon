@@ -16,6 +16,7 @@
 #include <dsound.h>		// directX draw
 #include "errortype.h"
 #include <map>
+#include <memory>
 
 typedef unsigned int SoundIndex;
 typedef unsigned int MusicIndex;
@@ -58,15 +59,6 @@ class MySoundEngine
 	SoundIndex m_NextSoundIndex;
 
 private:
-	// Simply creates a MySoundEngine
-	// hwnd is the handle of the main window
-	// Precondition:
-	//	DirectSound is installed on the computer
-	MySoundEngine(HWND hwnd);
-
-	// The destructor for the MyInstrument. Calls Release().
-	~MySoundEngine();
-
 	// Releases the memory and COM objects=. Needs to be called
 	// before closing the program. (Gets called by the constructor,
 	// but best to call it explicitly as well.)
@@ -79,17 +71,25 @@ private:
 	MySound& FindSound(SoundIndex);
 
 	IDirectSound8 *lpds;
-	static MySoundEngine* instance;
+	static std::unique_ptr<MySoundEngine> instance;
 
 	MySound emptySound;
 
 public:
+	// Simply creates a MySoundEngine
+	// hwnd is the handle of the main window
+	// Precondition:
+	//	DirectSound is installed on the computer
+	MySoundEngine(HWND hwnd);
+
+	// The destructor for the MyInstrument. Calls Release().
+	~MySoundEngine();
+
 	// Creates the static singleton MySoundEngine instance
 	// hwnd is the handle of the main window
 	// Precondition:
 	//	DirectSound is installed on the computer
 	// Note this function should be called once at the start of the game before using 
-	// "MySoundEngine::Start()"
 	// before using any other methods.
 	static ErrorType Start(HWND hwnd);
 

@@ -12,7 +12,9 @@
 #include "mydrawengine.h"
 #include <algorithm>			// Using find() in DeregisterPicture
 
-MyDrawEngine* MyDrawEngine::instance=nullptr;
+//MyDrawEngine* MyDrawEngine::instance=nullptr;
+std::unique_ptr<MyDrawEngine> MyDrawEngine::instance = nullptr;
+
 
 // *************************************************************
 // Constructors and singleton management
@@ -23,11 +25,11 @@ ErrorType MyDrawEngine::Start(HWND hwnd, bool bFullScreen)
 {
 	if(instance)		// If an instance already exists
 	{
-		instance->Terminate();
+		instance.reset();
 	}
 	 
 	// Create the instance
-	instance= new MyDrawEngine(hwnd);
+	instance = std::make_unique<MyDrawEngine>(hwnd);
 	// Start the window for Windows
 	if(FAILED(instance->StartWindow()))
 	{
@@ -54,11 +56,15 @@ ErrorType MyDrawEngine::Start(HWND hwnd, bool bFullScreen)
 // Static method to return the instance (singleton pattern)
 MyDrawEngine* MyDrawEngine::GetInstance()
 {
-	return instance;
+	if (!instance)
+		ErrorLogger::Writeln(L"Attempted to retrieve an instance of MyDrawEngine, but it hasn't been started.");
+
+	return instance.get();
 }		// GetInstance
 
 // **************************************************************
 
+/* TRANSFERRING TO SMART POINTERS, NOT NEEDED; TODO: REMOVE
 // Static method to delete the instance
 ErrorType MyDrawEngine::Terminate()
 {
@@ -70,7 +76,7 @@ ErrorType MyDrawEngine::Terminate()
 	}
 	else
 		return FAILURE;
-}	// Terminate
+}	// Terminate */
 
 // **************************************************************
 
@@ -618,6 +624,11 @@ PictureIndex MyDrawEngine::FindPicture(const wchar_t* filename)
 	{
 		return picit->second;
 	}
+}
+
+bool MyDrawEngine::IsStarted()
+{
+	return instance != nullptr;
 }
 
 // Loading a picture

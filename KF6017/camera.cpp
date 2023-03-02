@@ -74,12 +74,12 @@ Segment2D Camera::Transform(Segment2D segment) const
 // Left and right will depend on screen aspect
 void Camera::Reset()
 {
-	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
 	int height = 0;
-	int width =0;
+	int width = 0;
 
-	if(pDrawEngine)			// Draw engine is initialised
+	if(MyDrawEngine::IsStarted())			// Draw engine is initialised
 	{
+		MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
 		height = pDrawEngine->GetScreenHeight();
 		width = pDrawEngine->GetScreenWidth();	
 	}

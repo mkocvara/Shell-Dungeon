@@ -52,11 +52,11 @@ class MyDrawEngine
 private:
 
    // Defines the vertex format used in Direct3D
-struct MYVERTEX
-{
-	FLOAT x,y,z,rhw;
-	DWORD colour;
-};
+	struct MYVERTEX
+	{
+		FLOAT x,y,z,rhw;
+		DWORD colour;
+	};
 
 #define MYFVF (D3DFVF_XYZRHW|D3DFVF_DIFFUSE)
 
@@ -113,15 +113,8 @@ struct MYVERTEX
 		// Returns:			SUCCESS
 	ErrorType Release();
 
-	static MyDrawEngine* instance;
+	static std::unique_ptr<MyDrawEngine> instance;
 		// Instance of this singleton
-
-		// Parameters:
-		//		hwnd		The handle to the application's window.
-	MyDrawEngine(HWND hwnd);
-
-		// Singleton destructor - calls "Release()"
-	~MyDrawEngine();	
 
 	// Reloads a specified picture - called within ReloadBitmaps
    // Parameters:
@@ -146,6 +139,15 @@ public:
 	Camera theCamera;          // Camera objects is used to translate world coordinates to/from
                               // screen coordinates
 
+
+	// Parameters:
+	//		hwnd		The handle to the application's window.
+	// Note you should not call constructor directly. Start an instance by calling MyDrawEngine::Start() instead.
+	MyDrawEngine(HWND hwnd);
+
+	// Singleton destructor - calls "Release()"
+	~MyDrawEngine();
+
 	// Some standard colours.
 	static const unsigned int BLACK = 0;
 	static const unsigned int RED = D3DCOLOR_ARGB(255,255,0,0);
@@ -164,6 +166,10 @@ public:
 	static const unsigned int GREY = D3DCOLOR_ARGB(255,128,128,128);
 
 	// Public methods ***************************************
+
+	// Returns:
+	//  The method returns true if an instance has been started and false if not.
+	static bool IsStarted();
 
 	// Precondition:
 	//	filename is a NULL-terminated w_string
@@ -279,14 +285,14 @@ public:
 	//		height		The pixel height of the screen 
 	//		hwnd		The handle to the application's window.
 	// Note you should call this static method using MyDrawEngine::Start() before using
-	// any other methods of this class.
+	// any other methods of this class. Do not call constructor directly.
 	static ErrorType Start(HWND hwnd, bool bFullScreen);
 
 	// Postcondition:	The instance of MyDrawEngine has been terminated.
 	// Returns:			SUCCESS If the instance of MyDrawEngine had been started using Start()
 	//					FAILURE if the instance of MyDrawEngine had not been started.
-	// Note that you should call this at the end of your game to avoid a memory leak.
-	static ErrorType Terminate();
+	// [DEPRECATED - smart pointers are used now] Note that you should call this at the end of your game to avoid a memory leak.
+	// static ErrorType Terminate();
 
 		// Precondition:	shutdown() has not been called
 		//					Neither primary nor buffer is locked.

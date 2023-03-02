@@ -12,6 +12,7 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #include "errortype.h"
+#include <memory>
 
 
 
@@ -19,7 +20,7 @@
 class MyInputs
 {
 private:
-	static MyInputs* instance;			// Singleton
+	static std::unique_ptr<MyInputs> instance;			// Singleton
 
 	int miMouseDX;						   // The x-movement of the mouse in the last sample
 	int miMouseDY;						   // The y-movement of the mouse in the last sample
@@ -52,16 +53,6 @@ private:
 	static const int SHAKE=1;
 	static const int CENTRE=2;
 
-
-		// Constructor. Creates the MyInputs object and connects to a mouse, joystick and keyboard
-		// via direct input.
-		// The attributes mbKeyboardAvailable , mbMouseAvailable, mbJoystickAvailable will be set
-		// to true if each corresponding object can be connected. Otherwise each is false.
-		// Destructor. Calls Release()
-	MyInputs(HINSTANCE hinst, HWND hwnd);
-
-	~MyInputs();
-
 		// Releases all directInput objects
 	void Release();
 
@@ -73,6 +64,14 @@ private:
 
 
 public:
+	// Constructor. Creates the MyInputs object and connects to a mouse, joystick and keyboard
+	// via direct input.
+	// The attributes mbKeyboardAvailable , mbMouseAvailable, mbJoystickAvailable will be set
+	// to true if each corresponding object can be connected. Otherwise each is false.
+	// Destructor. Calls Release()
+	MyInputs(HINSTANCE hinst, HWND hwnd);
+
+	~MyInputs();
 
 	// ***** Class management functions **********************************************
 
