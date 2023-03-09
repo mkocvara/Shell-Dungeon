@@ -1,6 +1,9 @@
 #pragma once
 #include "vector2D.h"
 #include "errortype.h"
+#include <memory>
+
+class ServiceManager;
 
 enum class GameObjectState
 {
@@ -24,11 +27,12 @@ public:
 	bool IsRemoved() const;
 
 protected:
-	GameObject(); // make it essentially abstract
+	GameObject(std::weak_ptr<ServiceManager> serviceManager); // make it essentially abstract
 	Vector2D position;
 	float rotationAngle;	
-
 	float renderScale;
+
+	std::weak_ptr<ServiceManager> serviceManager;
 
 	virtual ErrorType Render();
 

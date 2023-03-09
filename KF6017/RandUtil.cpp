@@ -1,6 +1,6 @@
 #include "RandUtil.h"
 
-#if !RELEASE
+#if _DEBUG
 #include "ErrorLogger.h"
 #endif
 
@@ -20,8 +20,8 @@ float RandUtil::randRangeDouble(double min, double max)
     return distr(gen);
 }
 
-#if !RELEASE
-void RandUtil::debug()
+#if _DEBUG
+void RandUtil::Debug()
 {
     for (int i = 0; i < 20; i++)
     {

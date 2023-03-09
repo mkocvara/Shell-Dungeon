@@ -9,7 +9,7 @@ public:
 	static float randRangeDouble(double min, double max);
 
 #if !RELEASE
-	static void debug();
+	static void Debug();
 #endif
 
 private:

@@ -13,8 +13,9 @@
 // a scale to make the screen have a height of 2000 using world coordinates.
 // So the top of the screen is 1000. Bottom of the screen is -1000.
 // Left and right will depend on screen aspect
-Camera::Camera()
+Camera::Camera(MyDrawEngine* engine)
 {
+	m_drawEngine = engine;
 	Reset();
 }
 
@@ -77,11 +78,10 @@ void Camera::Reset()
 	int height = 0;
 	int width = 0;
 
-	if(MyDrawEngine::IsStarted())			// Draw engine is initialised
+	if(m_drawEngine->IsStarted())			// Draw engine is initialised
 	{
-		MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
-		height = pDrawEngine->GetScreenHeight();
-		width = pDrawEngine->GetScreenWidth();	
+		height = m_drawEngine->GetScreenHeight();
+		width = m_drawEngine->GetScreenWidth();
 	}
 	else					// Use windows instead
 	{

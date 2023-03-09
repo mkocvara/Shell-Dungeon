@@ -5,9 +5,6 @@
 #include "mysoundengine.h"
 #include "errorlogger.h"
 
-
-std::unique_ptr<MySoundEngine> MySoundEngine::instance=nullptr;
-
 MySoundEngine::MySoundEngine(HWND hwnd)
 {
 	// The first sound loaded will have a SoundIndex value of 1
@@ -53,41 +50,6 @@ ErrorType MySoundEngine::Release()
 	}
 	return FAILURE;
 }
-
-ErrorType MySoundEngine::Start(HWND hwnd)
-{
-	if(instance)
-	{
-		instance.reset();
-	}
-	instance = std::make_unique<MySoundEngine>(hwnd);
-	if (instance)
-		return SUCCESS;
-	else
-		return FAILURE;
-}
-
-MySoundEngine* MySoundEngine::GetInstance()
-{
-	if (!instance)
-		ErrorLogger::Writeln(L"Attempted to retrieve an instance of MySoundEngine, but it hasn't been started.");
-
-	return instance.get();
-}
-
-/*/ DEPRECATED - using unique_ptr now
-ErrorType MySoundEngine::Terminate()
-{
-	if(instance)
-	{
-		delete instance;
-		instance=nullptr;
-		return SUCCESS;
-	}
-	else
-		return FAILURE;
-}
-/*/
 
 const wchar_t* MySoundEngine::ErrorString(HRESULT err)
 {

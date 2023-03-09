@@ -37,6 +37,12 @@
     <Filter Include="Header Files\Engine\Obects">
       <UniqueIdentifier>{50d395c7-9d52-4cc4-ac8c-02b0500fed98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Services">
+      <UniqueIdentifier>{11477782-6484-48cd-aa3d-1b7c2720d1ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Services">
+      <UniqueIdentifier>{7f36b24a-30b9-43de-bec6-7cc177f5a327}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gamecode.cpp">
@@ -51,19 +57,7 @@
     <ClCompile Include="RandUtil.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ErrorLogger.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="gametimer.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="mydrawengine.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="myinputs.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="mysoundengine.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Shapes.cpp">
@@ -84,8 +78,35 @@
     <ClCompile Include="MovingGameObject.cpp">
       <Filter>Source Files\Engine\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorLogger.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
-      <Filter>Source Files\Engine</Filter>
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="mysoundengine.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="myinputs.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="mydrawengine.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectFactory.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="AsteroidsObjectFactory.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceManager.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="AsteroidsServiceManager.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,25 +125,10 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="ErrorLogger.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="errortype.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="gametimer.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="mydrawengine.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="myinputs.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="mysoundengine.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="objecttypes.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Shapes.h">
@@ -137,8 +143,38 @@
     <ClInclude Include="MovingGameObject.h">
       <Filter>Header Files\Engine\Obects</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectManager.h">
+    <ClInclude Include="Bullet.h">
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorLogger.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="mydrawengine.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="mysoundengine.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="myinputs.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="objecttypes.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectFactory.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="AsteroidsObjectFactory.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceManager.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="AsteroidsServiceManager.h">
+      <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

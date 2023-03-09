@@ -1,10 +1,11 @@
 #include "GameObject.h"
 #include "mydrawengine.h"
+#include "ServiceManager.h"
 
-
-GameObject::GameObject()
+GameObject::GameObject(std::weak_ptr<ServiceManager> serviceManager)
 {
 	SetActive(false);
+	this->serviceManager = serviceManager;
 }
 
 // PUBLIC
@@ -39,7 +40,14 @@ void GameObject::SetRenderSprite(const wchar_t* imagePath)
 		return;
 	}
 
-	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager.lock()->GetDrawEngine().lock();
+
+	if (!pDrawEngine)
+	{
+		ErrorLogger::Writeln(L"GameObject::SetRenderSprite(); Draw engine is null.");
+		return;
+	}
+
 	renderSprite = pDrawEngine->LoadPicture(imagePath);
 }
 
@@ -80,7 +88,7 @@ ErrorType GameObject::Render()
 		return FAILURE;
 	}
 
-	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager.lock()->GetDrawEngine().lock();
 	return pDrawEngine->DrawAt(position, renderSprite, renderScale, rotationAngle);
 }
 

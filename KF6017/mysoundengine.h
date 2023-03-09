@@ -71,7 +71,6 @@ private:
 	MySound& FindSound(SoundIndex);
 
 	IDirectSound8 *lpds;
-	static std::unique_ptr<MySoundEngine> instance;
 
 	MySound emptySound;
 
@@ -84,24 +83,6 @@ public:
 
 	// The destructor for the MyInstrument. Calls Release().
 	~MySoundEngine();
-
-	// Creates the static singleton MySoundEngine instance
-	// hwnd is the handle of the main window
-	// Precondition:
-	//	DirectSound is installed on the computer
-	// Note this function should be called once at the start of the game before using 
-	// before using any other methods.
-	static ErrorType Start(HWND hwnd);
-
-		// Postcondition:	A pointer to the instance of MyDrawEngine has been returned.
-	// Call this using "MySoundEngine enginePtr = MySoundEngine::GetInstance();"
-	static MySoundEngine* GetInstance();
-
-	// Postcondition:	The instance of MySoundEngine has been terminated.
-	// Returns:			SUCCESS If the instance of MySoundEngine had been started using Start()
-	//					FAILURE if the instance of MySoundEngine had not been started.
-	// Note that you should call this at the end of your game to avoid a memory leak.
-	static ErrorType Terminate();
 
 	// Returns a string describing the directDraw error for most HRESULTs sent to it
 	static const wchar_t* ErrorString(HRESULT err);
@@ -123,8 +104,6 @@ public:
 	// Unloads all sounds from memory
 	// Returns SUCCESS always
 	ErrorType UnloadAllSounds();
-
-
 
 	// Sets the volume of the specified sound. 
 	// 0 is full volume -10000 is silent
@@ -160,9 +139,4 @@ public:
 
 	// Stops all sounds
 	void StopAllSounds();
-
 };
-
-
-
-

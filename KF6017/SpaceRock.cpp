@@ -1,12 +1,13 @@
 #include "SpaceRock.h"
 #include "errorlogger.h"
 #include "RandUtil.h"
+#include "ServiceManager.h"
 #include "mydrawengine.h"
 
 
 // PUBLIC
 
-SpaceRock::SpaceRock() : Super()
+SpaceRock::SpaceRock(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager)
 { 
 }
 
@@ -14,7 +15,7 @@ SpaceRock::~SpaceRock()
 {
 }
 
-void SpaceRock::Initialise()
+void SpaceRock::Initialise(Vector2D position, float angle, float scale)
 {
 	int randSprite = RandUtil::randRangeInt(0, _renderSpritePaths.size()-1);	
 	float randAngle = RandUtil::randRangeDouble(0, 360);
@@ -23,8 +24,8 @@ void SpaceRock::Initialise()
 	float randSpeed = RandUtil::randRangeDouble(0.5f, 1.5f);
 	velocity = moveDir * randSpeed;
 
-	MyDrawEngine* pDrawEngine = MyDrawEngine::GetInstance();
-	Vector2D randPos = pDrawEngine->theCamera.ReverseTransform(Vector2D(
+	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager.lock()->GetDrawEngine().lock();
+	Vector2D randPos = pDrawEngine->camera->ReverseTransform(Vector2D(
 		RandUtil::randRangeDouble(0.f, pDrawEngine->GetScreenWidth()), 
 		RandUtil::randRangeDouble(0.f, pDrawEngine->GetScreenHeight())
 	));
@@ -32,12 +33,4 @@ void SpaceRock::Initialise()
 	SetRenderSprite(_renderSpritePaths[randSprite]);
 	Super::Initialise(randPos, randAngle, randScale);
 	return;
-}
-
-
-// PROTECTED
-
-void SpaceRock::Move(double deltaTime)
-{
-	position += velocity;
 }

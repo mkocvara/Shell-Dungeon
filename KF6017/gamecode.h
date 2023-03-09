@@ -9,7 +9,9 @@
 #include "errortype.h"
 #include "windows.h"
 #include "gametimer.h"
-#include "ObjectManager.h"
+#include <memory>
+
+class ServiceManager;
 
 // This is a hack for reading keyboard in situations where you don't want to
 // use a full input system.
@@ -85,7 +87,7 @@ private:
 	Game(Game& other);             // Copy constructor disabled
 
 	GameTimer m_gameTimer;
-	ObjectManager objectManager;
+	std::shared_ptr<ServiceManager> serviceManager;
 };
 
 

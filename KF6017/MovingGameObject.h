@@ -11,8 +11,8 @@ public:
 	virtual ErrorType Update(double deltaTime) override;
 
 protected:
-	MovingGameObject();
+	MovingGameObject(std::weak_ptr<ServiceManager> serviceManager);
 	Vector2D velocity;
-	virtual void Move(double deltaTime) =0;
+	virtual void Move(double deltaTime);
 };
 

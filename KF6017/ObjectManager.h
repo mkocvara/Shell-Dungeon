@@ -14,8 +14,11 @@ public:
 	ErrorType UpdateAll(double deltaTime);
 	void AddObject(GameObject* newObject);
 	void AddObject(std::unique_ptr<GameObject>& newObject);
+	void Clear();
+	int GetNumberOfObjects() const;
 
 private:
-	std::list<std::unique_ptr<GameObject>> mGameObjects;
+	void RemoveDeletedObjects();
+	std::list<std::unique_ptr<GameObject>> gameObjects;
 };
 

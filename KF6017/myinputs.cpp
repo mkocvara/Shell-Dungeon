@@ -9,7 +9,6 @@
 // *************************************************************************************
 // Implementation of the global EnumerateJoystick function 
 
-std::unique_ptr<MyInputs> MyInputs::instance=nullptr;	
 LPDIRECTINPUTDEVICE8 MyInputs::lpdijoystick=nullptr;	// The dirextInput joystick
 LPDIRECTINPUTDEVICE8 MyInputs::lpdikeyboard=nullptr;	// The directInput keyboard
 LPDIRECTINPUTDEVICE8 MyInputs::lpdimouse=nullptr;		// The directInput mouse	
@@ -37,60 +36,6 @@ BOOL CALLBACK MyInputs::EnumerateJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID pDev
 
 // *************************************************************************************
 // Implementation of the MyInputs member functions
-
-ErrorType MyInputs::Start(HINSTANCE hinst, HWND hwnd)
-{
-	if(instance)
-	{
-		instance.reset();
-	}
-	instance = std::make_unique<MyInputs>(hinst, hwnd);
-
-	if (instance)
-		return SUCCESS;
-	else
-		return FAILURE;
-}
-
-/*/ DEPRECATED - unique_ptr is used now
-ErrorType MyInputs::Terminate()
-{
-	// Need to stop all effects
-	// -> Stop does not seem to work
-	instance->PullJoystick(0,.1,0);
-	if(mrglpdiEffectList[SHAKE])
-	{
-		mrglpdiEffectList[SHAKE]->Stop();
-		mrglpdiEffectList[SHAKE]->Release();
-	}
-	if(mrglpdiEffectList[PULL]) 
-	{
-		mrglpdiEffectList[PULL]->Stop();
-		mrglpdiEffectList[PULL]->Release();
-	}
-	if(mrglpdiEffectList[CENTRE]) 
-	{
-		mrglpdiEffectList[CENTRE]->Stop();
-		mrglpdiEffectList[CENTRE]->Release();
-	}
-
-	if(instance)
-	{
-		delete instance;
-		instance = nullptr;
-		return SUCCESS;
-	}
-	return FAILURE;
-}
-/*/
-
-MyInputs* MyInputs::GetInstance()
-{
-	if (!instance)
-		ErrorLogger::Writeln(L"Attempted to retrieve an instance of MyInputs, but it hasn't been started.");
-
-	return instance.get();
-}
 
 MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 :mkiMaxJoystickAxis(100)
@@ -349,7 +294,7 @@ MyInputs::~MyInputs()
 {
 	// Need to stop all effects
 	// -> Stop does not seem to work
-	instance->PullJoystick(0, .1, 0);
+	PullJoystick(0, .1, 0);
 	if (mrglpdiEffectList[SHAKE])
 	{
 		mrglpdiEffectList[SHAKE]->Stop();

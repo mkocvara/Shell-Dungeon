@@ -12,77 +12,39 @@
 #include "mydrawengine.h"
 #include <algorithm>			// Using find() in DeregisterPicture
 
-//MyDrawEngine* MyDrawEngine::instance=nullptr;
-std::unique_ptr<MyDrawEngine> MyDrawEngine::instance = nullptr;
-
-
 // *************************************************************
 // Constructors and singleton management
 // *************************************************************
 
 
-ErrorType MyDrawEngine::Start(HWND hwnd, bool bFullScreen)
+ErrorType MyDrawEngine::Start(bool bFullScreen)
 {
-	if(instance)		// If an instance already exists
-	{
-		instance.reset();
-	}
-	 
-	// Create the instance
-	instance = std::make_unique<MyDrawEngine>(hwnd);
 	// Start the window for Windows
-	if(FAILED(instance->StartWindow()))
+	if(FAILED(StartWindow()))
 	{
 		ErrorLogger::Writeln(L"Failed to start the MyDrawEngine window");
 		return FAILURE;
 	}
 
 	// Start a default font
-	instance->AddFont(L"Ariel", 24, false, false);
+	AddFont(L"Ariel", 24, false, false);
 	
 	// If user has requested windowed mode
 	if(!bFullScreen)
-		instance->GoWindowed();
+		GoWindowed();
 
 	// Clear everything
-	instance->Flip();
-	instance->ClearBackBuffer();
+	Flip();
+	ClearBackBuffer();
+
+	m_started = true;
 
 	return SUCCESS;
-}		// Start
-
-// **************************************************************
-
-// Static method to return the instance (singleton pattern)
-MyDrawEngine* MyDrawEngine::GetInstance()
-{
-	if (!instance)
-		ErrorLogger::Writeln(L"Attempted to retrieve an instance of MyDrawEngine, but it hasn't been started.");
-
-	return instance.get();
-}		// GetInstance
-
-// **************************************************************
-
-/* TRANSFERRING TO SMART POINTERS, NOT NEEDED; TODO: REMOVE
-// Static method to delete the instance
-ErrorType MyDrawEngine::Terminate()
-{
-	if(instance)
-	{
-		delete instance;
-		instance=nullptr;
-		return SUCCESS;
-	}
-	else
-		return FAILURE;
-}	// Terminate */
+}
 
 // **************************************************************
 
 // Constructor
-// width - screen resolution width
-// height  - screen resolution height
 // hwnd - handle to the Window
 MyDrawEngine::MyDrawEngine(HWND hwnd)
 {
@@ -90,7 +52,7 @@ MyDrawEngine::MyDrawEngine(HWND hwnd)
 	m_lpD3D = nullptr;
 	m_lpD3DDevice = nullptr;
 
-	m_Hwnd = hwnd;				   // Remember the window handle
+	m_Hwnd = hwnd;				// Remember the window handle
 
 	m_bFullScreen = true;		// Start off fullscreen
 
@@ -102,6 +64,7 @@ MyDrawEngine::MyDrawEngine(HWND hwnd)
 
 	m_lpSprite = nullptr;
 
+	camera = std::make_unique<Camera>(this);
 	m_CameraActive = true;
 
 }		// Constructor
@@ -595,7 +558,7 @@ Rectangle2D MyDrawEngine::GetViewport() const
 	Vector2D tl(0.0f, 0.0f);
 	Vector2D bq((float)m_ScreenWidth,(float)m_ScreenHeight);
 	Rectangle2D screen;
-	screen.PlaceAt(theCamera.ReverseTransform(tl), theCamera.ReverseTransform(bq));
+	screen.PlaceAt(camera->ReverseTransform(tl), camera->ReverseTransform(bq));
 	return screen;
 }
 
@@ -626,9 +589,9 @@ PictureIndex MyDrawEngine::FindPicture(const wchar_t* filename)
 	}
 }
 
-bool MyDrawEngine::IsStarted()
+bool MyDrawEngine::IsStarted() const
 {
-	return instance != nullptr;
+	return m_started;
 }
 
 // Loading a picture
@@ -876,7 +839,7 @@ ErrorType MyDrawEngine::WriteText(Vector2D position, const wchar_t text[], int c
 {
 	if (m_CameraActive)
 	{
-		position = theCamera.Transform(position);
+		position = camera->Transform(position);
 	}
 	return WriteText(int(position.XValue), int(position.YValue), text, colour, fontIndex);
 }
@@ -885,7 +848,7 @@ ErrorType MyDrawEngine::WriteInt(Vector2D position, int num, int colour, FontInd
 {
 	if (m_CameraActive)
 	{
-		position = theCamera.Transform(position);
+		position = camera->Transform(position);
 	}
 	return WriteInt(int(position.XValue), int(position.YValue), num, colour, fontIndex);
 }
@@ -894,7 +857,7 @@ ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, F
 {
 	if (m_CameraActive)
 	{
-		position = theCamera.Transform(position);
+		position = camera->Transform(position);
 	}
 	return WriteDouble(int(position.XValue), int(position.YValue), num, colour, fontIndex);
 }
@@ -914,8 +877,8 @@ ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scale,
 	Vector2D originalPosition = position;
 	if (m_CameraActive)
 	{
-		position = theCamera.Transform(position);
-		scale = theCamera.Transform(scale);
+		position = camera->Transform(position);
+		scale = camera->Transform(scale);
       angle = -angle;
 	}
 
@@ -991,8 +954,8 @@ ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int co
 {
 	if (m_CameraActive)
 	{
-		start = theCamera.Transform(start);
-		end = theCamera.Transform(end);
+		start = camera->Transform(start);
+		end = camera->Transform(end);
 	}
 
 	// Vertex array with two vertices needed
@@ -1079,8 +1042,8 @@ ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int 
 {
 	if (m_CameraActive)
 	{
-		centre = theCamera.Transform(centre);
-		radius = theCamera.Transform(radius);
+		centre = camera->Transform(centre);
+		radius = camera->Transform(radius);
 	}
 
 	// Force a minimum radius
@@ -1182,7 +1145,7 @@ ErrorType MyDrawEngine::FillRect(Rectangle2D destinationRect, unsigned int colou
 
 	if (m_CameraActive)
 	{
-		destinationRect = theCamera.Transform(destinationRect);
+		destinationRect = camera->Transform(destinationRect);
 	}
 
 	// Four corners
@@ -1270,7 +1233,7 @@ ErrorType MyDrawEngine::BlendRect(Rectangle2D destinationRect, unsigned int colo
 
 	if (m_CameraActive)
 	{
-		destinationRect = theCamera.Transform(destinationRect);
+		destinationRect = camera->Transform(destinationRect);
 	}
 
 	// Calculate transparency as an integer 0-255
@@ -1373,7 +1336,7 @@ ErrorType MyDrawEngine::DrawPoint(Vector2D point, unsigned int colour)
 
 	if (m_CameraActive)
 	{
-		point = theCamera.Transform(point);
+		point = camera->Transform(point);
 	}
 	// An "array" with one entry
 	MYVERTEX Vertices[] = {
@@ -1475,7 +1438,7 @@ ErrorType MyDrawEngine::DrawPointList(Vector2D points[], unsigned int colours[],
 		Vector2D p = points[i];
 		if (m_CameraActive)
 		{
-			p = theCamera.Transform(p);
+			p = camera->Transform(p);
 		}
 		pVertices[i].x = p.XValue;
 		pVertices[i].y = p.YValue;

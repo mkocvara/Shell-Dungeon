@@ -5,15 +5,15 @@
 class SpaceRock : public MovingGameObject
 {
 public:
-	SpaceRock();
+	SpaceRock(std::weak_ptr<ServiceManager> serviceManager);
 	virtual ~SpaceRock();
 
 	typedef MovingGameObject Super;
 
-	virtual void Initialise();
+	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1) override;
 
 protected:
-	virtual void Move(double deltaTime) override;
+	//virtual void Move(double deltaTime) override;
 
 private:
 	std::vector<const wchar_t*> _renderSpritePaths = {

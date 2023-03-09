@@ -3,9 +3,14 @@
 #include "myinputs.h"
 #include "errorlogger.h"
 
+#include "ServiceManager.h"
+#include "ObjectManager.h"
+#include "GameObjectFactory.h"
+
+
 // PUBLIC
 
-Spaceship::Spaceship() : Super()
+Spaceship::Spaceship(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager)
 {
 }
 
@@ -20,27 +25,31 @@ void Spaceship::Initialise(Vector2D position, float angle, float scale)
 	return;
 }
 
-//ErrorType Spaceship::Update(float deltaTime)
-//{
-//	if (!IsActive())
-//		return SUCCESS;
-//
-//	if (FAILED(Super::Update(deltaTime)))
-//	{
-//		return FAILURE;
-//	}
-//
-//	return SUCCESS;
-//}
+ErrorType Spaceship::Update(double deltaTime)
+{
+	if (!IsActive())
+		return SUCCESS;
+
+	HandleInputs(deltaTime);
+
+	if (FAILED(Super::Update(deltaTime)))
+	{
+		return FAILURE;
+	}
+
+	return SUCCESS;
+}
 
 
 // PROTECTED
 
-void Spaceship::Move(double deltaTime)
+void Spaceship::HandleInputs(double deltaTime)
 {
-	MyInputs* pInputs = MyInputs::GetInstance();
+	std::shared_ptr<MyInputs> pInputs = serviceManager.lock()->GetInputs().lock();
 	pInputs->SampleKeyboard();
+	pInputs->SampleMouse();
 
+	// MOVEMENT
 	// Rotation
 	short rotDir = 0;
 	if (pInputs->KeyPressed(DIK_LEFT) || pInputs->KeyPressed(DIK_A))
@@ -63,5 +72,24 @@ void Spaceship::Move(double deltaTime)
 	Vector2D f = friction * velocity;
 	velocity += f * deltaTime;
 
-	position += velocity;
+	// FIRING
+	if (pInputs->IfMouseNewLeftDown())
+	{
+		Shoot();
+	}
+}
+
+void Spaceship::Shoot()
+{
+	std::shared_ptr<ObjectManager> pObjectManager = serviceManager.lock()->GetObjectManager().lock();
+	if (!pObjectManager)
+		return;
+
+	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManager.lock()->GetObjectFactory().lock();
+	if (!pObjectFactory)
+		return;
+
+	std::unique_ptr<GameObject> obj = pObjectFactory->Create(ObjectType::bullet, serviceManager);
+	obj->Initialise(position, rotationAngle, 1.f);
+	pObjectManager->AddObject(obj);
 }

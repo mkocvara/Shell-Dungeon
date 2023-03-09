@@ -21,6 +21,7 @@
 #include "errortype.h"
 #include "string"
 #include "camera.h"
+#include <memory>
 
 
 // Macros ***************************************************
@@ -102,6 +103,8 @@ private:
 
 	bool m_CameraActive;					   // If true, drawing will transform using camera settings. Default is true.
 
+	bool m_started = false;
+
 	bool m_bFullScreen;						// True if full screen. False otherwise
 	std::map<PictureIndex, MyPicture> m_MyPictureList;	      // Map of MyPicture objects
 	std::map<std::wstring, PictureIndex> m_FilenameList;		// Map of filenames
@@ -109,16 +112,13 @@ private:
 	PictureIndex m_NextPictureIndex;		// The index of the next font to be added	
 	FontIndex m_pNextFont;					// The index of the next font to be added
 
-		// Postcondition:	The primary surface, the buffer, the clipper and DirectDraw have been released.
-		// Returns:			SUCCESS
+	// Postcondition:	The primary surface, the buffer, the clipper and DirectDraw have been released.
+	// Returns:			SUCCESS
 	ErrorType Release();
 
-	static std::unique_ptr<MyDrawEngine> instance;
-		// Instance of this singleton
-
 	// Reloads a specified picture - called within ReloadBitmaps
-   // Parameters:
-   //    pic    The index of the required picture
+	// Parameters:
+	//    pic    The index of the required picture
 	ErrorType ReloadPicture(PictureIndex pic);
 
 	// Releases all Bitmaps. Used when resetting the device or
@@ -136,13 +136,12 @@ private:
 	void ReloadFonts();
 
 public:
-	Camera theCamera;          // Camera objects is used to translate world coordinates to/from
-                              // screen coordinates
-
+	std::unique_ptr<Camera> camera;		// Camera objects is used to translate world coordinates to/from
+										// screen coordinates
 
 	// Parameters:
 	//		hwnd		The handle to the application's window.
-	// Note you should not call constructor directly. Start an instance by calling MyDrawEngine::Start() instead.
+	// Note: After creating a new instance, it should be started by calling MyDrawEngine::Start() instead.
 	MyDrawEngine(HWND hwnd);
 
 	// Singleton destructor - calls "Release()"
@@ -169,7 +168,7 @@ public:
 
 	// Returns:
 	//  The method returns true if an instance has been started and false if not.
-	static bool IsStarted();
+	bool IsStarted() const;
 
 	// Precondition:
 	//	filename is a NULL-terminated w_string
@@ -275,51 +274,36 @@ public:
 	void GetDimensions(PictureIndex pic, int& height, int& width);
 
 	// Precondition:	A window for the application has been created
-	// Postcondition:	An instance of MyDrawEngine is created and a pointer to it has been
-	//					returned.
-	//					If a previous instance already exists, this is terminated first.
-	//					The screen has been put into full-screen, exclusive mode.
+	// Postcondition:	The window has been started.
 	//					The primary surface and the back buffer have been initialised and cleared.
 	// Parameters:
-	//		width		The pixel width of the screen 
-	//		height		The pixel height of the screen 
 	//		hwnd		The handle to the application's window.
-	// Note you should call this static method using MyDrawEngine::Start() before using
-	// any other methods of this class. Do not call constructor directly.
-	static ErrorType Start(HWND hwnd, bool bFullScreen);
+	//		bFullScreen	Bool determining if the application window is made fullscreen.
+	// Must be called on a newly created instance before it can be used.
+	ErrorType Start(bool bFullScreen);
 
-	// Postcondition:	The instance of MyDrawEngine has been terminated.
-	// Returns:			SUCCESS If the instance of MyDrawEngine had been started using Start()
-	//					FAILURE if the instance of MyDrawEngine had not been started.
-	// [DEPRECATED - smart pointers are used now] Note that you should call this at the end of your game to avoid a memory leak.
-	// static ErrorType Terminate();
-
-		// Precondition:	shutdown() has not been called
-		//					Neither primary nor buffer is locked.
-		// Postcondition:	Primary surface and the back buffer have been flipped.
-		//					(function will wait until flip is possible)
-		// Returns:			SUCCESS
+	// Precondition:	shutdown() has not been called
+	//					Neither primary nor buffer is locked.
+	// Postcondition:	Primary surface and the back buffer have been flipped.
+	//					(function will wait until flip is possible)
+	// Returns:			SUCCESS
 	ErrorType Flip();
 
-	// Postcondition:	A pointer to the instance of MyDrawEngine has been returned.
-	// Call this using "MyDrawEngine enginePtr = MyDrawEngine::GetInstance();"
-	static MyDrawEngine* GetInstance();
-
-		// Preconditions	thePicture has been initialised to contain an image
-		// Postcondition	The whole image in theSurface will be placed
-		//					on the back buffer. (Subject to clipping.)
-		//					The centre of the image will be placed at the x,y coordinates specified
-		//	Returns			SUCCESS if blit successful. FAILURE otherwise.
-		// Parameters:		position - the screen location of the centre of the picture
-		//					pic - the PictureIndex of the image to be drawn
-		//					scale - the scale of the image. The image will be scaled from its "centre"
-		//						(by default the mathematical centre of the surface)
-		//					angle - the anticlockwise rotation of the image in radians
-		//						the image will be rotated around its centre (by
-		//						default the mathematical centre of the surface)
-		//					transparency - the transparency of the image. 0.0 is opaque. 1.0 is
-		//						fully transparent. Behaviour for transparency values greater
-		//						than 1.0 or less than 0.0 is undefined.
+	// Preconditions	thePicture has been initialised to contain an image
+	// Postcondition	The whole image in theSurface will be placed
+	//					on the back buffer. (Subject to clipping.)
+	//					The centre of the image will be placed at the x,y coordinates specified
+	//	Returns			SUCCESS if blit successful. FAILURE otherwise.
+	// Parameters:		position - the screen location of the centre of the picture
+	//					pic - the PictureIndex of the image to be drawn
+	//					scale - the scale of the image. The image will be scaled from its "centre"
+	//						(by default the mathematical centre of the surface)
+	//					angle - the anticlockwise rotation of the image in radians
+	//						the image will be rotated around its centre (by
+	//						default the mathematical centre of the surface)
+	//					transparency - the transparency of the image. 0.0 is opaque. 1.0 is
+	//						fully transparent. Behaviour for transparency values greater
+	//						than 1.0 or less than 0.0 is undefined.
 	ErrorType DrawAt(Vector2D position, PictureIndex pic, float scale=1.0, float angle=0, float transparency=0);
 
 	// Precondition:	A window for the application has been created
@@ -345,62 +329,62 @@ public:
 	ErrorType GoFullScreen();
 
 
-		// Postcondition	A rectangle in the back buffer will be filled with the specified
-		//					colour. (If partially on-screen)
-		// Parameters:		destinationRect - a rectangle specifying the area to be filled.
-		//								the top of the rectangle must be a smaller number than
-		//								the bottom. 
-		//								the left side of the rectangle must be a smaller number than
-		//								the right side. 
-		//					colour - an integer representing the colour to be used
-		//					angle - an angle to tilt the rectangle, in radians clockwise
-		//							rotation occurs around the centre of the rectangle.
-		// Returns			SUCCESS if fill successful. FAILURE otherwise
+	// Postcondition	A rectangle in the back buffer will be filled with the specified
+	//					colour. (If partially on-screen)
+	// Parameters:		destinationRect - a rectangle specifying the area to be filled.
+	//								the top of the rectangle must be a smaller number than
+	//								the bottom. 
+	//								the left side of the rectangle must be a smaller number than
+	//								the right side. 
+	//					colour - an integer representing the colour to be used
+	//					angle - an angle to tilt the rectangle, in radians clockwise
+	//							rotation occurs around the centre of the rectangle.
+	// Returns			SUCCESS if fill successful. FAILURE otherwise
 	ErrorType FillRect( Rectangle2D destinationRect, unsigned int colour, float angle=0);
 
-		// Postcondition	A rectangle in the back buffer will be filled with the specified
-		//					colour. (If partially on-screen). The rectangle will be partially
-		//					transparent with regards to images already on the back buffer.
-		// Parameters:		destinationRect - a rectangle specifying the area to be filled.
-		//								the top of the rectangle must be a smaller number than
-		//								the bottom. 
-		//								the left side of the rectangle must be a smaller number than
-		//								the right side. 
-		//					colour - an integer representing the colour to be used
-		//					transparency - a number from 0 to 1.0 to indicate how transparent
-		//								the rectangle should be. 0 is opaque. 1 is fully transparent
-		//								(i.e. invisible)
-		//					angle - an angle to tilt the rectangle, in radians clockwise
-		//							rotation occurs around the centre of the rectangle.
-		// Returns			SUCCESS if fill successful. FAILURE otherwise
+	// Postcondition	A rectangle in the back buffer will be filled with the specified
+	//					colour. (If partially on-screen). The rectangle will be partially
+	//					transparent with regards to images already on the back buffer.
+	// Parameters:		destinationRect - a rectangle specifying the area to be filled.
+	//								the top of the rectangle must be a smaller number than
+	//								the bottom. 
+	//								the left side of the rectangle must be a smaller number than
+	//								the right side. 
+	//					colour - an integer representing the colour to be used
+	//					transparency - a number from 0 to 1.0 to indicate how transparent
+	//								the rectangle should be. 0 is opaque. 1 is fully transparent
+	//								(i.e. invisible)
+	//					angle - an angle to tilt the rectangle, in radians clockwise
+	//							rotation occurs around the centre of the rectangle.
+	// Returns			SUCCESS if fill successful. FAILURE otherwise
 	ErrorType BlendRect( Rectangle2D destinationRect, unsigned int colour, float transparency, float angle=0);
 
-		// Postcondition	A point of the specified colour has been
-		//					plotted at the location specified on on the back buffer.
-		// Returns			SUCCESS
+	// Postcondition	A point of the specified colour has been
+	//					plotted at the location specified on on the back buffer.
+	// Returns			SUCCESS
 	ErrorType DrawPoint(Vector2D point, unsigned int colour);
 
-		// Precondition		point and colour are arrays with size smaller or equal to numPoints
-		// Postcondition	numPoints points of the specified colour has been
-		//					plotted at x1,y1 on the back buffer.
-		// Returns			SUCCESS
+	// Precondition		point and colour are arrays with size smaller or equal to numPoints
+	// Postcondition	numPoints points of the specified colour has been
+	//					plotted at x1,y1 on the back buffer.
+	// Returns			SUCCESS
 	ErrorType DrawPointList(Vector2D point[], unsigned int colour[], unsigned int numPoints);
 
-		// Precondition		The back buffer is locked.
-		// Postcondition	A line between start and end
-		//					has been plotted on the back buffer.
-		// Returns			SUCCESS
+	// Precondition		The back buffer is locked.
+	// Postcondition	A line between start and end
+	//					has been plotted on the back buffer.
+	// Returns			SUCCESS
 	ErrorType DrawLine(Vector2D start, Vector2D end,  unsigned int colour);
 
 
-		// Postcondition	A circle centred on centre with the radius "radius" has been
-		//					filled on the screen with the specified colour
-		//					has been plotted on the back buffer.
-		// Returns			SUCCESS
+	// Postcondition	A circle centred on centre with the radius "radius" has been
+	//					filled on the screen with the specified colour
+	//					has been plotted on the back buffer.
+	// Returns			SUCCESS
 	ErrorType FillCircle(Vector2D centre, float radius, unsigned int colour);
 
-		// Postcondition	The back buffer is cleared (all black)
-		// Returns			SUCCESS if successful FAILURE otherwise.
+	// Postcondition	The back buffer is cleared (all black)
+	// Returns			SUCCESS if successful FAILURE otherwise.
 	ErrorType ClearBackBuffer();
 
 	//	Postcondition:
@@ -419,46 +403,46 @@ public:
 	void UseCamera(bool activate);
 
 
-		// This method writes text to the screen at the specified coordinates.
-		// Precondition:
-		//  text is a null-terminated string
-		// Postcondition:
-		//	Text is written to the screen at the specified coordinates, using the
-		//  requested font and colour.
-		//  OR FAILURE has been returned. (Usually means an invalid FontIndex)
-		// Parameters:
-		//  x,y Screen coordinates to write the text (these will be the position of the top
-		//		left position of the writing rectangle.
-		//  text - A null terminated string containing the text to be written.
-		//  colour - 32-bit colour for the colour of the text to be written (no transparency).
-		//  fontIndex - the index of the font to be used. 0 uses a default 24-point Arial font.
-		// Returns:
-		//	FAILURE if rendering failed or the fontIndex was invalid.
-		// SUCCESS otherwise
-		// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
-		//    but will not scale
+	// This method writes text to the screen at the specified coordinates.
+	// Precondition:
+	//  text is a null-terminated string
+	// Postcondition:
+	//	Text is written to the screen at the specified coordinates, using the
+	//  requested font and colour.
+	//  OR FAILURE has been returned. (Usually means an invalid FontIndex)
+	// Parameters:
+	//  x,y Screen coordinates to write the text (these will be the position of the top
+	//		left position of the writing rectangle.
+	//  text - A null terminated string containing the text to be written.
+	//  colour - 32-bit colour for the colour of the text to be written (no transparency).
+	//  fontIndex - the index of the font to be used. 0 uses a default 24-point Arial font.
+	// Returns:
+	//	FAILURE if rendering failed or the fontIndex was invalid.
+	// SUCCESS otherwise
+	// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
+	//    but will not scale
 	ErrorType WriteText(int x, int y, const wchar_t text[], int colour, FontIndex fontIndex =0);
 	ErrorType WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex =0);
 
 
-		// These methods writes a  number to the screen at the specified coordinates.
-		// Precondition:
-		//  text is a null-terminated string
-		// Postcondition:
-		//	Text is written to the screen at the specified coordinates, using the
-		//  requested font and colour.
-		//  OR FAILURE has been returned. (Usually means an invalid FontIndex)
-		// Parameters:
-		//  x,y Screen coordinates to write the text (these will be the position of the top
-		//		left position of the writing rectangle.
-		//  num - The number to the written
-		//  colour - 32-bit colour for the colour of the number to be written (no transparency).
-		//  fontIndex - the index of the font to be used. 0 uses a default 24-point Arial font.
-		// Returns:
-		//	FAILURE if rendering failed or the fontIndex was invalid.
-		// SUCCESS otherwise
-		// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
-		//     but will not scale
+	// These methods writes a  number to the screen at the specified coordinates.
+	// Precondition:
+	//  text is a null-terminated string
+	// Postcondition:
+	//	Text is written to the screen at the specified coordinates, using the
+	//  requested font and colour.
+	//  OR FAILURE has been returned. (Usually means an invalid FontIndex)
+	// Parameters:
+	//  x,y Screen coordinates to write the text (these will be the position of the top
+	//		left position of the writing rectangle.
+	//  num - The number to the written
+	//  colour - 32-bit colour for the colour of the number to be written (no transparency).
+	//  fontIndex - the index of the font to be used. 0 uses a default 24-point Arial font.
+	// Returns:
+	//	FAILURE if rendering failed or the fontIndex was invalid.
+	// SUCCESS otherwise
+	// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
+	//     but will not scale
 	ErrorType WriteInt(int x, int y, int num, int colour, FontIndex fontIndex=0 );
 	ErrorType WriteDouble(int x, int y, double num, int colour, FontIndex fontIndex=0 );
 	ErrorType WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex=0 );

@@ -149,10 +149,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsteroidsObjectFactory.cpp" />
+    <ClCompile Include="AsteroidsServiceManager.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="gamecode.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="gametimer.cpp" />
     <ClCompile Include="MovingGameObject.cpp" />
     <ClCompile Include="mydrawengine.cpp" />
@@ -160,6 +164,7 @@
     <ClCompile Include="mysoundengine.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="RandUtil.cpp" />
+    <ClCompile Include="ServiceManager.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="SpaceRock.cpp" />
     <ClCompile Include="Spaceship.cpp" />
@@ -167,11 +172,15 @@
     <ClCompile Include="wincode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsteroidsObjectFactory.h" />
+    <ClInclude Include="AsteroidsServiceManager.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
     <ClInclude Include="gamecode.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="gametimer.h" />
     <ClInclude Include="MovingGameObject.h" />
     <ClInclude Include="mydrawengine.h" />
@@ -180,6 +189,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="objecttypes.h" />
     <ClInclude Include="RandUtil.h" />
+    <ClInclude Include="ServiceManager.h" />
     <ClInclude Include="Shapes.h" />
     <ClInclude Include="SpaceRock.h" />
     <ClInclude Include="Spaceship.h" />
