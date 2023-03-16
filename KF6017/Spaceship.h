@@ -16,9 +16,8 @@ public:
 protected:	
 	const float rotationSpeed = 2.f; 
 	const float acceleration = 5.f;
-	const float friction = -0.5f;
+	// friction = -0.5; see constructor
 
-	//virtual void Move(double deltaTime) override;
 	virtual void HandleInputs(double deltaTime);
 
 	void Shoot();

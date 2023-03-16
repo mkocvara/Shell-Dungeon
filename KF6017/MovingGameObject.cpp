@@ -1,7 +1,9 @@
 #include "MovingGameObject.h"
+#include "ErrorLogger.h"
 
-MovingGameObject::MovingGameObject(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager)
+MovingGameObject::MovingGameObject(std::weak_ptr<ServiceManager> serviceManager, float friction) : Super(serviceManager)
 {
+	this->friction = friction;
 }
 
 
@@ -26,5 +28,12 @@ ErrorType MovingGameObject::Update(double deltaTime)
 
 void MovingGameObject::Move(double deltaTime)
 {
-	position += velocity;
+	if (friction < 0.f)
+		ErrorLogger::Writeln(L"Friction is not negative in: "); // TODO add type
+
+	// apply friction
+	Vector2D f = friction * velocity;
+	velocity += f * deltaTime;
+
+	position += velocity * deltaTime;
 }

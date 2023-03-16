@@ -10,7 +10,7 @@
 
 // PUBLIC
 
-Spaceship::Spaceship(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager)
+Spaceship::Spaceship(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager, -0.5)
 {
 }
 
@@ -65,12 +65,8 @@ void Spaceship::HandleInputs(double deltaTime)
 		// accelerate
 		Vector2D a;
 		a.setBearing(rotationAngle, acceleration);
-		velocity += a * deltaTime;
+		velocity += a;
 	}
-
-	// apply friction
-	Vector2D f = friction * velocity;
-	velocity += f * deltaTime;
 
 	// FIRING
 	if (pInputs->IfMouseNewLeftDown())
