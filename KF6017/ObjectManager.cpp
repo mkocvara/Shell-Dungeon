@@ -45,13 +45,13 @@ ErrorType ObjectManager::UpdateAll(double deltaTime)
 
 void ObjectManager::Clear()
 {
-	for (std::unique_ptr<GameObject>& gameObject : gameObjects) // Do I need to do this?
-	{
-		if (!gameObject)
-			continue;
+	//for (std::unique_ptr<GameObject>& gameObject : gameObjects) // Do I need to do this?
+	//{
+	//	if (!gameObject)
+	//		continue;
 
-		gameObject.reset();
-	}
+	//	gameObject.reset();
+	//}
 
 	gameObjects.clear();
 }
@@ -63,8 +63,6 @@ int ObjectManager::GetNumberOfObjects() const
 
 void ObjectManager::RemoveDeletedObjects()
 {
-	//std::list<std::unique_ptr<GameObject>>::iterator it;
-	//for (it = mGameObjects.begin(); it != mGameObjects.end(); ++it) 
 	for (std::unique_ptr<GameObject>& gameObject : gameObjects)
 	{
 		if (gameObject.get()->IsRemoved())
