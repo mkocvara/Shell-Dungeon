@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "ServiceManager.h"
 #include "ErrorLogger.h"
+#include "Explosion.h"
 
 
 // PUBLIC
@@ -47,6 +48,11 @@ std::weak_ptr<GameObject> AsteroidsObjectFactory::Create(ObjectType type, std::w
 		std::shared_ptr<Bullet> obj = std::make_shared<Bullet>(serviceManager);
 		asGameObject = std::static_pointer_cast<GameObject>(obj);
 		asCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
+	}
+	else if (type == ObjectType::explosion)
+	{
+		std::shared_ptr<Explosion> obj = std::make_shared<Explosion>(serviceManager);
+		asGameObject = std::static_pointer_cast<GameObject>(obj);
 	}
 
 	if (!asGameObject)

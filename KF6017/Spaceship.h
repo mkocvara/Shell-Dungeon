@@ -30,6 +30,8 @@ protected:
 
 	std::shared_ptr<AngledRectangle2D> boundingShape;
 
+	void Die();
+
 private:
 	const wchar_t* renderSpritePath = L"Assets/basic.bmp";
 };

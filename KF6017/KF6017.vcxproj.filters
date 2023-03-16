@@ -108,6 +108,9 @@
     <ClCompile Include="GameObjectFactory.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gamecode.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="ICollidableObject.h">
       <Filter>Header Files\Engine\Obects</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
+      <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

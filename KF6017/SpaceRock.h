@@ -25,7 +25,7 @@ protected:
 	std::shared_ptr<Circle2D> boundingShape;
 
 private:
-	std::vector<const wchar_t*> _renderSpritePaths = {
+	std::vector<const wchar_t*> renderSpritePaths = {
 		L"Assets/rock1.bmp",
 		L"Assets/rock2.bmp",
 		L"Assets/rock3.bmp",

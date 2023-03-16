@@ -79,7 +79,12 @@ void ObjectManager::CheckCollisions()
 			std::shared_ptr<GameObject> go1 = *it1;
 			std::shared_ptr<GameObject> go2 = *it2;
 
+			// Check that both objects exist and are active
 			if (!go1 || !go2 || !go1->IsActive() || !go2->IsActive())
+				continue;
+
+			// Check that both objects are collidable.
+			if (!collidableObjectsLookup[go1] || !collidableObjectsLookup[go2])
 				continue;
 
 			std::shared_ptr<ICollidableObject> co1 = collidableObjectsLookup[go1];

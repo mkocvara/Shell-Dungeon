@@ -17,7 +17,7 @@ SpaceRock::~SpaceRock()
 
 void SpaceRock::Initialise(Vector2D position, float angle, float scale)
 {
-	int randSprite = RandUtil::randRangeInt(0, _renderSpritePaths.size()-1);	
+	int randSprite = RandUtil::randRangeInt(0, renderSpritePaths.size()-1);	
 	float randAngle = RandUtil::randRangeDouble(0, 360);
 	float randScale = RandUtil::randRangeDouble(0.6f, 1.f);
 	Vector2D moveDir(RandUtil::randRangeDouble(0.f, 1.f), RandUtil::randRangeDouble(0.f, 1.f));
@@ -30,7 +30,7 @@ void SpaceRock::Initialise(Vector2D position, float angle, float scale)
 		RandUtil::randRangeDouble(0.f, pDrawEngine->GetScreenHeight())
 	));
 
-	SetRenderSprite(_renderSpritePaths[randSprite]);
+	SetRenderSprite(renderSpritePaths[randSprite]);
 
 	int spriteHeight, spriteWidth;
 	pDrawEngine->GetDimensions(renderSprite, spriteHeight, spriteWidth);

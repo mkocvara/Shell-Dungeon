@@ -4,7 +4,6 @@
 #include "Shapes.h"
 
 #include "ServiceManager.h"
-#include "ObjectManager.h"
 #include "GameObjectFactory.h"
 #include "mydrawengine.h"
 
@@ -60,7 +59,10 @@ std::weak_ptr<IShape2D> Spaceship::GetShape() const
 
 void Spaceship::HandleCollision(std::shared_ptr<GameObject> otherObject)
 {
-	// NOT IMPLEMENTED
+	if (otherObject->GetObjectType() == ObjectType::spacerock)
+	{
+		Die();
+	}
 }
 
 
@@ -100,13 +102,20 @@ void Spaceship::HandleInputs(double deltaTime)
 
 void Spaceship::Shoot()
 {
-	std::shared_ptr<ObjectManager> pObjectManager = serviceManager.lock()->GetObjectManager().lock();
-	if (!pObjectManager)
-		return;
-
 	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManager.lock()->GetObjectFactory().lock();
 	if (!pObjectFactory)
 		return;
 
 	pObjectFactory->Create(ObjectType::bullet, serviceManager, position, rotationAngle, 1.5f);
+}
+
+void Spaceship::Die()
+{
+	Remove();
+
+	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManager.lock()->GetObjectFactory().lock();
+	if (!pObjectFactory)
+		return;
+
+	pObjectFactory->Create(ObjectType::explosion, serviceManager, position, 0.f, 2.f);
 }
