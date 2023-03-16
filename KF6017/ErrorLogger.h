@@ -36,7 +36,7 @@ private:
 	~ErrorLogger();
 	std::wofstream file;				   // The file written to
 	const static wchar_t Filename[];	// The file name
-	const static int MAXLINES=100;	// Maximum number of lines that will be written
+	const static int MAXLINES=10000;	// Maximum number of lines that will be written
 										      // - to prevent a massive file.
 	static int LineCount;				// Current number of lines that have been written.
 										      // Programmer note- why is this a static?

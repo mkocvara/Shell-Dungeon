@@ -1,8 +1,12 @@
 #pragma once
 #include "MovingGameObject.h"
+#include "ICollidableObject.h"
 #include <vector>
+#include <memory>
 
-class SpaceRock : public MovingGameObject
+class Circle2D;
+
+class SpaceRock : public MovingGameObject, public ICollidableObject
 {
 public:
 	SpaceRock(std::weak_ptr<ServiceManager> serviceManager);
@@ -11,9 +15,14 @@ public:
 	typedef MovingGameObject Super;
 
 	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1) override;
+	virtual ErrorType Update(double deltaTime) override;
+
+	virtual std::weak_ptr<IShape2D> GetShape() const override;
+	virtual void HandleCollision(std::shared_ptr<GameObject> otherObject) override;
 
 protected:
 	//virtual void Move(double deltaTime) override;
+	std::shared_ptr<Circle2D> boundingShape;
 
 private:
 	std::vector<const wchar_t*> _renderSpritePaths = {

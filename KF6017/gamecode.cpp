@@ -276,27 +276,12 @@ ErrorType Game::StartOfGame()
 	if (!pObjectFactory)
 		return FAILURE;
 
-	std::unique_ptr<GameObject> obj = pObjectFactory->Create(ObjectType::spaceship, serviceManager);
-	obj->Initialise();
-	pObjectManager->AddObject(obj);
+	pObjectFactory->Create(ObjectType::spaceship, serviceManager);
 
-	std::unique_ptr<GameObject> rock1 = pObjectFactory->Create(ObjectType::spacerock, serviceManager);
-	rock1->Initialise();
-	pObjectManager->AddObject(rock1);
-
-	std::unique_ptr<GameObject> rock2 = pObjectFactory->Create(ObjectType::spacerock, serviceManager);
-	rock2->Initialise();
-	pObjectManager->AddObject(rock2);
-
-	std::unique_ptr<GameObject> rock3 = pObjectFactory->Create(ObjectType::spacerock, serviceManager);
-	rock3->Initialise();
-	pObjectManager->AddObject(rock3);
-
-	std::unique_ptr<GameObject> rock4 = pObjectFactory->Create(ObjectType::spacerock, serviceManager);
-	rock4->Initialise();
-	pObjectManager->AddObject(rock4);
-	
-	//pDrawEngine->RED
+	for (int i = 0; i < 1; i++)
+	{
+		pObjectFactory->Create(ObjectType::spacerock, serviceManager);
+	}
 
 	m_gameTimer.begin();
 

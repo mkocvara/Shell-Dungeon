@@ -176,6 +176,7 @@
     <ClInclude Include="AsteroidsServiceManager.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="ICollidableObject.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
     <ClInclude Include="gamecode.h" />

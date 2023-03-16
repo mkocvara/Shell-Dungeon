@@ -34,10 +34,10 @@ protected:
 
 	std::weak_ptr<ServiceManager> serviceManager;
 
+	int renderSprite = -1;
 	virtual ErrorType Render();
 
 private: 
 	GameObjectState state;
-	int renderSprite = -1;
 };
 

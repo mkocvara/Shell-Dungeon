@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObjectFactory.h"
 
-class AsteroidsObjectFactory : public GameObjectFactory
+class AsteroidsObjectFactory final : public GameObjectFactory
 {
 public:
 	AsteroidsObjectFactory();
@@ -9,6 +9,15 @@ public:
 
 	typedef GameObjectFactory Super;
 
-	virtual std::unique_ptr<GameObject> Create(ObjectType type, std::weak_ptr<ServiceManager> serviceManager) override;
+	/// <summary>
+	/// Creates an object of specified type and adds it to the object manager in the passed service manager.
+	/// </summary>
+	/// <param name="type">Type of object to create</param>
+	/// <param name="serviceManager">Service manager instance for the game</param>
+	/// <returns>A weak_ptr to the created object.</returns>
+	virtual std::weak_ptr<GameObject> Create(ObjectType type, std::weak_ptr<ServiceManager> serviceManager, Vector2D initPosition, float initAngle, float initScale) override;
+
+private:
+	void InitialiseGameObject(std::shared_ptr<GameObject>& obj, Vector2D initPosition, float initAngle, float initScale);
 };
 

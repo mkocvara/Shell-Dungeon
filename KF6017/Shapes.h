@@ -271,6 +271,9 @@ public:
 	// A negative radius is converted to positive
 	void PlaceAt(const Vector2D &centre, float radius);
 
+	// Places the Circle2D at the specified location while retaining radius
+	void PlaceAt(const Vector2D &centre);
+
 	// Returns the location of the centre of the circle
 	Vector2D GetCentre() const;
 

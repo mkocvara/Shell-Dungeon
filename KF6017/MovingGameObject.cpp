@@ -28,7 +28,7 @@ ErrorType MovingGameObject::Update(double deltaTime)
 
 void MovingGameObject::Move(double deltaTime)
 {
-	if (friction < 0.f)
+	if (friction > 0.f)
 		ErrorLogger::Writeln(L"Friction is not negative in: "); // TODO add type
 
 	// apply friction

@@ -644,11 +644,16 @@ Circle2D::Circle2D(const Vector2D &centre, float radius)
 
 void Circle2D::PlaceAt(const Vector2D &centre, float radius)
 {
-	this->mCentre=centre;
+	PlaceAt(centre);
 	if(radius>=0)
 		this->mdRadius=radius;
 	else
 		this->mdRadius=-radius;
+}
+
+void Circle2D::PlaceAt(const Vector2D& centre)
+{
+	this->mCentre = centre;
 }
 
 

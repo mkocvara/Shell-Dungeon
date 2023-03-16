@@ -96,9 +96,6 @@
     <ClCompile Include="mydrawengine.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectFactory.cpp">
-      <Filter>Source Files\Engine\Services</Filter>
-    </ClCompile>
     <ClCompile Include="AsteroidsObjectFactory.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
@@ -106,6 +103,9 @@
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
     <ClCompile Include="AsteroidsServiceManager.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectFactory.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
   </ItemGroup>
@@ -175,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="AsteroidsServiceManager.h">
       <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="ICollidableObject.h">
+      <Filter>Header Files\Engine\Obects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
