@@ -78,6 +78,11 @@ bool GameObject::IsRemoved() const
 	return state == GameObjectState::removed;
 }
 
+ObjectType GameObject::GetObjectType() const
+{
+	return objectType;
+}
+
 
 // PROTECTED
 ErrorType GameObject::Render() 

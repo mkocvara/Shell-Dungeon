@@ -2,6 +2,7 @@
 #include "vector2D.h"
 #include "errortype.h"
 #include <memory>
+#include "objecttypes.h"
 
 class ServiceManager;
 
@@ -25,6 +26,7 @@ public:
 	virtual void Remove();
 	bool IsActive() const;
 	bool IsRemoved() const;
+	virtual ObjectType GetObjectType() const;
 
 protected:
 	GameObject(std::weak_ptr<ServiceManager> serviceManager); // make it essentially abstract
@@ -36,6 +38,8 @@ protected:
 
 	int renderSprite = -1;
 	virtual ErrorType Render();
+
+	ObjectType objectType;
 
 private: 
 	GameObjectState state;

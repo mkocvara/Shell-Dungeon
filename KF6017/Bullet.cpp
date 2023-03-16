@@ -9,6 +9,7 @@
 
 Bullet::Bullet(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager)
 {
+	objectType = ObjectType::bullet;
 }
 
 Bullet::~Bullet()
@@ -51,8 +52,10 @@ std::weak_ptr<IShape2D> Bullet::GetShape() const
 
 void Bullet::HandleCollision(std::shared_ptr<GameObject> otherObject)
 {
-	// TODO NOT IMPLEMENTED
-	ErrorLogger::Writeln(L"Bullet collided!");
+	if (otherObject->GetObjectType() == ObjectType::spacerock)
+	{
+		Remove();
+	}
 }
 
 

@@ -278,7 +278,7 @@ ErrorType Game::StartOfGame()
 
 	pObjectFactory->Create(ObjectType::spaceship, serviceManager);
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		pObjectFactory->Create(ObjectType::spacerock, serviceManager);
 	}

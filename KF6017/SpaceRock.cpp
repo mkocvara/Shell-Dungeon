@@ -7,7 +7,8 @@
 // PUBLIC
 
 SpaceRock::SpaceRock(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager)
-{ 
+{
+	objectType = ObjectType::spacerock;
 }
 
 SpaceRock::~SpaceRock()
@@ -64,6 +65,8 @@ std::weak_ptr<IShape2D> SpaceRock::GetShape() const
 
 void SpaceRock::HandleCollision(std::shared_ptr<GameObject> otherObject)
 {
-	// TODO NOT IMPLEMENTED
-	ErrorLogger::Writeln(L"Asteroid collided!");
+	if (otherObject->GetObjectType() == ObjectType::bullet)
+	{
+		Remove();
+	}
 }

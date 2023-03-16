@@ -14,6 +14,7 @@
 Spaceship::Spaceship(std::weak_ptr<ServiceManager> serviceManager) :
 	Super(serviceManager, -0.5)
 {
+	objectType = ObjectType::spaceship;
 }
 
 Spaceship::~Spaceship()
@@ -59,8 +60,7 @@ std::weak_ptr<IShape2D> Spaceship::GetShape() const
 
 void Spaceship::HandleCollision(std::shared_ptr<GameObject> otherObject)
 {
-	// TODO: NOT IMPLEMENTED
-	ErrorLogger::Writeln(L"Spaceship collided!");
+	// NOT IMPLEMENTED
 }
 
 

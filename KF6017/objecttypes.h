@@ -8,6 +8,5 @@ enum class ObjectType
 	unknown, 
 	spaceship, 
 	spacerock,
-	bullet,
-	ping
+	bullet
 };
