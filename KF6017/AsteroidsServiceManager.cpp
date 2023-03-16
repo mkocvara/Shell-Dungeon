@@ -2,6 +2,14 @@
 #include "ErrorLogger.h"
 #include "AsteroidsObjectFactory.h"
 
+AsteroidsServiceManager::AsteroidsServiceManager() : Super()
+{
+}
+
+AsteroidsServiceManager::~AsteroidsServiceManager()
+{
+}
+
 ErrorType AsteroidsServiceManager::StartServices(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 {
 	if (FAILED(Super::StartServices(bFullScreen, hwnd, hinstance)))
