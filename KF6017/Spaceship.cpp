@@ -108,5 +108,5 @@ void Spaceship::Shoot()
 	if (!pObjectFactory)
 		return;
 
-	pObjectFactory->Create(ObjectType::bullet, serviceManager, position, rotationAngle, 1.f);
+	pObjectFactory->Create(ObjectType::bullet, serviceManager, position, rotationAngle, 1.5f);
 }
