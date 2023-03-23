@@ -4,8 +4,9 @@
 
 #include "mydrawengine.h"
 #include "ObjectManager.h"
-#include "GameObjectFactory.h"
-#include "MySoundEngine.h"
+//#include "GameObjectFactory.h"
+#include "SFXManager.h"
+//#include "MySoundEngine.h"
 #include "MyInputs.h"
 
 
@@ -29,12 +30,12 @@ ErrorType ServiceManager::StartServices(bool bFullScreen, HWND hwnd, HINSTANCE h
 		return FAILURE;
 	}
 
-	soundEngine = std::make_shared<MySoundEngine>(hwnd);
+	/*soundEngine = std::make_shared<MySoundEngine>(hwnd);
 	if (!soundEngine)
 	{
 		ErrorLogger::Writeln(L"Failed to start MySoundEngine");
 		return FAILURE;
-	}
+	}*/
 
 	inputs = std::make_shared<MyInputs>(hinstance, hwnd);
 	if (!inputs)
@@ -51,6 +52,7 @@ ErrorType ServiceManager::StartServices(bool bFullScreen, HWND hwnd, HINSTANCE h
 	}
 
 	// Child must create an instance of a GameObjectFactory subclass.
+	// Child must create an instance of a SFXManager subclass.
 
 	return SUCCESS;
 }
@@ -70,9 +72,14 @@ std::weak_ptr<MyDrawEngine> ServiceManager::GetDrawEngine()
 	return drawEngine;
 }
 
-std::weak_ptr<MySoundEngine> ServiceManager::GetSoundEngine()
+//std::weak_ptr<MySoundEngine> ServiceManager::GetSoundEngine()
+//{
+//	return soundEngine;
+//}
+
+std::weak_ptr<SFXManager> ServiceManager::GetSFXManager()
 {
-	return soundEngine;
+	return sfxManager;
 }
 
 std::weak_ptr<MyInputs> ServiceManager::GetInputs()

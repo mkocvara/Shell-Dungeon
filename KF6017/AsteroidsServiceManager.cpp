@@ -1,6 +1,7 @@
 #include "AsteroidsServiceManager.h"
 #include "ErrorLogger.h"
 #include "AsteroidsObjectFactory.h"
+#include "AsteroidsSFXManager.h"
 
 AsteroidsServiceManager::AsteroidsServiceManager() : Super()
 {
@@ -19,6 +20,13 @@ ErrorType AsteroidsServiceManager::StartServices(bool bFullScreen, HWND hwnd, HI
 	if (!objectFactory)
 	{
 		ErrorLogger::Writeln(L"Failed to create AsteroidsObjectFactory");
+		return FAILURE;
+	}
+
+	sfxManager = std::make_shared<AsteroidsSFXManager>(hwnd);
+	if (!sfxManager)
+	{
+		ErrorLogger::Writeln(L"Failed to create AsteroidsSFXManager");
 		return FAILURE;
 	}
 

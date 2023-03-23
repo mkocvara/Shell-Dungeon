@@ -1,7 +1,7 @@
 #pragma once
 #include "ServiceManager.h"
 
-class AsteroidsServiceManager : public ServiceManager
+class AsteroidsServiceManager final : public ServiceManager
 {
 public:
 	AsteroidsServiceManager();

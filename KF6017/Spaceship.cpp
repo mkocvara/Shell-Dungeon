@@ -6,6 +6,7 @@
 #include "ServiceManager.h"
 #include "GameObjectFactory.h"
 #include "mydrawengine.h"
+#include "AsteroidsSFXManager.h"
 
 
 // PUBLIC
@@ -104,9 +105,36 @@ void Spaceship::Shoot()
 {
 	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManager.lock()->GetObjectFactory().lock();
 	if (!pObjectFactory)
+	{
+		ErrorLogger::Writeln(L"Spaceship failed to retreive object factory.");
 		return;
+	}
 
 	pObjectFactory->Create(ObjectType::bullet, serviceManager, position, rotationAngle, 1.5f);
+
+	std::shared_ptr<SFXManager> pSFXManager = serviceManager.lock()->GetSFXManager().lock();
+	if (!pSFXManager)
+	{
+		ErrorLogger::Writeln(L"Spaceship failed to retreive SFX manager.");
+		return;
+	}
+
+	bool castSuccess = false;
+	if (typeid(*pSFXManager) == typeid(AsteroidsSFXManager))
+	{
+		std::shared_ptr<AsteroidsSFXManager> sfx = std::static_pointer_cast<AsteroidsSFXManager>(pSFXManager);
+		if (sfx)
+		{
+			sfx->PlayShot();
+			castSuccess = true;
+		}
+	}
+	
+	if (!castSuccess)
+	{
+		ErrorLogger::Writeln(L"Spaceship failed to cast SFX manager to game specific manager.");
+		return;
+	}
 }
 
 void Spaceship::Die()

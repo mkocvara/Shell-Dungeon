@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="AsteroidsObjectFactory.cpp" />
     <ClCompile Include="AsteroidsServiceManager.cpp" />
+    <ClCompile Include="AsteroidsSFXManager.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="RandUtil.cpp" />
     <ClCompile Include="ServiceManager.cpp" />
+    <ClCompile Include="SFXManager.cpp" />
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="SpaceRock.cpp" />
     <ClCompile Include="Spaceship.cpp" />
@@ -179,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="AsteroidsObjectFactory.h" />
     <ClInclude Include="AsteroidsServiceManager.h" />
+    <ClInclude Include="AsteroidsSFXManager.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="Explosion.h" />
@@ -197,6 +200,7 @@
     <ClInclude Include="objecttypes.h" />
     <ClInclude Include="RandUtil.h" />
     <ClInclude Include="ServiceManager.h" />
+    <ClInclude Include="SFXManager.h" />
     <ClInclude Include="Shapes.h" />
     <ClInclude Include="SpaceRock.h" />
     <ClInclude Include="Spaceship.h" />
