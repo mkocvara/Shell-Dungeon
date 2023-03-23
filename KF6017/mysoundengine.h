@@ -25,8 +25,6 @@ typedef unsigned int MusicIndex;
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "winmm.lib")
 
-// TODO REMOVE // const int NUMBUFFERCOPIES = 4;		// The number of copies of each sound buffer. Effectively the number of times the same sound can be played simultaneously
-
 // Class to load an play .wav files
 class MySoundEngine
 {
@@ -36,9 +34,6 @@ class MySoundEngine
 		// This is a long pointer to the DSound buffer. DirectX
 		// functions can be called on it, once it it initialised.
 		std::vector<LPDIRECTSOUNDBUFFER> lpSoundBuffers;
-		//LPDIRECTSOUNDBUFFER lpSoundBuffers[NUMBUFFERCOPIES];
-		//LPDIRECTSOUNDBUFFER lpSoundBuffer;
-		//unsigned int m_nextBuffer = 0;
 		bool m_isLoaded = false;
 		std::wstring m_sourceFileName;
 

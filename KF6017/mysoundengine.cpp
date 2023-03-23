@@ -553,22 +553,5 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 	lpSoundBuffers.push_back(std::move(tempLpSoundBuffer));
 	m_isLoaded = true;
 
-	// copy the buffer into duplicates to allow simultaneous play // TODO REMOVE //
-	/*for (int i = 1; i < NUMBUFFERCOPIES; i++)
-	{
-		HRESULT err = lpds->DuplicateSoundBuffer(lpSoundBuffer, &(lpSoundBuffers[i]));
-		if (err == S_OK)
-		{
-			m_hasDuplicates = true;
-		}
-		else
-		{
-			m_hasDuplicates = false;
-			ErrorLogger::Write(L"Couldn't create buffer duplicates: ");
-			ErrorLogger::Writeln(filename);
-		}
-	}*/
-
 	return SUCCESS;
 }
-
