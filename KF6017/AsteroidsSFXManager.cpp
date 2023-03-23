@@ -12,7 +12,7 @@ AsteroidsSFXManager::~AsteroidsSFXManager()
 
 void AsteroidsSFXManager::PlayShot()
 {
-	soundEngine->Play(shotSound, true);
+	soundEngine->Play(shotSound);
 }
 
 void AsteroidsSFXManager::LoadAllSounds()

@@ -17,27 +17,15 @@ ObjectManager::~ObjectManager()
 	gameObjects.clear();
 }
 
-//void ObjectManager::AddObject(GameObject* newObject)
-//{
-//	std::unique_ptr<GameObject> pObj(std::move(newObject));
-//	AddObject(pObj);
-//}
-
 void ObjectManager::AddObject(std::shared_ptr<GameObject>& newObject)
 {
 	gameObjects.push_back(newObject);
 }
 
-//void ObjectManager::AddCollidableObject(ICollidableObject* newObject)
-//{
-//	std::unique_ptr<ICollidableObject> pObj(std::move(newObject));
-//	AddCollidableObject(pObj);
-//}
-
 void ObjectManager::AddCollidableObject(std::shared_ptr<GameObject>& asGameObject, std::shared_ptr<ICollidableObject>& asCollidableObject)
 {
 	AddObject(asGameObject);
-	collidableObjectsLookup.emplace(asGameObject, asCollidableObject); //.push_back(newObject);
+	collidableObjectsLookup.emplace(asGameObject, asCollidableObject); 
 }
 
 ErrorType ObjectManager::UpdateAll(double deltaTime)
@@ -52,7 +40,7 @@ ErrorType ObjectManager::UpdateAll(double deltaTime)
 	}
 
 	CheckCollisions();
-	RemoveDeletedObjects(); // Perhaps run this only every so often instead?
+	RemoveDeletedObjects(); // TODO Perhaps run this only every so often instead?
 
 	return SUCCESS;
 }
