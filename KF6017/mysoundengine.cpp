@@ -71,7 +71,6 @@ MySoundEngine::MySound& MySoundEngine::FindSound(SoundIndex sound)
 }
 
 SoundIndex MySoundEngine::LoadWav(const wchar_t* filename)
-// CAUTION - Multiple early returns
 {
 	// Check if already loaded
 	auto it = m_FilenameList.find(filename);
@@ -80,11 +79,10 @@ SoundIndex MySoundEngine::LoadWav(const wchar_t* filename)
 		return it->second;
 	}
 
-
 	if(!lpds)
 	{
 		ErrorLogger::Writeln(L"Cannot load a sound wave - No pointer to DirectSound.");
-		return -1;			// Early return  **
+		return -1;
 	}
 
 	MySound temp;
@@ -135,7 +133,7 @@ ErrorType MySoundEngine::UnloadAllSounds()
 ErrorType MySoundEngine::SetVolume(SoundIndex sound, int volume)
 {
 	MySound& sb = FindSound(sound);
-	if(!sb.lpSoundBuffer)
+	if(!sb.m_isLoaded)
 	{
 		ErrorLogger::Writeln(L"Sound not found in SetVolume.");
 		return FAILURE;
@@ -153,7 +151,7 @@ ErrorType MySoundEngine::SetFrequency(SoundIndex sound, int frequency)
 {
 	MySound& sb = FindSound(sound);
 
-	if(!sb.lpSoundBuffer)
+	if(!sb.m_isLoaded)
 	{
 		ErrorLogger::Writeln(L"Sound not found in SetFrequency.");
 		return FAILURE;
@@ -171,12 +169,12 @@ ErrorType MySoundEngine::SetFrequency(SoundIndex sound, int frequency)
 ErrorType MySoundEngine::SetPan(SoundIndex sound, int pan)
 {
 	MySound& sb = FindSound(sound);
-	if (!sb.lpSoundBuffer)
+	if (!sb.m_isLoaded)
 	{
-		ErrorLogger::Writeln(L"Can't pan sound - Sound buffer not created.");
+		ErrorLogger::Writeln(L"Sound not found in SetPan.");
 		return FAILURE;
 	}
-	if (sb.lpSoundBuffer->SetPan(pan) == FAILURE)
+	if (sb.SetPan(pan) == FAILURE)
 	{
 		ErrorLogger::Write(L"Failed to set pan for a sound: ");
 		ErrorLogger::Writeln(sb.m_sourceFileName.c_str());
@@ -193,13 +191,13 @@ ErrorType MySoundEngine::Play(SoundIndex sound, bool looping)
 
 	MySound& sb = FindSound(sound);
 
-	if(!sb.lpSoundBuffer)
+	if(!sb.m_isLoaded)
 	{
 		ErrorLogger::Writeln(L"Can't play sound - Sound buffer not created.");
 	}
 	else
 	{
-		ErrorType result = sb.Play(looping);
+		ErrorType result = sb.Play(looping, lpds);
 
 		return result;
 	}	// if lpSoundBuffer not NULL
@@ -209,7 +207,7 @@ ErrorType MySoundEngine::Play(SoundIndex sound, bool looping)
 ErrorType MySoundEngine::Stop(SoundIndex sound)
 {
 	MySound& sb = FindSound(sound);
-	if(!sb.lpSoundBuffer)
+	if(!sb.m_isLoaded)
 	{
 		ErrorLogger::Writeln(L"Sound buffer not created.");
 		return FAILURE;
@@ -235,7 +233,7 @@ void MySoundEngine::StopAllSounds()
 
 MySoundEngine::MySound::MySound()
 {
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBufferDuplicates)
+	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
 	{
 		pNext = nullptr;
 	}
@@ -243,7 +241,7 @@ MySoundEngine::MySound::MySound()
 
 void MySoundEngine::MySound::Release()
 {
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBufferDuplicates)
+	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
 	{
 		if (pNext)
 		{
@@ -256,20 +254,49 @@ void MySoundEngine::MySound::Release()
 
 MySoundEngine::MySound::~MySound()
 {
-
+	
 }
 
-LPDIRECTSOUNDBUFFER MySoundEngine::MySound::GetBuffer()
+LPDIRECTSOUNDBUFFER MySoundEngine::MySound::GetBuffer(IDirectSound8* lpds)
 {
-	if (m_nextBuffer >= NUMBUFFERCOPIES || !m_hasDuplicates)
-		m_nextBuffer = 0;
-	return lpSoundBufferDuplicates[m_nextBuffer++];
+	if (lpSoundBuffers.empty())
+	{
+		ErrorLogger::Writeln(L"Failed to GetBuffer, no buffers loaded.");
+		return nullptr;
+	}
+
+	// find a buffer that isn't currently playing
+	for (LPDIRECTSOUNDBUFFER buffer : lpSoundBuffers)
+	{
+		DWORD dwStatus;
+		buffer->GetStatus(&dwStatus);
+		bool isPlaying = (dwStatus & DSBSTATUS_PLAYING);
+		if (!isPlaying)
+		{
+			return buffer;
+		}
+	}
+	
+	// if all are playing, make a duplicate and return it
+	LPDIRECTSOUNDBUFFER tempBuffer;
+	HRESULT err = lpds->DuplicateSoundBuffer(lpSoundBuffers[0], &tempBuffer);
+	if (err == S_OK)
+	{
+		lpSoundBuffers.push_back(std::move(tempBuffer));
+	}
+	else
+	{
+		ErrorLogger::Write(L"Couldn't create buffer duplicates: ");
+		ErrorLogger::Writeln(m_sourceFileName.c_str());
+	}
+
+	return lpSoundBuffers[lpSoundBuffers.size()-1];
 }
 
 ErrorType MySoundEngine::MySound::Stop()
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBufferDuplicates)
+	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
 	{
 		if (FAILED(pNext->Stop()))
 			result = FAILURE;
@@ -280,7 +307,7 @@ ErrorType MySoundEngine::MySound::Stop()
 ErrorType MySoundEngine::MySound::SetVolume(int vol)
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBufferDuplicates)
+	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
 	{
 		if (FAILED(pNext->SetVolume(vol)))
 			result = FAILURE;
@@ -288,14 +315,14 @@ ErrorType MySoundEngine::MySound::SetVolume(int vol)
 	return result;
 }
 
-ErrorType MySoundEngine::MySound::Play(bool looping)
+ErrorType MySoundEngine::MySound::Play(bool looping, IDirectSound8* lpds)
 {
 	DWORD flag = 0;
 	if (looping)
 	{
 		flag = DSBPLAY_LOOPING;
 	}
-	HRESULT err = GetBuffer()->Play(0, 0, flag);
+	HRESULT err = GetBuffer(lpds)->Play(0, 0, flag);
 	if (FAILED(err))
 	{
 		ErrorLogger::Write(L"Failed to play a sound: ");
@@ -309,7 +336,7 @@ ErrorType MySoundEngine::MySound::Play(bool looping)
 ErrorType MySoundEngine::MySound::SetPan(int pan)
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBufferDuplicates)
+	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
 	{
 		HRESULT err = pNext->SetPan(pan);
 		if (FAILED(err)) result = FAILURE;
@@ -327,7 +354,7 @@ ErrorType MySoundEngine::MySound::SetPan(int pan)
 ErrorType MySoundEngine::MySound::SetFrequency(int frequency)
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBufferDuplicates)
+	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
 	{
 		HRESULT err = pNext->SetFrequency(frequency);
 		if (FAILED(err)) result = FAILURE;
@@ -349,15 +376,15 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 
 	DSBUFFERDESC dsbd;			// "Order form" for the sound
 	WAVEFORMATEX formatdesc;	// Description of the format	
-	HMMIO hWaveFile;		// Handle to the wave file
-	MMCKINFO parent;		// A parent chunk (wav file data chunks)
-	MMCKINFO child;			// A child chunk (wav file data chunks)
+	HMMIO hWaveFile;			// Handle to the wave file
+	MMCKINFO parent;			// A parent chunk (wav file data chunks)
+	MMCKINFO child;				// A child chunk (wav file data chunks)
 
-	UCHAR* tempBuffer;		// Pointer to a buffer to temporarily store sound
-	UCHAR* tempPtr1;		// Pointer to first part of sound buffer
-	UCHAR* tempPtr2;		// Pointer to second part of sound buffer
-	DWORD length1;			// Length of first part of sound buffer
-	DWORD length2;			// Length of second part of sound buffer
+	UCHAR* tempBuffer;			// Pointer to a buffer to temporarily store sound
+	UCHAR* tempPtr1;			// Pointer to first part of sound buffer
+	UCHAR* tempPtr2;			// Pointer to second part of sound buffer
+	DWORD length1;				// Length of first part of sound buffer
+	DWORD length2;				// Length of second part of sound buffer
 
 	// ***************************************************************
 	// Most of what follows is some fairly complicated bits that
@@ -380,11 +407,12 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 
 	hWaveFile = mmioOpen(buffer, NULL, MMIO_READ | MMIO_ALLOCBUF);
 
-	if (!hWaveFile)			// If file could not open
+	// If file could not open
+	if (!hWaveFile)			
 	{
 		ErrorLogger::Write(L"Failed to open sound file ");
 		ErrorLogger::Writeln(filename);
-		return FAILURE;			// Early return  **
+		return FAILURE;	
 	}
 
 	// Find the wave section
@@ -397,8 +425,8 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Write(L"Couldn't find wave section in wave file ");
 		ErrorLogger::Writeln(filename);
 
-		mmioClose(hWaveFile, 0);			// Error - close the wave file
-		return FAILURE;			// Early return  **
+		mmioClose(hWaveFile, 0); // Error - close the wave file
+		return FAILURE;			
 	}
 
 	// Find the format section
@@ -408,8 +436,8 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Write(L"Couldn't find format section in wave file ");
 		ErrorLogger::Writeln(filename);
 
-		mmioClose(hWaveFile, 0);			// Error - close the wave file
-		return FAILURE;			// Early return  **
+		mmioClose(hWaveFile, 0); // Error - close the wave file
+		return FAILURE;		
 	}
 
 	// Read out the format data
@@ -419,7 +447,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Writeln(filename);
 
 		mmioClose(hWaveFile, 0);
-		return FAILURE;			// Early return  **
+		return FAILURE;		
 	}
 
 	// Check this is a pcm format (a standard wav format)
@@ -429,7 +457,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Writeln(filename);
 
 		mmioClose(hWaveFile, 0);
-		return FAILURE;			// Early return  **
+		return FAILURE;		
 	}
 
 	// Pop upstairs so we can then get down to data chunk
@@ -439,7 +467,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Writeln(filename);
 
 		mmioClose(hWaveFile, 0);
-		return FAILURE;			// Early return  **
+		return FAILURE;		
 	}
 
 	// Now drop into data chunk
@@ -450,8 +478,8 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Write(L"Couldn't find data section in wave file ");
 		ErrorLogger::Writeln(filename);
 
-		mmioClose(hWaveFile, 0);			// Error - close the wave file
-		return FAILURE;			// Early return  **
+		mmioClose(hWaveFile, 0); // Error - close the wave file
+		return FAILURE;			
 	}
 
 
@@ -467,15 +495,16 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 	dsbd.dwBufferBytes = child.cksize;				// Set bytes needed to store
 	dsbd.lpwfxFormat = &formatdesc;					// The format descriptor (got earlier from the file)
 
-	HRESULT err = lpds->CreateSoundBuffer(&dsbd, &(lpSoundBuffer), NULL);
+	LPDIRECTSOUNDBUFFER tempLpSoundBuffer;
+	HRESULT err = lpds->CreateSoundBuffer(&dsbd, &tempLpSoundBuffer, NULL);
 	if (FAILED(err))
 	{
 		Release();
 		ErrorLogger::Writeln(L"Could not create a sound buffer");
 		ErrorLogger::Writeln(MySoundEngine::ErrorString(err));
-		return FAILURE;			// Early return  **
+		return FAILURE;
 	}
-
+	
 	// ************************************************************
 	// The file is open, the buffer is created. Now to read all the data in.
 
@@ -488,7 +517,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 
 	// Locking the Dsound buffer
 
-	err = lpSoundBuffer->Lock(0, child.cksize, (void**)&tempPtr1,
+	err = tempLpSoundBuffer->Lock(0, child.cksize, (void**)&tempPtr1,
 		&length1, (void**)&tempPtr2,
 		&length2, DSBLOCK_FROMWRITECURSOR);
 	if (FAILED(err))
@@ -496,9 +525,9 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Writeln(L"Couldn't lock the sound buffer.");
 		ErrorLogger::Writeln(MySoundEngine::ErrorString(err));
 		free(tempBuffer);
-		lpSoundBuffer->Release();
-		lpSoundBuffer = nullptr;
-		return FAILURE;			// Early return  **
+		tempLpSoundBuffer->Release();
+		tempLpSoundBuffer = nullptr;
+		return FAILURE;
 	}
 
 	// Copy the two bits of the buffer
@@ -506,7 +535,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 	memcpy(tempPtr2, tempBuffer + length1, length2);
 
 	// Unlock the Dsound buffer
-	err = lpSoundBuffer->Unlock(tempPtr1,
+	err = tempLpSoundBuffer->Unlock(tempPtr1,
 		length1, tempPtr2,
 		length2);
 	if (FAILED(err))
@@ -514,17 +543,20 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 		ErrorLogger::Writeln(L"Couldn't unlock the sound buffer.");
 		ErrorLogger::Writeln(MySoundEngine::ErrorString(err));
 		free(tempBuffer);
-		lpSoundBuffer->Release();
-		lpSoundBuffer = nullptr;
-		return FAILURE;			// Early return  **
+		tempLpSoundBuffer->Release();
+		tempLpSoundBuffer = nullptr;
+		return FAILURE;	
 	}
 
 	free(tempBuffer);
 
-	// copy the buffer into duplicates to allow simultaneous play
-	for (int i = 1; i < NUMBUFFERCOPIES; i++)
+	lpSoundBuffers.push_back(std::move(tempLpSoundBuffer));
+	m_isLoaded = true;
+
+	// copy the buffer into duplicates to allow simultaneous play // TODO REMOVE //
+	/*for (int i = 1; i < NUMBUFFERCOPIES; i++)
 	{
-		HRESULT err = lpds->DuplicateSoundBuffer(lpSoundBuffer, &(lpSoundBufferDuplicates[i]));
+		HRESULT err = lpds->DuplicateSoundBuffer(lpSoundBuffer, &(lpSoundBuffers[i]));
 		if (err == S_OK)
 		{
 			m_hasDuplicates = true;
@@ -535,7 +567,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 			ErrorLogger::Write(L"Couldn't create buffer duplicates: ");
 			ErrorLogger::Writeln(filename);
 		}
-	}
+	}*/
 
 	return SUCCESS;
 }

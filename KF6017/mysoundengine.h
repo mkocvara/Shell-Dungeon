@@ -17,6 +17,7 @@
 #include "errortype.h"
 #include <map>
 #include <memory>
+#include <vector>
 
 typedef unsigned int SoundIndex;
 typedef unsigned int MusicIndex;
@@ -24,7 +25,7 @@ typedef unsigned int MusicIndex;
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "winmm.lib")
 
-const int NUMBUFFERCOPIES = 4;		// The number of copies of each sound buffer. Effectively the number of times the same sound can be played simultaneously
+// TODO REMOVE // const int NUMBUFFERCOPIES = 4;		// The number of copies of each sound buffer. Effectively the number of times the same sound can be played simultaneously
 
 // Class to load an play .wav files
 class MySoundEngine
@@ -34,27 +35,28 @@ class MySoundEngine
 	public:
 		// This is a long pointer to the DSound buffer. DirectX
 		// functions can be called on it, once it it initialised.
-		LPDIRECTSOUNDBUFFER lpSoundBufferDuplicates[NUMBUFFERCOPIES];
-		LPDIRECTSOUNDBUFFER& lpSoundBuffer = lpSoundBufferDuplicates[0];
-		int m_nextBuffer = 0;
-		bool m_hasDuplicates = false;
+		std::vector<LPDIRECTSOUNDBUFFER> lpSoundBuffers;
+		//LPDIRECTSOUNDBUFFER lpSoundBuffers[NUMBUFFERCOPIES];
+		//LPDIRECTSOUNDBUFFER lpSoundBuffer;
+		//unsigned int m_nextBuffer = 0;
+		bool m_isLoaded = false;
 		std::wstring m_sourceFileName;
 
 		MySound();
 
 		void Release();
 		~MySound();
-		LPDIRECTSOUNDBUFFER GetBuffer();
+		LPDIRECTSOUNDBUFFER GetBuffer(IDirectSound8* lpds);
 		ErrorType Stop();
 		ErrorType SetVolume(int vol);
-		ErrorType Play(bool looping);
+		ErrorType Play(bool looping, IDirectSound8* lpds);
 		ErrorType SetPan(int pan);
 		ErrorType LoadWav(const wchar_t* filename, IDirectSound8* lpds);
 		ErrorType SetFrequency(int frequency);
 
 
 	};
-	std::map<SoundIndex, MySound> m_MySoundList;	// Map of MyPicture objects
+	std::map<SoundIndex, MySound> m_MySoundList;	// Map of MySound objects
 	std::map<std::wstring, SoundIndex> m_FilenameList;		// Map of filenames
 	SoundIndex m_NextSoundIndex;
 
@@ -75,13 +77,12 @@ private:
 	MySound emptySound;
 
 public:
-	// Simply creates a MySoundEngine
 	// hwnd is the handle of the main window
 	// Precondition:
 	//	DirectSound is installed on the computer
 	MySoundEngine(HWND hwnd);
 
-	// The destructor for the MyInstrument. Calls Release().
+	// Calls Release().
 	~MySoundEngine();
 
 	// Returns a string describing the directDraw error for most HRESULTs sent to it
@@ -108,7 +109,7 @@ public:
 	// Sets the volume of the specified sound. 
 	// 0 is full volume -10000 is silent
 	// Returns SUCCESS if the sound was found. FAILURE otherwise
-	// Parameters: sound - the PictureIndex of the sound to set
+	// Parameters: sound - the SoundIndex of the sound to set
 	// Notes: settings above -3000 work best
 	ErrorType SetVolume(SoundIndex sound, int volume);
 
