@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Game Objects">
-      <UniqueIdentifier>{3651ec91-8ee7-48d2-89ae-d04c0ed46d14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Game Objects">
-      <UniqueIdentifier>{dd457bb6-ff0e-48f8-9f75-7392f3ab0505}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{de0e9b37-86eb-472f-8c07-20c7e6800f43}</UniqueIdentifier>
     </Filter>
@@ -43,16 +37,31 @@
     <Filter Include="Header Files\Engine\Services">
       <UniqueIdentifier>{7f36b24a-30b9-43de-bec6-7cc177f5a327}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{fe9f9637-bfae-4253-8a84-704a7016ea2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Services">
+      <UniqueIdentifier>{8f813f32-758d-4325-9105-72b7618d3c5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Game Objects">
+      <UniqueIdentifier>{dd457bb6-ff0e-48f8-9f75-7392f3ab0505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{f40d3d3c-d807-4e50-af71-bfef4c17397e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Services">
+      <UniqueIdentifier>{99046660-9993-4ea1-8ed0-494ba2b01f14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Game Objects">
+      <UniqueIdentifier>{3651ec91-8ee7-48d2-89ae-d04c0ed46d14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gamecode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Spaceship.cpp">
-      <Filter>Source Files\Game Objects</Filter>
+      <Filter>Source Files\Game\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="SpaceRock.cpp">
-      <Filter>Source Files\Game Objects</Filter>
+      <Filter>Source Files\Game\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="RandUtil.cpp">
       <Filter>Source Files\Utils</Filter>
@@ -79,7 +88,7 @@
       <Filter>Source Files\Engine\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files\Game Objects</Filter>
+      <Filter>Source Files\Game\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="ErrorLogger.cpp">
       <Filter>Source Files\Utils</Filter>
@@ -96,31 +105,34 @@
     <ClCompile Include="mydrawengine.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
-    <ClCompile Include="AsteroidsObjectFactory.cpp">
-      <Filter>Source Files\Engine\Services</Filter>
-    </ClCompile>
     <ClCompile Include="ServiceManager.cpp">
-      <Filter>Source Files\Engine\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="AsteroidsServiceManager.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectFactory.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
     <ClCompile Include="Explosion.cpp">
-      <Filter>Source Files\Game Objects</Filter>
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="AsteroidsServiceManager.cpp">
+      <Filter>Source Files\Game\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="AsteroidsObjectFactory.cpp">
+      <Filter>Source Files\Game\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="SFXManager.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="gamecode.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gamecode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Spaceship.h">
-      <Filter>Header Files\Game Objects</Filter>
+      <Filter>Header Files\Game\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="SpaceRock.h">
-      <Filter>Header Files\Game Objects</Filter>
+      <Filter>Header Files\Game\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="RandUtil.h">
       <Filter>Header Files\Utils</Filter>
@@ -147,7 +159,7 @@
       <Filter>Header Files\Engine\Obects</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>Header Files\Game Objects</Filter>
+      <Filter>Header Files\Game\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="ErrorLogger.h">
       <Filter>Header Files\Utils</Filter>
@@ -170,20 +182,26 @@
     <ClInclude Include="ObjectManager.h">
       <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
-    <ClInclude Include="AsteroidsObjectFactory.h">
-      <Filter>Header Files\Engine\Services</Filter>
-    </ClInclude>
     <ClInclude Include="ServiceManager.h">
-      <Filter>Header Files\Engine\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="AsteroidsServiceManager.h">
       <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
     <ClInclude Include="ICollidableObject.h">
       <Filter>Header Files\Engine\Obects</Filter>
     </ClInclude>
     <ClInclude Include="Explosion.h">
-      <Filter>Header Files\Game Objects</Filter>
+      <Filter>Header Files\Game\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="SFXManager.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="AsteroidsServiceManager.h">
+      <Filter>Header Files\Game\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="AsteroidsObjectFactory.h">
+      <Filter>Header Files\Game\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="gamecode.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
