@@ -19,12 +19,11 @@ public:
 
 	std::weak_ptr<ObjectManager> GetObjectManager();
 	std::weak_ptr<MyDrawEngine> GetDrawEngine();
-	//std::weak_ptr<MySoundEngine> GetSoundEngine();
-	std::weak_ptr<SFXManager> GetSFXManager();
 	std::weak_ptr<MyInputs> GetInputs();
 
-	// GameObjectFactor is abstract; this must be instantiated by a subclass
+	// GameObjectFactory and SFXManager are abstract; they must be instantiated by a subclass
 	std::weak_ptr<GameObjectFactory> GetObjectFactory();
+	std::weak_ptr<SFXManager> GetSFXManager();
 
 protected:
 	ServiceManager(); // abstract
@@ -32,7 +31,6 @@ protected:
 	std::shared_ptr<ObjectManager> objectManager;
 	std::shared_ptr<GameObjectFactory> objectFactory;
 	std::shared_ptr<MyDrawEngine> drawEngine;
-	//std::shared_ptr<MySoundEngine> soundEngine;
 	std::shared_ptr<SFXManager> sfxManager;
 	std::shared_ptr<MyInputs> inputs;
 };
