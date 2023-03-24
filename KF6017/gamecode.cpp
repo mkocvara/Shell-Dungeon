@@ -33,8 +33,8 @@ Game Game::instance;    // Singleton instance
 // This is called soon after the program runs
 ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 {
-	serviceManager = std::make_shared<AsteroidsServiceManager>();
-	return serviceManager->StartServices(bFullScreen, hwnd, hinstance);
+	mpServiceManager = std::make_shared<AsteroidsServiceManager>();
+	return mpServiceManager->StartServices(bFullScreen, hwnd, hinstance);
 }
 
 // This is repeated, called every frame.
@@ -42,7 +42,7 @@ ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 // game state
 ErrorType Game::Main()
 {
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager->GetDrawEngine().lock();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
 	if (!pDrawEngine)
 		return FAILURE;
 
@@ -136,8 +136,8 @@ void Game::Shutdown()
 ErrorType Game::PauseMenu()
 {
 	// Code for a basic pause menu
-	std::shared_ptr<MyInputs> pInputs = serviceManager->GetInputs().lock();
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager->GetDrawEngine().lock();
+	std::shared_ptr<MyInputs> pInputs = mpServiceManager->GetInputs().lock();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
 
 	if (!pDrawEngine || !pInputs)
 		return FAILURE;
@@ -200,8 +200,8 @@ ErrorType Game::PauseMenu()
 // which is currently a basic placeholder
 ErrorType Game::MainMenu()
 {
-	std::shared_ptr<MyInputs> pInputs = serviceManager->GetInputs().lock();
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager->GetDrawEngine().lock();
+	std::shared_ptr<MyInputs> pInputs = mpServiceManager->GetInputs().lock();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
 
 	if (!pDrawEngine || !pInputs)
 		return FAILURE;
@@ -268,19 +268,19 @@ ErrorType Game::MainMenu()
 // Use this to initialise the core game
 ErrorType Game::StartOfGame()
 {
-	std::shared_ptr<ObjectManager> pObjectManager = serviceManager->GetObjectManager().lock();
+	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
 	if (!pObjectManager)
 		return FAILURE;
 
-	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManager->GetObjectFactory().lock();
+	std::shared_ptr<GameObjectFactory> pObjectFactory = mpServiceManager->GetObjectFactory().lock();
 	if (!pObjectFactory)
 		return FAILURE;
 
-	pObjectFactory->Create(ObjectType::spaceship, serviceManager);
+	pObjectFactory->Create(ObjectType::spaceship, mpServiceManager);
 
 	for (int i = 0; i < 6; i++)
 	{
-		pObjectFactory->Create(ObjectType::spacerock, serviceManager);
+		pObjectFactory->Create(ObjectType::spacerock, mpServiceManager);
 	}
 
 	m_gameTimer.begin();
@@ -300,12 +300,12 @@ ErrorType Game::Update()
 	if(FAILED(HandleInput()))
 		return FAILURE;
 
-	std::shared_ptr<ObjectManager> pObjectManager = serviceManager->GetObjectManager().lock();
+	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
 
-	pObjectManager->UpdateAll(m_gameTimer.mdFrameTime);
+	pObjectManager->UpdateAll(m_gameTimer.mFrameTime);
 
 #if _DEBUG
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager->GetDrawEngine().lock();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
 	if (!pDrawEngine)
 		return FAILURE;
 
@@ -333,7 +333,7 @@ ErrorType Game::HandleInput()
 ErrorType Game::EndOfGame()
 // called when the game ends by returning to main menu
 {
-	std::shared_ptr<ObjectManager> pObjectManager = serviceManager->GetObjectManager().lock();
+	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
 	if (!pObjectManager)
 		return FAILURE;
 

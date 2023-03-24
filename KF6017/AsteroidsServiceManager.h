@@ -9,6 +9,6 @@ public:
 
 	typedef ServiceManager Super;
 
-	virtual ErrorType StartServices(bool bFullScreen, HWND hwnd, HINSTANCE hinstance) override;
+	virtual ErrorType StartServices(bool fullScreen, HWND hwnd, HINSTANCE hinstance) override;
 };
 

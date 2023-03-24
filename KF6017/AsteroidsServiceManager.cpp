@@ -11,20 +11,20 @@ AsteroidsServiceManager::~AsteroidsServiceManager()
 {
 }
 
-ErrorType AsteroidsServiceManager::StartServices(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
+ErrorType AsteroidsServiceManager::StartServices(bool fullScreen, HWND hwnd, HINSTANCE hinstance)
 {
-	if (FAILED(Super::StartServices(bFullScreen, hwnd, hinstance)))
+	if (FAILED(Super::StartServices(fullScreen, hwnd, hinstance)))
 		return FAILURE;
 
-	objectFactory = std::make_shared<AsteroidsObjectFactory>();
-	if (!objectFactory)
+	mpObjectFactory = std::make_shared<AsteroidsObjectFactory>();
+	if (!mpObjectFactory)
 	{
 		ErrorLogger::Writeln(L"Failed to create AsteroidsObjectFactory");
 		return FAILURE;
 	}
 
-	sfxManager = std::make_shared<AsteroidsSFXManager>(hwnd);
-	if (!sfxManager)
+	mpSfxManager = std::make_shared<AsteroidsSFXManager>(hwnd);
+	if (!mpSfxManager)
 	{
 		ErrorLogger::Writeln(L"Failed to create AsteroidsSFXManager");
 		return FAILURE;

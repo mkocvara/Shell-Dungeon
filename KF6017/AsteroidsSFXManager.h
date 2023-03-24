@@ -12,7 +12,7 @@ public:
 	void PlayShot();
 
 private:
-	SoundIndex shotSound;
+	SoundIndex mShotSound;
 
 	virtual void LoadAllSounds() override;
 };

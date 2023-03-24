@@ -37,75 +37,75 @@ public:
 	Point2D();
 
 	// Copy constructor
-	Point2D(const Vector2D& copy);
+	Point2D(const Vector2D& rCopy);
 
 	// Constructor. Remember that this is designed for screen geometry, so
 	// y is inverted
 	Point2D(float x, float y);
 
 	// Places the point at the location specified by the vector
-	void PlaceAt(const Vector2D &position);
+	void PlaceAt(const Vector2D &rPosition);
 
 	// Returns the vector location of the point
 	Vector2D GetPosition() const;
 
 	// Returns true if the other is identical to this
 	// False otherwise
-	bool Intersects(const Point2D &other) const;
+	bool Intersects(const Point2D &rOther) const;
 	
 	//Returns the distance between other and this
-	float Distance(const Point2D &other) const;
+	float Distance(const Point2D &rOther) const;
 
 	// Just returns the location of this Point2D
-	Vector2D Intersection(const Point2D &other) const;
+	Vector2D Intersection(const Point2D &rOther) const;
 
 	// Returns true if this point lies on the 
 	// Segment2D other.
 	// False otherwise
-	bool Intersects(const Segment2D &other) const;
+	bool Intersects(const Segment2D &rOther) const;
 
 	// Returns the distance from this point to the nearest 
 	// point on the segment
-	float Distance(const Segment2D &other) const;
+	float Distance(const Segment2D &rOther) const;
 
 	// Returns the location of this point
-	Vector2D Intersection(const Segment2D &other) const;
+	Vector2D Intersection(const Segment2D &rOther) const;
 
 	// Returns true if the point lies within the circle
 	// False otherwise
-	bool Intersects(const Circle2D &other) const;
+	bool Intersects(const Circle2D &rOther) const;
 
 	// Returns the distance from the point2D
 	// to the edge of the circle
 	// Note this will return a -ve value if
 	// this point is inside the circle (-ve the
 	// distance to the edge.)
-	float Distance(const Circle2D &other) const;
+	float Distance(const Circle2D &rOther) const;
 
 	// Returns the location of this point
-	Vector2D Intersection(const Circle2D &other) const;
+	Vector2D Intersection(const Circle2D &rOther) const;
 
 	// Returns true if the point is within the rectangle
 	// False otherwise
 	// Note that Rectangle2D include the left and top edge,
 	// but excludes the bottom and right edge
-	bool Intersects(const Rectangle2D &other) const;
+	bool Intersects(const Rectangle2D &rOther) const;
 
    // Returns true if the point is within the angled rectangle
    // False otherwise
-   bool Intersects(const AngledRectangle2D &other) const;
+   bool Intersects(const AngledRectangle2D &rOther) const;
 
 	// Returns true if the point intersects the specified shape
-	bool Intersects(const IShape2D &other) const;
+	bool Intersects(const IShape2D &rOther) const;
 
 	// Returns the distance from this point to the closest 
 	// point on the rectangle.
 	// Returns a negative number if the point is within the rectangle
 	//(-ve the distance to the nearest edge)
-	float Distance(const Rectangle2D &other) const;
+	float Distance(const Rectangle2D &rOther) const;
 
 	// Returns the location of this point
-	Vector2D Intersection(const Rectangle2D &other) const;
+	Vector2D Intersection(const Rectangle2D &rOther) const;
 };
 
 // A segment is a line with a start and an end
@@ -115,7 +115,8 @@ class Segment2D:public IShape2D
 	friend Point2D;
 	friend Circle2D;
 	friend Rectangle2D;
-   friend AngledRectangle2D;
+	friend AngledRectangle2D;
+
 private:
 	Vector2D mStart;
 	Vector2D mEnd;
@@ -125,7 +126,7 @@ public:
 
 	// Places segment in position defined by the start and end
 	// Start is part of the line, end isn't
-	void PlaceAt(const Vector2D &start, const Vector2D &end);
+	void PlaceAt(const Vector2D& rStart, const Vector2D& rEnd);
 
 	// Clips the segment to the t-values provided
 	void ClipTo(float minT, float maxT);
@@ -143,76 +144,76 @@ public:
 	// False otherwise
 	// Note that the point is not on the segment if it is beyond
 	// the start or end
-	bool Intersects(const Point2D &other) const;
+	bool Intersects(const Point2D& rOther) const;
 
 	// Returns true if the segment intersects the specified shape
-	bool Intersects(const IShape2D &other) const;
+	bool Intersects(const IShape2D& rOther) const;
 
 	// Distance from other to the closest point
 	// on the segment
-	float Distance(const Point2D &other) const;
+	float Distance(const Point2D& rOther) const;
 
 	// Returns true if the segments are parallel (in either direction)
 	// Allows for founding errors with a 0.01% tolerance
-	bool ParallelTo(const Segment2D &other) const;
+	bool ParallelTo(const Segment2D& rOther) const;
 
 	// Returns true if the segment is parallel to a vector(in either direction)
 	// Allows for founding errors with a 0.01% tolerance
-	bool ParallelTo(const Vector2D &other) const;
+	bool ParallelTo(const Vector2D& rOther) const;
 
 	// Returns the closest point on the segment
 	// to other
-	Vector2D Intersection(const Point2D &other) const;
+	Vector2D Intersection(const Point2D& rOther) const;
 
 	// Returns true if the two segments intersect
 	// Returns false otherwise
-	bool Intersects(const Segment2D &other) const;
+	bool Intersects(const Segment2D& rOther) const;
 
 	// Returns the closest distance between the two segments
-	float Distance(const Segment2D &other) const;
+	float Distance(const Segment2D& rOther) const;
 
 	// Returns the closest point on this segment to the
 	// other segments (point of intersection if they intersect)
-	Vector2D Intersection(const Segment2D &other) const;
+	Vector2D Intersection(const Segment2D& rOther) const;
 
 	// Returns true if the Segment intersect the circle
 	// False otherwise
-	bool Intersects(const Circle2D &other) const;
+	bool Intersects(const Circle2D& rOther) const;
 
 	// Returns the closest distance from the segment to the circle
 	// If the segment intersects the circle, this
 	// returns -ve the distance from the deepest point on the
 	// segment to the edge of the circle
-	float Distance(const Circle2D &other) const;
+	float Distance(const Circle2D& rOther) const;
 
 	// Returns the closest point on the segment to the circle.
 	// if the segement intersects the circle, this returns the
 	// deepest point on the segment
-	Vector2D Intersection(const Circle2D &other) const;
+	Vector2D Intersection(const Circle2D& rOther) const;
 
 	// Returns true if the segment intersects the rectangle
 	// False otherwise
-	bool Intersects(const Rectangle2D &other) const;
+	bool Intersects(const Rectangle2D& rOther) const;
 
    // Returns true if the segment intersects the angled rectangle
    // False otherwise
-   bool Intersects(const AngledRectangle2D &other) const;
+   bool Intersects(const AngledRectangle2D& rOther) const;
 
 	// Returns the distance from the Segment to the Rectangle
 	// If they intersect, returns a negative number
 	// Slow function
-	float Distance(const Rectangle2D &other) const;
+	float Distance(const Rectangle2D& rOther) const;
 
 	// Returns the closest point on the Segment to the rectangle
 	// If they intersect, returns the mid-point of the part of
 	// the segment that intersects
-	Vector2D Intersection(const Rectangle2D &other) const;
+	Vector2D Intersection(const Rectangle2D& rOther) const;
 
 	// Returns the point of intersection with a rectangle.
 	// If there are two points, returns the once closest to the
 	// start.
 	// If no intersection is found, returns the end of the segment
-	Vector2D FirstIntersection(const Rectangle2D &other) const;
+	Vector2D FirstIntersection(const Rectangle2D& rOther) const;
 
 	/* Returns t, treating the line as a parametric equation.
 	// Can return a t below 0 or above 1 if x is beyond the ends of the segment
@@ -265,14 +266,14 @@ public:
 
 	// Constructor. Places the Circle2D at the specified location with specified radius.
 	// A negative radius is converted to positive
-	Circle2D(const Vector2D &centre, float radius);
+	Circle2D(const Vector2D& rCentre, float radius);
 
 	// Places the Circle2D at the specified location with specified radius.
 	// A negative radius is converted to positive
-	void PlaceAt(const Vector2D &centre, float radius);
+	void PlaceAt(const Vector2D& rCentre, float radius);
 
 	// Places the Circle2D at the specified location while retaining radius
-	void PlaceAt(const Vector2D &centre);
+	void PlaceAt(const Vector2D& rCentre);
 
 	// Returns the location of the centre of the circle
 	Vector2D GetCentre() const;
@@ -285,89 +286,89 @@ public:
 
 	// Returns true if the Point is inside the circle
 	// False otherwise
-	bool Intersects(const Point2D &other) const;
+	bool Intersects(const Point2D& rOther) const;
 
 	// Returns true if the circle intersects the specified shape
-	bool Intersects(const IShape2D &other) const;
+	bool Intersects(const IShape2D& rOther) const;
 
 	// Returns the distance from the point to the circle
 	// If the point is inside the circle,
 	// returns -ve the distance from the point to
 	// the edge of the circle
-	float Distance(const Point2D &other) const;
+	float Distance(const Point2D& rOther) const;
 
 	// Returns the point on the edge of the circle closest
 	// to the point (whether inside or outside)
 	// Or returns the centre of this circle if the point
 	// is exactly equal to the circle's centre
-	Vector2D Intersection(const Point2D &other) const;
+	Vector2D Intersection(const Point2D& rOther) const;
 
 	// Returns true if the segment intersects the circle
 	// False otherwise
-	bool Intersects(const Segment2D &other) const;
+	bool Intersects(const Segment2D& rOther) const;
 
 	// Returns the closest distance from the circle
 	// to the segment
-	float Distance(const Segment2D &other) const;
+	float Distance(const Segment2D& rOther) const;
 
 	// If the segment intersects the  circle,
 	// Returns the point on the surface of the circle
 	// closest to the mid-point of the intersecting part of the segment.
 	// otherwise returns the closest point on the edge of the 
 	// circle to the segment
-	Vector2D Intersection(const Segment2D &other) const;
+	Vector2D Intersection(const Segment2D& rOther) const;
 
 	// Returns true if the two circles intersect
 	// false otherwise
-	bool Intersects(const Circle2D &other) const;
+	bool Intersects(const Circle2D& rOther) const;
 
 	// returns the distance between the two circles
 	// This will be negative if the circles intersect
-	float Distance(const Circle2D &other) const;
+	float Distance(const Circle2D& rOther) const;
 
 	// Returns the closest point on the edge of this circle
 	// to the centre of the other circle. (Or the centre of
 	// this circle if the two centres are equal)
-	Vector2D Intersection(const Circle2D &other) const;
+	Vector2D Intersection(const Circle2D& rOther) const;
 
 	// Returns true if the circle intersects the rectangle
 	// false otherwise
-	bool Intersects(const Rectangle2D &other) const;
+	bool Intersects(const Rectangle2D& rOther) const;
 
    // Returns true if the circle intersects the angled rectangle
    // false otherwise
-   bool Intersects(const AngledRectangle2D &other) const;
+   bool Intersects(const AngledRectangle2D& rOther) const;
 
 	// Returns the distance from the edge of the circle
 	// to the rectangle.
 	// Returns a negative number if the circle and
 	// the rectangle overlap
-	float Distance(const Rectangle2D &other) const;
+	float Distance(const Rectangle2D& rOther) const;
 
 	// Returns the point on the surface of the circle
 	// closest to the intersection (or the nearest point on
 	// the rectangle if no intersection
-	Vector2D Intersection(const Rectangle2D &other) const;
+	Vector2D Intersection(const Rectangle2D& rOther) const;
 
 	// Returns the normal to the (presumed)
 	// collision between the other point and
 	// this circle
-	Vector2D CollisionNormal(const Point2D& other) const;
+	Vector2D CollisionNormal(const Point2D& rOther) const;
 
 	// Returns the normal to the (presumed)
 	// collision between the other circle and
 	// this circle
-	Vector2D CollisionNormal(const Circle2D& other) const;
+	Vector2D CollisionNormal(const Circle2D& rOther) const;
 
 	// Returns the normal to the (presumed)
 	// collision between the other rectangle and
 	// this circle
-	Vector2D CollisionNormal(const Rectangle2D& other) const;
+	Vector2D CollisionNormal(const Rectangle2D& rOther) const;
 
 	// Returns the normal to the (presumed)
 	// collision between the other segment and
 	// this circle
-	Vector2D CollisionNormal(const Segment2D& other) const;
+	Vector2D CollisionNormal(const Segment2D& rOther) const;
 };
 
 // Class to manage a 2D rectangle shape.
@@ -377,7 +378,8 @@ class Rectangle2D:public IShape2D
 	friend Point2D;
 	friend Segment2D;
 	friend Circle2D;
-   friend AngledRectangle2D;
+	friend AngledRectangle2D;
+
 private:
 	Vector2D mCorner1;		// Bottom left assuming regular cartesian
 	Vector2D mCorner2;		// Top right assuming regular cartesian
@@ -426,29 +428,29 @@ public:
 
 	// Returns true if the point intersects the rectangle
 	// false otherwise
-	bool Intersects(const Point2D &other) const;
+	bool Intersects(const Point2D& rOther) const;
 
 	// Returns the distance from the point to the rectangle
 	// If the point is inside the rectangle,
 	// this returns -ve the distance to the closest edge
-	float Distance(const Point2D &other) const;
+	float Distance(const Point2D& rOther) const;
 
 	// Returns the point on the surface of the rectangle closest to the
 	// point
-	Vector2D Intersection(const Point2D &other) const;
+	Vector2D Intersection(const Point2D& rOther) const;
 
 	// Returns the normal to the surface of the rectangle closest
 	// to the point of collision.
 	// (1,0)  (-1,0)  (0,1)  or (0,-1)
 	// If no collision, returns (0,0)
-	Vector2D CollisionNormal(const Point2D& other) const;
+	Vector2D CollisionNormal(const Point2D& rOther) const;
 
 	// Returns the normal of the probable collision between
 	// the rectangle and the circle.
 	// (If no collision returns a unit vector from the
 	// closest point on the edge of the rectangle to
 	// the centre of the circle
-	Vector2D CollisionNormal(const Circle2D& other) const;
+	Vector2D CollisionNormal(const Circle2D& rOther) const;
 
 	// Returns the normal of the probable collision between
 	// this rectangle and the passed rectangle. The normal
@@ -456,66 +458,64 @@ public:
 	// (1,0) or (-1,0) depending on which is the closest edge.
 	// (If there is no collision, it returns a vector pointing 
 	// away from the closest edge on this rectangle
-	Vector2D CollisionNormal(const Rectangle2D& other) const;
+	Vector2D CollisionNormal(const Rectangle2D& rOther) const;
 
 	// Not implemented  *************************************
-	Vector2D CollisionNormal(const Segment2D& other) const;
+	Vector2D CollisionNormal(const Segment2D& rOther) const;
 
 	// Returns true if the segment intersects the
 	// rectangle. False otherwise
-	bool Intersects(const Segment2D &other) const;
-
-
+	bool Intersects(const Segment2D& rOther) const;
 
 	// Returns the length of the supplied segment that passes through the rectangle
 	// Returns zero if the segment does not intersect the rectangle
-	float LengthThrough(const Segment2D &other) const;
+	float LengthThrough(const Segment2D& rOther) const;
 
 	// Returns the closest distance from the segment
 	// to the rectangle. Returns a -ve value if the segment intersects
 	// the rectangle
-	float Distance(const Segment2D &other) const;
+	float Distance(const Segment2D& rOther) const;
 
 	// Returns the point on the edge of the rectangle
 	// closest to segment (or the deepest part of the
 	// segment if the segment intersects the rectangle)
-	Vector2D Intersection(const Segment2D &other) const;
+	Vector2D Intersection(const Segment2D& rOther) const;
 
 	// Returns true if the circle intersects the 
 	// rectangle.
 	// False otherwise
-	bool Intersects(const Circle2D &other) const;
+	bool Intersects(const Circle2D& rOther) const;
 
 	// Returns the shortest distance from the circle 
 	// to the rectangle.
 	// Returns a negative number if the circle
 	// intersects the rectangle
-	float Distance(const Circle2D &other) const;
+	float Distance(const Circle2D& rOther) const;
 
 	// Returns the point on the edge of the rectangle
 	// where intersection occured (or the closest
 	// point to the circle if no intersection)
-	Vector2D Intersection(const Circle2D &other) const;
+	Vector2D Intersection(const Circle2D& rOther) const;
 
 	// Returns true if the rectangles intersect
 	// false otherwise
-	bool Intersects(const Rectangle2D &other) const;
+	bool Intersects(const Rectangle2D& rOther) const;
 
    // Returns true if the rectangles intersect
    // false otherwise
-   bool Intersects(const AngledRectangle2D &other) const;
+   bool Intersects(const AngledRectangle2D& rOther) const;
 
 	// Returns the distance between the two closest points 
 	// on the two rectangles. Returns zero if the rectangles
 	// overlap
-	float Distance(const Rectangle2D &other) const;
+	float Distance(const Rectangle2D& rOther) const;
 
 	// Returns the point on this rectangle that is closest
 	// to the point of intersection with the other rectangle.
 	// If the two rectangles do not overlap, returns the
 	// point on this rectangle that is closest to the other
 	// rectangle
-	Vector2D Intersection(const Rectangle2D &other) const;
+	Vector2D Intersection(const Rectangle2D& rOther) const;
 
 	// Returns the supplied segment, clipped to fit inside the
 	// rectangle.
@@ -524,7 +524,7 @@ public:
 	Segment2D Clip(Segment2D other) const;
 
 		// Returns true if the rectangle intersects the specified shape
-	bool Intersects(const IShape2D &other) const;
+	bool Intersects(const IShape2D& rOther) const;
 };
 
 
@@ -554,7 +554,7 @@ public:
    AngledRectangle2D(Vector2D centre, float height, float width);
 
    // Sets the height and width of the angled rectangle
-   void SetDimensions( float height, float width);
+   void SetDimensions(float height, float width);
 
    // Sets the centre of the angled rectangle
    void SetCentre(Vector2D centre);
@@ -575,11 +575,10 @@ public:
    float GetWidth() const;
 
    // Returns true if the AngledRectangle intersects with other shapes
-   bool Intersects(const IShape2D& other) const;
-   bool Intersects(const Point2D& other) const;
-   bool Intersects(const Circle2D& other) const;
-   bool Intersects(const Segment2D& other) const;
-   bool Intersects(const Rectangle2D& other) const;
-   bool Intersects(const AngledRectangle2D& other) const;
-
+   bool Intersects(const IShape2D& rOther) const;
+   bool Intersects(const Point2D& rOther) const;
+   bool Intersects(const Circle2D& rOther) const;
+   bool Intersects(const Segment2D& rOther) const;
+   bool Intersects(const Rectangle2D& rOther) const;
+   bool Intersects(const AngledRectangle2D& rOther) const;
 };

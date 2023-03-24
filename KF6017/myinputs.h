@@ -1,10 +1,3 @@
-// myinputs.h
-// Shell engine version 2020
-// Chris Rook
-// Modified 08/11/2018
-// Start() now returns an ErrorType, to be consistent with MyDrawEngine
-
-
 #pragma once
 #pragma comment(lib, "dinput8.lib")
 
@@ -19,33 +12,33 @@
 class MyInputs
 {
 private:
-	int miMouseDX;						   // The x-movement of the mouse in the last sample
-	int miMouseDY;						   // The y-movement of the mouse in the last sample
-	int miMouseDZ;
+	int mMouseDX;						   // The x-movement of the mouse in the last sample
+	int mMouseDY;						   // The y-movement of the mouse in the last sample
+	int mMouseDZ;
 
-	bool mbMouseLeft;					   // Whether or not left mouse button down in last sample
-	bool mbMouseRight;					// Whether or not right mouse button down in last sample
-	bool mbMouseMiddle;					// Whether or not middle mouse button down in last sample
+	bool mMouseLeft;					   // Whether or not left mouse button down in last sample
+	bool mMouseRight;					// Whether or not right mouse button down in last sample
+	bool mMouseMiddle;					// Whether or not middle mouse button down in last sample
 
-	bool mbLastMouseLeft;				// Whether or not left mouse button down in previous sample
-	bool mbLastMouseRight;				// Whether or not right mouse button down in previous sample
-	bool mbLastMouseMiddle;				// Whether or not middle mouse button down in previous sample
+	bool mLastMouseLeft;				// Whether or not left mouse button down in previous sample
+	bool mLastMouseRight;				// Whether or not right mouse button down in previous sample
+	bool mLastMouseMiddle;				// Whether or not middle mouse button down in previous sample
 
-	DIMOUSESTATE msMousestate;			// DirectINput object to store state of mouse
+	DIMOUSESTATE mMousestate;			// DirectINput object to store state of mouse
 	static const int KEYMAPSIZE=256;
-	char mrgcKeystate[KEYMAPSIZE];			// Array to hold the keyboard state. (Usually 102 keys, but 256 allows
+	char mKeystates[KEYMAPSIZE];			// Array to hold the keyboard state. (Usually 102 keys, but 256 allows
 										            //		for future expansion
-	char mrgcOldKeystate[KEYMAPSIZE];		// Keystate on previous keyboard sample
+	char mOldKeystates[KEYMAPSIZE];		// Keystate on previous keyboard sample
 
-	DIJOYSTATE msJoystickState;			      // DirectInput object to store state of joystick
-	static LPDIRECTINPUT8 lpdi;				   // DirectInput interface
-	static LPDIRECTINPUTDEVICE8 lpdijoystick;	// The dirextInput joystick
-	static LPDIRECTINPUTDEVICE8 lpdikeyboard;	// The directInput keyboard
-	static LPDIRECTINPUTDEVICE8 lpdimouse;		// The directInput mouse
+	DIJOYSTATE mJoystickState;			      // DirectInput object to store state of joystick
+	static LPDIRECTINPUT8 sLpdi;				   // DirectInput interface
+	static LPDIRECTINPUTDEVICE8 sLpdiJoystick;	// The dirextInput joystick
+	static LPDIRECTINPUTDEVICE8 sLpdiKeyboard;	// The directInput keyboard
+	static LPDIRECTINPUTDEVICE8 sLpdiMouse;		// The directInput mouse
 	GUID mJoystickGUID;					         // The GUID of the first joystick
-	const int mkiMaxJoystickAxis ;
+	const int mMaxJoystickAxis ;
 
-	static LPDIRECTINPUTEFFECT mrglpdiEffectList[3];	// The list of pointers to available effects. Will be NULL if not available.
+	static LPDIRECTINPUTEFFECT sLpdiEffectList[3];	// The list of pointers to available effects. Will be NULL if not available.
 	static const int PULL=0;
 	static const int SHAKE=1;
 	static const int CENTRE=2;

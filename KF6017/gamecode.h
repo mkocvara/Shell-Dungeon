@@ -87,7 +87,7 @@ private:
 	Game(Game& other);             // Copy constructor disabled
 
 	GameTimer m_gameTimer;
-	std::shared_ptr<ServiceManager> serviceManager;
+	std::shared_ptr<ServiceManager> mpServiceManager;
 };
 
 

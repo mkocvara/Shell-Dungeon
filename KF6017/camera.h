@@ -15,18 +15,18 @@ class MyDrawEngine;
 class Camera
 {
 private:
-	Vector2D m_screenCentre;			// Coordinates of the centre of the screen (width/2, height/2)
-	Vector2D m_worldPosition;			// World coordinates for the centre of the screen			
-	float m_zoom;						   // Scale factor for drawing. 
+	Vector2D mScreenCentre;			// Coordinates of the centre of the screen (width/2, height/2)
+	Vector2D mWorldPosition;			// World coordinates for the centre of the screen			
+	float mZoom;						   // Scale factor for drawing. 
 
-	MyDrawEngine* m_drawEngine;			// Needs to be a raw pointer, as the camera must not have ownership (and should not delete)
+	MyDrawEngine* mpDrawEngine;			// Needs to be a raw pointer, as the camera must not have ownership (and should not delete)
 
 public:
 	// Sets the camera with an intial position at 0,0 with 
 	// a scale to make the screen have a height of 2000 using world coordinates.
 	// So the top of the screen is 1000. Bottom of the screen is -1000.
 	// Left and right will depend on screen aspect
-	Camera(MyDrawEngine* engine);
+	Camera(MyDrawEngine* pDrawEngine);
 
 	// Returns the screen coordinates from the given world coordinates
 	// using the current camera settings
@@ -63,4 +63,3 @@ public:
 	// Sets the camera zoom
 	void SetZoom(float zoom);
 };
-

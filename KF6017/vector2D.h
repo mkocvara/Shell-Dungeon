@@ -1,12 +1,3 @@
-// Chris Rook. Northumbria University
-// 24/04/2012	Added magnitudeSquared.
-// Modified 04/11/2018
-// Changed rotatedBy to use angles clockwise
-// Modified 06/09/2019
-//	Added type double use of *, / , *= and /=
-//   Also int for division
-
-
 #ifndef VECTOR_H
 #define VECTOR_H
 
@@ -20,16 +11,16 @@ public:
 
 	Vector2D(float x, float y);
 
-	Vector2D(const Vector2D& copyVector);
+	Vector2D(const Vector2D& rCopyVector);
 
 	// Returns a unit vector in the direction of the current vector
 	Vector2D unitVector() const;
 
 	// Vector addition
-	Vector2D operator+ (const Vector2D& addVector) const;
+	Vector2D operator+ (const Vector2D& rAddVector) const;
 
 	// Vector subtraction
-	Vector2D operator- (const Vector2D& minusVector) const;
+	Vector2D operator- (const Vector2D& rMinusVector) const;
 
 	// Scalar multiplication
 	Vector2D operator* (float multiplier) const;
@@ -50,10 +41,10 @@ public:
 	Vector2D operator/ (int divisor) const;
 
 	// Vector addition
-	void operator+=(const Vector2D& addVector);
+	void operator+=(const Vector2D& rAddVector);
 
 	// Vector subtraction
-	void operator-=(const Vector2D& addVector);
+	void operator-=(const Vector2D& rAddVector);
 
 	// Scalar multiplication
 	void operator*=(float multiplier);
@@ -74,13 +65,13 @@ public:
 	void operator/=(int divisor);
 
 	// Dot operator
-	float operator* (const Vector2D& otherVector) const;
+	float operator* (const Vector2D& rOtherVector) const;
 
 	// Negative of a vector - same as vector, but in opposite direction
 	Vector2D operator-() const;
 
 	// Comparison of vectors
-	bool operator==(const Vector2D& otherVector) const;
+	bool operator==(const Vector2D& rOtherVector) const;
 
 	// Returns the angle of the vector from the (0,1) direction
 	float angle() const;
@@ -89,7 +80,7 @@ public:
 	void set(float x, float y);
 
 	// Copies from another vector. Effectively identical to the = operator
-	void set(const Vector2D& copyVector);
+	void set(const Vector2D& rCopyVector);
 
 	// Returns the magnitude of the vector
 	float magnitude() const;
@@ -105,10 +96,10 @@ public:
 	Vector2D perpendicularVector() const;
 
 	// Returns true if the two vectors are parallel
-	bool isParallelTo(const Vector2D& otherVector) const;
+	bool isParallelTo(const Vector2D& rOtherVector) const;
 
 	// Returns true if the two vectors are perpendicular
-	bool isPerpendicularTo(const Vector2D& otherVector) const;
+	bool isPerpendicularTo(const Vector2D& rOtherVector) const;
 
 	// Returns a vector of identical magnitude, but rotated by the specified angle (in radians)
 	Vector2D rotatedBy(float angle) const;

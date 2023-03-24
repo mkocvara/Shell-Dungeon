@@ -2,10 +2,10 @@
 #include "mydrawengine.h"
 #include "ServiceManager.h"
 
-GameObject::GameObject(std::weak_ptr<ServiceManager> serviceManager)
+GameObject::GameObject(std::weak_ptr<ServiceManager> pServiceManager)
 {
 	SetActive(false);
-	this->serviceManager = serviceManager;
+	mpServiceManager = pServiceManager;
 }
 
 // PUBLIC
@@ -17,9 +17,9 @@ GameObject::~GameObject()
 
 void GameObject::Initialise(Vector2D position, float angle, float scale)
 {
-	this->position = position;
-	this->rotationAngle = angle;
-	this->renderScale = scale;
+	mPosition = position;
+	mRotationAngle = angle;
+	mRenderScale = scale;
 
 	SetActive(true);
 }
@@ -40,7 +40,7 @@ void GameObject::SetRenderSprite(const wchar_t* imagePath)
 		return;
 	}
 
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager.lock()->GetDrawEngine().lock();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
 
 	if (!pDrawEngine)
 	{
@@ -48,53 +48,53 @@ void GameObject::SetRenderSprite(const wchar_t* imagePath)
 		return;
 	}
 
-	renderSprite = pDrawEngine->LoadPicture(imagePath);
+	mRenderSprite = pDrawEngine->LoadPicture(imagePath);
 }
 
 Vector2D GameObject::GetForwardVector() const
 {
 	Vector2D forward(0, 0);
-	forward.setBearing(rotationAngle, 1);
+	forward.setBearing(mRotationAngle, 1);
 	return forward;
 }
 
 void GameObject::SetActive(bool newActive)
 {
-	state = newActive ? GameObjectState::active : GameObjectState::inactive;
+	mState = newActive ? GameObjectState::active : GameObjectState::inactive;
 }
 
 void GameObject::Remove()
 {
-	state = GameObjectState::removed;
+	mState = GameObjectState::removed;
 }
 
 bool GameObject::IsActive() const
 {
-	return state == GameObjectState::active;
+	return mState == GameObjectState::active;
 }
 
 bool GameObject::IsRemoved() const
 {
-	return state == GameObjectState::removed;
+	return mState == GameObjectState::removed;
 }
 
 ObjectType GameObject::GetObjectType() const
 {
-	return objectType;
+	return mObjectType;
 }
 
 
 // PROTECTED
 ErrorType GameObject::Render() 
 {
-	if (renderSprite == -1) 
+	if (mRenderSprite == -1) 
 	{
 		ErrorLogger::Writeln(L"GameObject::Render(); renderSprite has not been set.");
 		return FAILURE;
 	}
 
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager.lock()->GetDrawEngine().lock();
-	return pDrawEngine->DrawAt(position, renderSprite, renderScale, rotationAngle);
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
+	return pDrawEngine->DrawAt(mPosition, mRenderSprite, mRenderScale, mRotationAngle);
 }
 
 

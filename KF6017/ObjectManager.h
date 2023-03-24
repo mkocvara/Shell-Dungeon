@@ -14,17 +14,15 @@ public:
 	~ObjectManager();
 
 	ErrorType UpdateAll(double deltaTime);
-	void AddObject(std::shared_ptr<GameObject>& newObject);
-	void AddCollidableObject(std::shared_ptr<GameObject>& asGameObject, std::shared_ptr<ICollidableObject>& asCollidableObject);
+	void AddObject(std::shared_ptr<GameObject>& rpNewObject);
+	void AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObject, std::shared_ptr<ICollidableObject>& rpAsCollidableObject);
 	void Clear();
 	int GetNumberOfObjects() const;
 
 private:
 	void CheckCollisions();
 	void RemoveDeletedObjects();
-	std::list<std::shared_ptr<GameObject>> gameObjects;
-	std::map<std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>> collidableObjectsLookup;
-
-	//std::list<std::shared_ptr<ICollidableObject>> collidableObjects;
+	std::list<std::shared_ptr<GameObject>> mGameObjectsList;
+	std::map<std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>> mObjectsCollidableMap;
 };
 

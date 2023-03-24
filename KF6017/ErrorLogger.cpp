@@ -7,15 +7,15 @@
 #include <math.h>
 #include <string>
 
-const wchar_t ErrorLogger::Filename[]=L"errors.log";
-ErrorLogger ErrorLogger::instance;
-int ErrorLogger::LineCount=0;
+const wchar_t ErrorLogger::msFilename[]=L"errors.log";
+ErrorLogger ErrorLogger::msInstance;
+int ErrorLogger::msLineCount=0;
 
 
 ErrorLogger::ErrorLogger()
 {
 #ifdef LOGGING
-	file.open(Filename);
+	mFile.open(msFilename);
 
 	LPSYSTEMTIME time = new SYSTEMTIME();
 	GetSystemTime(time);
@@ -42,7 +42,7 @@ ErrorLogger::ErrorLogger()
 ErrorLogger::~ErrorLogger()
 {
 #ifdef LOGGING
-	file.close();
+	mFile.close();
 #endif
 }
 
@@ -60,20 +60,20 @@ void ErrorLogger::Writeln(const wchar_t text[])
 void ErrorLogger::Write(const wchar_t text[])
 {
 #ifdef LOGGING
-	if(LineCount<MAXLINES)
+	if(msLineCount<MAXLINES)
 	{
 		OutputDebugString(text);
-		instance.file << text;
-		if(++LineCount == MAXLINES)
+		msInstance.mFile << text;
+		if(++msLineCount == MAXLINES)
 		{
 			OutputDebugString(L"\nErrorLogger limit reached. Who taught you to progam?");
-			instance.file << L"\nErrorLogger limit reached. Who taught you to progam?";
-			instance.file.flush();
+			msInstance.mFile << L"\nErrorLogger limit reached. Who taught you to progam?";
+			msInstance.mFile.flush();
 		}
 	}
 #endif
 #ifdef SLOWLOG
-	instance.file.flush();
+	msInstance.mFile.flush();
 #endif
 }
 

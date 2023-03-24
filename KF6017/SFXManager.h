@@ -22,12 +22,12 @@ public:
 	// Subclass should have functions to play game-specific sounds.
 
 protected:
-	std::unique_ptr<MySoundEngine> soundEngine;
-	std::vector<SoundIndex> allSounds;
+	std::unique_ptr<MySoundEngine> mpSoundEngine;
+	std::vector<SoundIndex> mAllSounds;
 	virtual void LoadAllSounds() = 0;
 
 private:
-	int masterVolume = 100;
+	int mMasterVolume = 100;
 
 	// Subclass should have references to game-specific sounds.
 };

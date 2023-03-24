@@ -1,9 +1,3 @@
-// Errorlogger.h
-// Shell engine version 2020
-// Chris Rook
-// Last modified 20/09/2018
-
-
 #pragma once
 
 #include <fstream>
@@ -29,27 +23,31 @@
 class ErrorLogger
 {
 private:
-	static ErrorLogger instance;		// Errorlogger is a singleton
-										      // Programmer note - this singleton seems a bit confused.
-										      // It works, so leave it for now, but it needs to be tidied up.
+	static ErrorLogger msInstance;		// Errorlogger is a singleton
+										// Programmer note - this singleton seems a bit confused.
+										// It works, so leave it for now, but it needs to be tidied up.
 	ErrorLogger();
 	~ErrorLogger();
-	std::wofstream file;				   // The file written to
-	const static wchar_t Filename[];	// The file name
+	std::wofstream mFile;				// The file written to
+	const static wchar_t msFilename[];	// The file name
 	const static int MAXLINES=10000;	// Maximum number of lines that will be written
-										      // - to prevent a massive file.
-	static int LineCount;				// Current number of lines that have been written.
-										      // Programmer note- why is this a static?
+										// - to prevent a massive file.
+
+	static int msLineCount;				// Current number of lines that have been written.
+										// Programmer note- why is this a static?
 
 public:
 	static void Writeln(const wchar_t text[]);	// Writes the given text, followed by a new line
-												            // Increments LineCount
-												            // Will not write if LineCount < MAXLINES
-	static void Writeln(double num);			      // Writes the given number, followed by a new line
-												            // Increments LineCount
-												            // Will not write if LineCount < MAXLINES
-	static void Write(const wchar_t text[]);	   // Writes the given text
-												            // Will not write if LineCount < MAXLINES
-	static void Write(double num);				   // Writes the given number
-												            // Will not write if LineCount < MAXLINES
+												// Increments LineCount
+												// Will not write if LineCount < MAXLINES
+
+	static void Writeln(double num);			// Writes the given number, followed by a new line
+												// Increments LineCount
+												// Will not write if LineCount < MAXLINES
+
+	static void Write(const wchar_t text[]);	// Writes the given text
+												// Will not write if LineCount < MAXLINES
+
+	static void Write(double num);				// Writes the given number
+												// Will not write if LineCount < MAXLINES
 };

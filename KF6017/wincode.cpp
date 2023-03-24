@@ -1,11 +1,3 @@
-// camera.h
-// Shell engine version 2023
-// Chris Rook
-// Last modified 06/09/2019
-//		Updating to const wchar_t to support string literals in parameters
-//	Added assumption of windowed when in DEBUG config, using _DEBUG macro in WinMain
-
-
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -37,10 +29,10 @@
 
 // Globals ************************************************************************************
 
-bool g_WindowClosed;			// A variable that records whether or not the window has been asked to close
-bool g_ApplicationActive;		// A variable that is true if the application is active (i.e. foreground) false otherwise
-HWND g_hWnd = NULL;
-HINSTANCE g_hInstance = NULL;
+bool gWindowClosed;			// A variable that records whether or not the window has been asked to close
+bool gApplicationActive;		// A variable that is true if the application is active (i.e. foreground) false otherwise
+HWND gHwnd = NULL;
+HINSTANCE gHInstance = NULL;
 
 
 // Function Declarations **********************************************************************************
@@ -78,11 +70,11 @@ LRESULT CALLBACK WindowProc(	// The event handler. It's a callback function
 	case WM_ACTIVATEAPP:
 		if(wparam==TRUE)	      // Window going active
 		{
-			g_ApplicationActive=true;
+			gApplicationActive=true;
 		}
 		else
 		{
-			g_ApplicationActive=false;			
+			gApplicationActive=false;			
 		}
 
 	case WM_SETCURSOR:
@@ -150,7 +142,7 @@ int WINAPI WinMain(HINSTANCE hInstance,			// A number that registers the instanc
 	memset(&msg,0, sizeof(msg));
 
 	// Set global instance
-	g_hInstance = hInstance;
+	gHInstance = hInstance;
 
 	//Find out if the user wants the game windowed or full screen
 	bool bFullScreen = true;
@@ -168,14 +160,14 @@ int WINAPI WinMain(HINSTANCE hInstance,			// A number that registers the instanc
 	{
 		// The event loop
 		
-		g_WindowClosed=false;
-		int gameError=Game::instance.Setup(bFullScreen, g_hWnd, g_hInstance);			// Initialise the game
-		g_ApplicationActive=true;							// Window is now foreground
+		gWindowClosed=false;
+		int gameError=Game::instance.Setup(bFullScreen, gHwnd, gHInstance);			// Initialise the game
+		gApplicationActive=true;							// Window is now foreground
 
 		if (gameError == FAILURE)							// If game failed to initialise
-			g_WindowClosed = true;
+			gWindowClosed = true;
 		else
-		while(!g_WindowClosed)
+		while(!gWindowClosed)
 		{												         // Infinite loop
 			while(PeekMessage(&msg, NULL, 0,0,PM_REMOVE))	// If there is a message in the queue, remove it and....
 			{
@@ -185,15 +177,15 @@ int WINAPI WinMain(HINSTANCE hInstance,			// A number that registers the instanc
 
 				if (msg.message == WM_QUIT)				// If is is "quit"
 				{
-					g_WindowClosed = true;
+					gWindowClosed = true;
 				}
 			}
 
-			if (!g_WindowClosed && g_ApplicationActive)		// Check I'm not already dead
+			if (!gWindowClosed && gApplicationActive)		// Check I'm not already dead
 			{
 				gameError=Game::instance.Main();					// Play the real game stuff
 				if(gameError==FAILURE)
-					g_WindowClosed = true;
+					gWindowClosed = true;
 			}
 
 		}		// End infinite loop
@@ -218,14 +210,14 @@ ErrorType CreateDXWindow(const wchar_t* title, int width, int height)
 	WindowRect.top		= (long)0;		   // Set Top Value To 0
 	WindowRect.bottom	= (long)height;	// Set Bottom Value To Requested Height
 
-	g_hInstance			= GetModuleHandle(NULL);				// Grab An Instance For Our Window
+	gHInstance			= GetModuleHandle(NULL);				// Grab An Instance For Our Window
 	ZeroMemory(&wc, sizeof(WNDCLASS));
 
 	wc.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;	// Redraw On Size, And Own DC For Window.
 	wc.lpfnWndProc		= (WNDPROC) WindowProc;					// WndProc Handles Messages
 	wc.cbClsExtra		= 0;									      // No Extra Window Data
 	wc.cbWndExtra		= 0;									      // No Extra Window Data
-	wc.hInstance		= g_hInstance;							   // Set The Instance
+	wc.hInstance		= gHInstance;							   // Set The Instance
 	wc.hIcon			= LoadIcon(NULL, IDI_WINLOGO);			// Load The Default Icon
 	wc.hCursor			= LoadCursor(NULL, IDC_ARROW);		// Load The Arrow Pointer
 	wc.hbrBackground	= NULL;									   // No Background Required For GL
@@ -251,7 +243,7 @@ ErrorType CreateDXWindow(const wchar_t* title, int width, int height)
 	AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);		// Adjust Window To True Requested Size
 
 	// Create The Window
-	if (!(g_hWnd=CreateWindowEx(dwExStyle,							// Extended Style For The Window
+	if (!(gHwnd=CreateWindowEx(dwExStyle,							// Extended Style For The Window
 								WINDOW_CLASS_NAME,					   // Class Name
 								title,								      // Window Title
 								dwStyle,							         // Required Window Style
@@ -260,7 +252,7 @@ ErrorType CreateDXWindow(const wchar_t* title, int width, int height)
 								WindowRect.bottom-WindowRect.top,	// Calculate Window Height
 								NULL,								// No Parent Window
 								NULL,								// No Menu
-								g_hInstance,					// Instance
+								gHInstance,					// Instance
 								NULL)))							// Dont Pass Anything To WM_CREATE
 	{
 		KillDXWindow();								// Reset The Display
@@ -268,7 +260,7 @@ ErrorType CreateDXWindow(const wchar_t* title, int width, int height)
 		return FAILURE;
 	}
 
-	ShowWindow(g_hWnd, SW_SHOW);
+	ShowWindow(gHwnd, SW_SHOW);
 
 	return SUCCESS;									// Success
 	// Caution! Early returns
@@ -284,16 +276,16 @@ void KillDXWindow()
 	// Show Mouse Pointer
 	ShowCursor(TRUE);
 
-	if (g_hWnd && !DestroyWindow(g_hWnd))				// Are We Able To Destroy The Window?
+	if (gHwnd && !DestroyWindow(gHwnd))				// Are We Able To Destroy The Window?
 	{
 		ErrorLogger::Writeln(L"Could Not Release gHwnd.");
-		g_hWnd=NULL;									// Set m_hWnd To NULL
+		gHwnd=NULL;									// Set m_hWnd To NULL
 	}
 
-	if (!UnregisterClass(WINDOW_CLASS_NAME, g_hInstance))			// Are We Able To Unregister Class
+	if (!UnregisterClass(WINDOW_CLASS_NAME, gHInstance))			// Are We Able To Unregister Class
 	{
 		ErrorLogger::Writeln(L"Could Not Unregister Class.");
-		g_hInstance=NULL;									// Set m_hInstance To NULL
+		gHInstance=NULL;									// Set m_hInstance To NULL
 	}
 }
 

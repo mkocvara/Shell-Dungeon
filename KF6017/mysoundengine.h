@@ -1,15 +1,3 @@
-// MySoundEngine.cpp
-// Shell engine version 2020
-// Chris Rook
-// Modified 8/11/2018
-// Start() now returns an ErrorType, to be consistent with MyDrawEngine
-
-// Modified 4/2/2022
-// Major rewrite. MySound is now a class and handles more functionality
-// Each sound buffer is loaded four times to allow simultaneous playing
-// Each sound can only be loaded once. If the same sound is loaded a second time,
-// LoadWAV will return the index of the existing sound
-
 #pragma once
 
 #include <string>
@@ -33,9 +21,9 @@ class MySoundEngine
 	public:
 		// This is a long pointer to the DSound buffer. DirectX
 		// functions can be called on it, once it it initialised.
-		std::vector<LPDIRECTSOUNDBUFFER> lpSoundBuffers;
-		bool m_isLoaded = false;
-		std::wstring m_sourceFileName;
+		std::vector<LPDIRECTSOUNDBUFFER> mLpdSoundBuffers;
+		bool mIsLoaded = false;
+		std::wstring mSourceFileName;
 
 		MySound();
 
@@ -51,9 +39,9 @@ class MySoundEngine
 
 
 	};
-	std::map<SoundIndex, MySound> m_MySoundList;	// Map of MySound objects
-	std::map<std::wstring, SoundIndex> m_FilenameList;		// Map of filenames
-	SoundIndex m_NextSoundIndex;
+	std::map<SoundIndex, MySound> mIndexSoundsMap;	// Map of MySound objects
+	std::map<std::wstring, SoundIndex> mFilenameIndexMap;		// Map of filenames
+	SoundIndex mNextSoundIndex;
 
 private:
 	// Releases the memory and COM objects=. Needs to be called
@@ -67,9 +55,9 @@ private:
 	// If not found, will return a reference to the empty MySound 
 	MySound& FindSound(SoundIndex);
 
-	IDirectSound8 *lpds;
+	IDirectSound8 *mpLpds;
 
-	MySound emptySound;
+	MySound mEmptySound;
 
 public:
 	// hwnd is the handle of the main window

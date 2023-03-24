@@ -8,7 +8,7 @@ class AngledRectangle2D;
 class Bullet : public MovingGameObject, public ICollidableObject
 {
 public:
-	Bullet(std::weak_ptr<ServiceManager> serviceManager);
+	Bullet(std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~Bullet();
 
 	typedef MovingGameObject Super;
@@ -17,16 +17,16 @@ public:
 	virtual ErrorType Update(double deltaTime) override;
 
 	virtual std::weak_ptr<IShape2D> GetShape() const override;
-	virtual void HandleCollision(std::shared_ptr<GameObject> otherObject) override;
+	virtual void HandleCollision(std::shared_ptr<GameObject> pOtherObject) override;
 
 protected:
 	virtual void Move(double deltaTime) override;
 	bool IsOffScreen();
 
-	std::shared_ptr<AngledRectangle2D> boundingShape;
+	std::shared_ptr<AngledRectangle2D> mpBoundingShape;
 
 private:
-	const wchar_t* renderSpritePath = L"Assets/bullet.bmp";
-	const float speed = 10.f;
+	const wchar_t* mRenderSpritePath = L"Assets/bullet.bmp";
+	const float mSpeed = 10.f;
 };
 

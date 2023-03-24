@@ -29,19 +29,19 @@ public:
 	virtual ObjectType GetObjectType() const;
 
 protected:
-	GameObject(std::weak_ptr<ServiceManager> serviceManager); // make it essentially abstract
-	Vector2D position;
-	float rotationAngle;	
-	float renderScale;
+	GameObject(std::weak_ptr<ServiceManager> pServiceManager); // make it essentially abstract
+	Vector2D mPosition;
+	float mRotationAngle;	
+	float mRenderScale;
 
-	std::weak_ptr<ServiceManager> serviceManager;
+	std::weak_ptr<ServiceManager> mpServiceManager;
 
-	int renderSprite = -1;
+	int mRenderSprite = -1;
 	virtual ErrorType Render();
 
-	ObjectType objectType;
+	ObjectType mObjectType;
 
 private: 
-	GameObjectState state;
+	GameObjectState mState;
 };
 

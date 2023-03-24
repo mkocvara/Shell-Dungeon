@@ -8,16 +8,16 @@
 
 int RandUtil::randRangeInt(int min, int max)
 {
-    static std::mt19937 gen = getGenerator();
+    static std::mt19937 sGen = getGenerator();
     std::uniform_int_distribution<> distr(min, max); // define the range
-    return distr(gen);
+    return distr(sGen);
 }
 
 float RandUtil::randRangeDouble(double min, double max)
 {
-    static std::mt19937 gen = getGenerator();
+    static std::mt19937 sGen = getGenerator();
     std::uniform_real_distribution<> distr(min, max); // define the range
-    return distr(gen);
+    return distr(sGen);
 }
 
 #if _DEBUG
@@ -36,7 +36,7 @@ void RandUtil::Debug()
 
 std::mt19937 RandUtil::getGenerator()
 {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    return gen;
+    static std::random_device sRD;
+    static std::mt19937 sGen(sRD());
+    return sGen;
 }

@@ -1,16 +1,9 @@
-// mydrawengine.h
-// Shell engine version 2023
-// Chris Rook
-// modified 06/09/2019
-//		Updating LoadPicture, FindPicture, AddFont to const wchar_t to support string literals in parameters
-
-// modified 04/02/2022
-//		Changes to ReleasePicture and ReleaseBitmaps to fix a bug where filenames were not being removed from the filename map
-
 #pragma once
+
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "dxguid.lib")  
+
 #include <d3d9.h>		// directX draw
 #include <d3dx9.h>		// extra directX draw stuff   
 #include "errorlogger.h"
@@ -64,14 +57,14 @@ private:
 	// Inner struct to store information about each picture
 	struct MyPicture
 	{
-		LPDIRECT3DTEXTURE9  lpTheTexture;	// The surface that MyPicture encapsulates
-		std::wstring m_SourceFileName;      // The file name of the loaded image
-		Vector2D m_Centre;                  // Cordinates of the "centre" of the image
+		LPDIRECT3DTEXTURE9  mLpdTheTexture;	// The surface that MyPicture encapsulates
+		std::wstring mSourceFileName;      // The file name of the loaded image
+		Vector2D mCentre;                  // Cordinates of the "centre" of the image
                                           // by default this is the centre of the square file
                                           // but it can be adjusted so that objects "rotate" around
                                           // some other centre
-		int m_width;                        // Width of the image in pixels
-		int m_height;                       // Height of the image in pixels
+		int mWidth;                        // Width of the image in pixels
+		int mHeight;                       // Height of the image in pixels
 
 	   // Public methods
 		//  Internal pointer to the texture is set to NULL
@@ -81,36 +74,36 @@ private:
 	// Inner struct to store information about each font
 	struct MyFont
 	{
-		LPD3DXFONT m_pFont;		      // Pointer to the font
-		std::wstring m_fontName;		// Name of the font
-		int m_height;			         // Height of the font
-		bool m_bold;			         // If true, font will be bold
-		bool m_italic;			         // If true, font will be italicised
+		LPD3DXFONT mFont;		      // Pointer to the font
+		std::wstring mFontName;		// Name of the font
+		int mHeight;			         // Height of the font
+		bool mBold;			         // If true, font will be bold
+		bool mItalic;			         // If true, font will be italicised
 
 		// Sets the pointer to nullptr
 		MyFont();
 	};
 
-	HWND m_Hwnd;								// The handle to the window
-	IDirect3D9* m_lpD3D;					   // Pointer to direct draw
-	IDirect3DDevice9* m_lpD3DDevice;		// Pointer to the D3D device
-	LPD3DXSPRITE m_lpSprite;				// Sprite to draw pictures
+	HWND mHwnd;								// The handle to the window
+	IDirect3D9* mpLPD3D;					   // Pointer to direct draw
+	IDirect3DDevice9* mpLPD3DDevice;		// Pointer to the D3D device
+	LPD3DXSPRITE mLPSprite;				// Sprite to draw pictures
 
-	int m_ScreenWidth;						// Height of the screen
-	int m_ScreenHeight;						// Width of the screen
-	int m_NativeScreenWidth;				// Height of the primary monitor at start
-	int m_NativeScreenHeight;				// Width of the primary monitor at start
+	int mScreenWidth;						// Height of the screen
+	int mScreenHeight;						// Width of the screen
+	int mNativeScreenWidth;				// Height of the primary monitor at start
+	int mNativeScreenHeight;				// Width of the primary monitor at start
 
-	bool m_CameraActive;					   // If true, drawing will transform using camera settings. Default is true.
+	bool mCameraActive;					   // If true, drawing will transform using camera settings. Default is true.
 
-	bool m_started = false;
+	bool mStarted = false;
 
-	bool m_bFullScreen;						// True if full screen. False otherwise
-	std::map<PictureIndex, MyPicture> m_MyPictureList;	      // Map of MyPicture objects
-	std::map<std::wstring, PictureIndex> m_FilenameList;		// Map of filenames
-	std::map<FontIndex, MyFont> m_MyFontList;			         // Map of Font objects
-	PictureIndex m_NextPictureIndex;		// The index of the next font to be added	
-	FontIndex m_pNextFont;					// The index of the next font to be added
+	bool mFullScreen;						// True if full screen. False otherwise
+	std::map<PictureIndex, MyPicture> mIndexPictureMap;	      // Map of MyPicture objects
+	std::map<std::wstring, PictureIndex> mFilenameIndexMap;		// Map of filenames
+	std::map<FontIndex, MyFont> mIndexFontMap;			         // Map of Font objects
+	PictureIndex mNextPictureIndex;		// The index of the next font to be added	
+	FontIndex mNextFont;					// The index of the next font to be added
 
 	// Postcondition:	The primary surface, the buffer, the clipper and DirectDraw have been released.
 	// Returns:			SUCCESS
@@ -136,7 +129,7 @@ private:
 	void ReloadFonts();
 
 public:
-	std::unique_ptr<Camera> camera;		// Camera objects is used to translate world coordinates to/from
+	std::unique_ptr<Camera> mpCamera;		// Camera objects is used to translate world coordinates to/from
 										// screen coordinates
 
 	// Parameters:
@@ -458,11 +451,11 @@ public:
 	// Returns the height and width of the current screen resolution
 	int GetScreenWidth() const
 	{
-		return m_ScreenWidth;
+		return mScreenWidth;
 	}
 	int GetScreenHeight() const
 	{
-		return m_ScreenHeight;
+		return mScreenHeight;
 	}
 
 	// Returns true if the specified point is visible from the current camera position.

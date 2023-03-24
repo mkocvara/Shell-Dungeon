@@ -8,26 +8,26 @@
 MySoundEngine::MySoundEngine(HWND hwnd)
 {
 	// The first sound loaded will have a SoundIndex value of 1
-	m_NextSoundIndex = 1;
+	mNextSoundIndex = 1;
 
-	emptySound.m_sourceFileName = L"empty sound";
+	mEmptySound.mSourceFileName = L"empty sound";
 
 	// Initialise dsound
 	HRESULT err;
-	if (FAILED(DirectSoundCreate8(&DSDEVID_DefaultPlayback, &lpds, NULL)))
+	if (FAILED(DirectSoundCreate8(&DSDEVID_DefaultPlayback, &mpLpds, NULL)))
 	{
 		ErrorLogger::Writeln(L"Failed to create sound player");
-		lpds=nullptr;
+		mpLpds=nullptr;
 	}
 
 	// Set cooperative level and check for error
-	err=lpds->SetCooperativeLevel(hwnd, DSSCL_NORMAL);
+	err=mpLpds->SetCooperativeLevel(hwnd, DSSCL_NORMAL);
 
 	if (FAILED(err))	// If failed to set cooperative level
 	{
 		ErrorLogger::Writeln(L"Failed to set cooperative level\n");
-		lpds->Release();
-		lpds=nullptr;
+		mpLpds->Release();
+		mpLpds=nullptr;
 		ErrorLogger::Writeln(ErrorString(err));
 	}
 }
@@ -42,10 +42,10 @@ MySoundEngine::~MySoundEngine()
 
 ErrorType MySoundEngine::Release()
 {
-	if (lpds)			// If not already null
+	if (mpLpds)			// If not already null
 	{
-		lpds->Release();
-		lpds=nullptr;
+		mpLpds->Release();
+		mpLpds=nullptr;
 		return SUCCESS;
 	}
 	return FAILURE;
@@ -60,12 +60,12 @@ const wchar_t* MySoundEngine::ErrorString(HRESULT err)
 MySoundEngine::MySound& MySoundEngine::FindSound(SoundIndex sound)
 {
 	// Find a sound in the map
-	std::map<SoundIndex, MySound>::iterator it = m_MySoundList.find(sound);
-	if(it  == m_MySoundList.end())			// Not found
+	std::map<SoundIndex, MySound>::iterator it = mIndexSoundsMap.find(sound);
+	if(it  == mIndexSoundsMap.end())			// Not found
 	{
 		ErrorLogger::Writeln(L"SoundIndex not found");
 		// Return empty sound buffer
-		return emptySound;
+		return mEmptySound;
 	}
 	return it->second;
 }
@@ -73,39 +73,39 @@ MySoundEngine::MySound& MySoundEngine::FindSound(SoundIndex sound)
 SoundIndex MySoundEngine::LoadWav(const wchar_t* filename)
 {
 	// Check if already loaded
-	auto it = m_FilenameList.find(filename);
-	if (it != m_FilenameList.end())
+	auto it = mFilenameIndexMap.find(filename);
+	if (it != mFilenameIndexMap.end())
 	{
 		return it->second;
 	}
 
-	if(!lpds)
+	if(!mpLpds)
 	{
 		ErrorLogger::Writeln(L"Cannot load a sound wave - No pointer to DirectSound.");
 		return -1;
 	}
 
 	MySound temp;
-	temp.LoadWav(filename, lpds);
+	temp.LoadWav(filename, mpLpds);
 
-	m_MySoundList.insert(std::pair<SoundIndex, MySound>(m_NextSoundIndex, temp));
+	mIndexSoundsMap.insert(std::pair<SoundIndex, MySound>(mNextSoundIndex, temp));
 
-	m_FilenameList.insert(std::pair<std::wstring, SoundIndex>(filename, m_NextSoundIndex));
+	mFilenameIndexMap.insert(std::pair<std::wstring, SoundIndex>(filename, mNextSoundIndex));
 
-	return m_NextSoundIndex++;
+	return mNextSoundIndex++;
 }
 
 ErrorType MySoundEngine::Unload(SoundIndex sound)
 {
-	std::map<SoundIndex, MySound>::iterator it = m_MySoundList.find(sound);
-	if (it != m_MySoundList.end())
+	std::map<SoundIndex, MySound>::iterator it = mIndexSoundsMap.find(sound);
+	if (it != mIndexSoundsMap.end())
 	{
-		MySound& sb = it->second;
+		MySound& rSound = it->second;
 
-		sb.Release();
+		rSound.Release();
 
-		m_MySoundList.erase(it);
-		m_FilenameList.erase(sb.m_sourceFileName);
+		mIndexSoundsMap.erase(it);
+		mFilenameIndexMap.erase(rSound.mSourceFileName);
 
 		return SUCCESS;
 
@@ -117,31 +117,31 @@ ErrorType MySoundEngine::Unload(SoundIndex sound)
 ErrorType MySoundEngine::UnloadAllSounds()
 {
 	ErrorType answer = SUCCESS;
-	std::map<SoundIndex, MySound>::iterator it = m_MySoundList.begin();
-	for(;it!= m_MySoundList.end();it++ )
+	std::map<SoundIndex, MySound>::iterator it = mIndexSoundsMap.begin();
+	for(;it!= mIndexSoundsMap.end();it++ )
 	{
-		MySound& sb = it->second;
+		MySound& rSound = it->second;
 
-		sb.Release();
+		rSound.Release();
 	}
 
-	m_MySoundList.erase(it, m_MySoundList.end());
-	m_FilenameList.clear();
+	mIndexSoundsMap.erase(it, mIndexSoundsMap.end());
+	mFilenameIndexMap.clear();
 	return answer;
 }
 
 ErrorType MySoundEngine::SetVolume(SoundIndex sound, int volume)
 {
-	MySound& sb = FindSound(sound);
-	if(!sb.m_isLoaded)
+	MySound& rSound = FindSound(sound);
+	if(!rSound.mIsLoaded)
 	{
 		ErrorLogger::Writeln(L"Sound not found in SetVolume.");
 		return FAILURE;
 	}
-	if (sb.SetVolume(volume) == FAILURE)
+	if (rSound.SetVolume(volume) == FAILURE)
 	{
 		ErrorLogger::Write(L"Failed to set volume for a sound:");
-		ErrorLogger::Writeln(sb.m_sourceFileName.c_str());
+		ErrorLogger::Writeln(rSound.mSourceFileName.c_str());
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -149,18 +149,18 @@ ErrorType MySoundEngine::SetVolume(SoundIndex sound, int volume)
 
 ErrorType MySoundEngine::SetFrequency(SoundIndex sound, int frequency)
 {
-	MySound& sb = FindSound(sound);
+	MySound& rSound = FindSound(sound);
 
-	if(!sb.m_isLoaded)
+	if(!rSound.mIsLoaded)
 	{
 		ErrorLogger::Writeln(L"Sound not found in SetFrequency.");
 		return FAILURE;
 	}
 	
-	if (sb.SetFrequency(frequency) == FAILURE)
+	if (rSound.SetFrequency(frequency) == FAILURE)
 	{
 		ErrorLogger::Write(L"Failed to set frequency for a sound: ");
-		ErrorLogger::Writeln(sb.m_sourceFileName.c_str());
+		ErrorLogger::Writeln(rSound.mSourceFileName.c_str());
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -168,16 +168,16 @@ ErrorType MySoundEngine::SetFrequency(SoundIndex sound, int frequency)
 
 ErrorType MySoundEngine::SetPan(SoundIndex sound, int pan)
 {
-	MySound& sb = FindSound(sound);
-	if (!sb.m_isLoaded)
+	MySound& rSound = FindSound(sound);
+	if (!rSound.mIsLoaded)
 	{
 		ErrorLogger::Writeln(L"Sound not found in SetPan.");
 		return FAILURE;
 	}
-	if (sb.SetPan(pan) == FAILURE)
+	if (rSound.SetPan(pan) == FAILURE)
 	{
 		ErrorLogger::Write(L"Failed to set pan for a sound: ");
-		ErrorLogger::Writeln(sb.m_sourceFileName.c_str());
+		ErrorLogger::Writeln(rSound.mSourceFileName.c_str());
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -189,15 +189,15 @@ ErrorType MySoundEngine::Play(SoundIndex sound, bool looping)
 	// are always zero. The third controls whether to loop,
 	// or just play once.
 
-	MySound& sb = FindSound(sound);
+	MySound& rSound = FindSound(sound);
 
-	if(!sb.m_isLoaded)
+	if(!rSound.mIsLoaded)
 	{
 		ErrorLogger::Writeln(L"Can't play sound - Sound buffer not created.");
 	}
 	else
 	{
-		ErrorType result = sb.Play(looping, lpds);
+		ErrorType result = rSound.Play(looping, mpLpds);
 
 		return result;
 	}	// if lpSoundBuffer not NULL
@@ -206,25 +206,25 @@ ErrorType MySoundEngine::Play(SoundIndex sound, bool looping)
 
 ErrorType MySoundEngine::Stop(SoundIndex sound)
 {
-	MySound& sb = FindSound(sound);
-	if(!sb.m_isLoaded)
+	MySound& rSound = FindSound(sound);
+	if(!rSound.mIsLoaded)
 	{
 		ErrorLogger::Writeln(L"Sound buffer not created.");
 		return FAILURE;
 	}
 
-	return sb.Stop();
+	return rSound.Stop();
 }
 
 void MySoundEngine::StopAllSounds()
 {
 	ErrorType answer = SUCCESS;
-	std::map<SoundIndex, MySound>::iterator it = m_MySoundList.begin();
-	for (; it != m_MySoundList.end(); it++)
+	std::map<SoundIndex, MySound>::iterator it = mIndexSoundsMap.begin();
+	for (; it != mIndexSoundsMap.end(); it++)
 	{
-		MySound& sb = it->second;
+		MySound& rSound = it->second;
 
-		sb.Stop();
+		rSound.Stop();
 	}
 }
 
@@ -233,20 +233,20 @@ void MySoundEngine::StopAllSounds()
 
 MySoundEngine::MySound::MySound()
 {
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
+	for (LPDIRECTSOUNDBUFFER& rNext : mLpdSoundBuffers)
 	{
-		pNext = nullptr;
+		rNext = nullptr;
 	}
 }
 
 void MySoundEngine::MySound::Release()
 {
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
+	for (LPDIRECTSOUNDBUFFER& rNext : mLpdSoundBuffers)
 	{
-		if (pNext)
+		if (rNext)
 		{
-			pNext->Release();
-			pNext = nullptr;
+			rNext->Release();
+			rNext = nullptr;
 		}
 
 	}
@@ -257,20 +257,20 @@ MySoundEngine::MySound::~MySound()
 	
 }
 
-LPDIRECTSOUNDBUFFER MySoundEngine::MySound::GetBuffer(IDirectSound8* lpds)
+LPDIRECTSOUNDBUFFER MySoundEngine::MySound::GetBuffer(IDirectSound8* pLpds)
 {
-	if (lpSoundBuffers.empty())
+	if (mLpdSoundBuffers.empty())
 	{
 		ErrorLogger::Writeln(L"Failed to GetBuffer, no buffers loaded.");
 		return nullptr;
 	}
 
 	// find a buffer that isn't currently playing
-	for (LPDIRECTSOUNDBUFFER buffer : lpSoundBuffers)
+	for (LPDIRECTSOUNDBUFFER buffer : mLpdSoundBuffers)
 	{
-		DWORD dwStatus;
-		buffer->GetStatus(&dwStatus);
-		bool isPlaying = (dwStatus & DSBSTATUS_PLAYING);
+		DWORD status;
+		buffer->GetStatus(&status);
+		bool isPlaying = (status & DSBSTATUS_PLAYING);
 		if (!isPlaying)
 		{
 			return buffer;
@@ -279,26 +279,26 @@ LPDIRECTSOUNDBUFFER MySoundEngine::MySound::GetBuffer(IDirectSound8* lpds)
 	
 	// if all are playing, make a duplicate and return it
 	LPDIRECTSOUNDBUFFER tempBuffer;
-	HRESULT err = lpds->DuplicateSoundBuffer(lpSoundBuffers[0], &tempBuffer);
+	HRESULT err = pLpds->DuplicateSoundBuffer(mLpdSoundBuffers[0], &tempBuffer);
 	if (err == S_OK)
 	{
-		lpSoundBuffers.push_back(std::move(tempBuffer));
+		mLpdSoundBuffers.push_back(std::move(tempBuffer));
 	}
 	else
 	{
 		ErrorLogger::Write(L"Couldn't create buffer duplicates: ");
-		ErrorLogger::Writeln(m_sourceFileName.c_str());
+		ErrorLogger::Writeln(mSourceFileName.c_str());
 	}
 
-	return lpSoundBuffers[lpSoundBuffers.size()-1];
+	return mLpdSoundBuffers[mLpdSoundBuffers.size()-1];
 }
 
 ErrorType MySoundEngine::MySound::Stop()
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
+	for (LPDIRECTSOUNDBUFFER& rNext : mLpdSoundBuffers)
 	{
-		if (FAILED(pNext->Stop()))
+		if (FAILED(rNext->Stop()))
 			result = FAILURE;
 	}
 	return result;
@@ -307,26 +307,26 @@ ErrorType MySoundEngine::MySound::Stop()
 ErrorType MySoundEngine::MySound::SetVolume(int vol)
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
+	for (LPDIRECTSOUNDBUFFER& rNext : mLpdSoundBuffers)
 	{
-		if (FAILED(pNext->SetVolume(vol)))
+		if (FAILED(rNext->SetVolume(vol)))
 			result = FAILURE;
 	}
 	return result;
 }
 
-ErrorType MySoundEngine::MySound::Play(bool looping, IDirectSound8* lpds)
+ErrorType MySoundEngine::MySound::Play(bool looping, IDirectSound8* pLpds)
 {
 	DWORD flag = 0;
 	if (looping)
 	{
 		flag = DSBPLAY_LOOPING;
 	}
-	HRESULT err = GetBuffer(lpds)->Play(0, 0, flag);
+	HRESULT err = GetBuffer(pLpds)->Play(0, 0, flag);
 	if (FAILED(err))
 	{
 		ErrorLogger::Write(L"Failed to play a sound: ");
-		ErrorLogger::Writeln(m_sourceFileName.c_str());
+		ErrorLogger::Writeln(mSourceFileName.c_str());
 		ErrorLogger::Writeln(MySoundEngine::ErrorString(err));
 		return FAILURE;
 	}
@@ -336,16 +336,16 @@ ErrorType MySoundEngine::MySound::Play(bool looping, IDirectSound8* lpds)
 ErrorType MySoundEngine::MySound::SetPan(int pan)
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
+	for (LPDIRECTSOUNDBUFFER& rNext : mLpdSoundBuffers)
 	{
-		HRESULT err = pNext->SetPan(pan);
+		HRESULT err = rNext->SetPan(pan);
 		if (FAILED(err)) result = FAILURE;
 	}
 
 	if (result == FAILURE)
 	{
 		ErrorLogger::Write(L"Failed to pan a sound:");
-		ErrorLogger::Writeln(m_sourceFileName.c_str());
+		ErrorLogger::Writeln(mSourceFileName.c_str());
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -354,25 +354,25 @@ ErrorType MySoundEngine::MySound::SetPan(int pan)
 ErrorType MySoundEngine::MySound::SetFrequency(int frequency)
 {
 	ErrorType result = SUCCESS;
-	for (LPDIRECTSOUNDBUFFER& pNext : lpSoundBuffers)
+	for (LPDIRECTSOUNDBUFFER& rNext : mLpdSoundBuffers)
 	{
-		HRESULT err = pNext->SetFrequency(frequency);
+		HRESULT err = rNext->SetFrequency(frequency);
 		if (FAILED(err)) result = FAILURE;
 	}
 
 	if (result == FAILURE)
 	{
 		ErrorLogger::Write(L"Failed to set a sound frequency: ");
-		ErrorLogger::Writeln(m_sourceFileName.c_str());
+		ErrorLogger::Writeln(mSourceFileName.c_str());
 		return FAILURE;
 	}
 	return SUCCESS;
 }
 
 
-ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8* lpds)
+ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8* pLpds)
 {
-	m_sourceFileName = filename;
+	mSourceFileName = filename;
 
 	DSBUFFERDESC dsbd;			// "Order form" for the sound
 	WAVEFORMATEX formatdesc;	// Description of the format	
@@ -496,7 +496,7 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 	dsbd.lpwfxFormat = &formatdesc;					// The format descriptor (got earlier from the file)
 
 	LPDIRECTSOUNDBUFFER tempLpSoundBuffer;
-	HRESULT err = lpds->CreateSoundBuffer(&dsbd, &tempLpSoundBuffer, NULL);
+	HRESULT err = pLpds->CreateSoundBuffer(&dsbd, &tempLpSoundBuffer, NULL);
 	if (FAILED(err))
 	{
 		Release();
@@ -550,8 +550,8 @@ ErrorType MySoundEngine::MySound::LoadWav(const wchar_t* filename, IDirectSound8
 
 	free(tempBuffer);
 
-	lpSoundBuffers.push_back(std::move(tempLpSoundBuffer));
-	m_isLoaded = true;
+	mLpdSoundBuffers.push_back(std::move(tempLpSoundBuffer));
+	mIsLoaded = true;
 
 	return SUCCESS;
 }

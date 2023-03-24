@@ -1,10 +1,6 @@
 #include "vector2D.h"
 #include "math.h"
 
-// Modified 04/11/2018
-// Changed rotatedBy to use angles clockwise
-
-
 Vector2D::Vector2D(): XValue(0), YValue(0)
 {
 }
@@ -13,10 +9,10 @@ Vector2D::Vector2D(float x, float y): XValue(x), YValue(y)
 {
 }
 
-Vector2D::Vector2D(const Vector2D& copyVector)
+Vector2D::Vector2D(const Vector2D& rCopyVector)
 {
-	XValue=copyVector.XValue;
-	YValue=copyVector.YValue;
+	XValue = rCopyVector.XValue;
+	YValue = rCopyVector.YValue;
 }
 
 void Vector2D::set(float x, float y)
@@ -25,22 +21,22 @@ void Vector2D::set(float x, float y)
 	YValue=y;
 }
 
-void Vector2D::set(const Vector2D& copyVector)
+void Vector2D::set(const Vector2D& rCopyVector)
 {
-	XValue=copyVector.XValue;
-	YValue=copyVector.YValue;
+	XValue = rCopyVector.XValue;
+	YValue = rCopyVector.YValue;
 }
 
 float Vector2D::magnitude() const
 {
-	return float(sqrt(XValue*XValue + YValue*YValue));
+	return float(sqrt(XValue * XValue + YValue * YValue));
 }
 
 	// Returns the square of the magnitude of the vector
 	// (hence avoiding a square root.)
 float Vector2D::magnitudeSquared() const
 {
-	return (XValue*XValue + YValue*YValue);
+	return (XValue * XValue + YValue * YValue);
 }
 
 
@@ -56,27 +52,27 @@ Vector2D Vector2D::unitVector() const
 	return Vector2D(XValue/divideBy, YValue/divideBy);
 }
 
-Vector2D Vector2D::operator+(const Vector2D& addVector) const
+Vector2D Vector2D::operator+(const Vector2D& rAddVector) const
 {
-	return Vector2D (XValue+addVector.XValue,YValue+addVector.YValue);
+	return Vector2D (XValue + rAddVector.XValue, YValue + rAddVector.YValue);
 }
 
-void Vector2D::operator+=(const Vector2D& addVector)
+void Vector2D::operator+=(const Vector2D& rAddVector)
 {
-	XValue+=addVector.XValue;
-	YValue+=addVector.YValue;
+	XValue += rAddVector.XValue;
+	YValue += rAddVector.YValue;
 }
 
-void Vector2D::operator-=(const Vector2D& addVector)
+void Vector2D::operator-=(const Vector2D& rAddVector)
 {
-	XValue-=addVector.XValue;
-	YValue-=addVector.YValue;
+	XValue -= rAddVector.XValue;
+	YValue -= rAddVector.YValue;
 }
 
 void Vector2D::operator/=(float divisor)
 {
-	XValue/=divisor;
-	YValue/=divisor;
+	XValue /= divisor;
+	YValue /= divisor;
 }
 
 void Vector2D::operator/=(int divisor)
@@ -93,8 +89,8 @@ void Vector2D::operator/=(double divisor)
 
 void Vector2D::operator*=(float multiplier)
 {
-	XValue*=multiplier;
-	YValue*=multiplier;
+	XValue *= multiplier;
+	YValue *= multiplier;
 }
 
 void Vector2D::operator*=(double multiplier)
@@ -105,17 +101,17 @@ void Vector2D::operator*=(double multiplier)
 
 void Vector2D::operator*=(int multiplier)
 {
-	XValue*=multiplier;
-	YValue*=multiplier;
+	XValue *= multiplier;
+	YValue *= multiplier;
 }
 
 
-Vector2D Vector2D::operator-(const Vector2D& addVector) const
+Vector2D Vector2D::operator-(const Vector2D& rMinusVector) const
 {
-	return Vector2D (XValue-addVector.XValue,YValue-addVector.YValue);
+	return Vector2D (XValue - rMinusVector.XValue,YValue- rMinusVector.YValue);
 }
 
-Vector2D Vector2D::operator -() const
+Vector2D Vector2D::operator-() const
 {
 	return Vector2D (-this->XValue,-this->YValue);
 }
@@ -135,14 +131,14 @@ Vector2D Vector2D::operator*(int multiplier) const
 	return Vector2D(XValue*multiplier,YValue*multiplier);
 }
 
-float Vector2D::operator*(const Vector2D& otherVector) const
+float Vector2D::operator*(const Vector2D& rOtherVector) const
 {
-	return XValue*otherVector.XValue+YValue*otherVector.YValue;
+	return XValue * rOtherVector.XValue + YValue * rOtherVector.YValue;
 }
 
-bool Vector2D::operator==(const Vector2D& otherVector) const
+bool Vector2D::operator==(const Vector2D& rOtherVector) const
 {
-	return (XValue == otherVector.XValue && YValue == otherVector.YValue);
+	return (XValue == rOtherVector.XValue && YValue == rOtherVector.YValue);
 }
 
 Vector2D Vector2D::operator/(float divisor) const
@@ -165,10 +161,10 @@ float Vector2D::angle() const
 {
 	float answer;
 
-	answer=float(atan2(XValue, YValue));
+	answer = float(atan2(XValue, YValue));
 
-	while(answer<0) answer+=6.28319f;
-	while(answer>=6.28319f) answer-=6.28319f;
+	while(answer < 0) answer += 6.28319f;
+	while(answer >= 6.28319f) answer -= 6.28319f;
 
 	return answer;
 }
@@ -176,20 +172,20 @@ float Vector2D::angle() const
 void Vector2D::setBearing(float angle, float magnitude)
 {
 // Working in radians
-	XValue = magnitude*float(sin(angle));
-	YValue = magnitude*float(cos(angle));
+	XValue = magnitude * float(sin(angle));
+	YValue = magnitude * float(cos(angle));
 }
 
-bool Vector2D::isParallelTo(const Vector2D &otherVector) const
+bool Vector2D::isParallelTo(const Vector2D &rOtherVector) const
 {
-	if(this->unitVector() == otherVector.unitVector()) return true;
-	if(this->unitVector() == -otherVector.unitVector()) return true;
+	if(this->unitVector() == rOtherVector.unitVector()) return true;
+	if(this->unitVector() == -rOtherVector.unitVector()) return true;
 	else return false;
 }
 
-bool Vector2D::isPerpendicularTo(const Vector2D &otherVector) const
+bool Vector2D::isPerpendicularTo(const Vector2D & rOtherVector) const
 {
-	return((*this*otherVector)==0);
+	return((*this * rOtherVector) == 0);
 }
 
 Vector2D Vector2D::perpendicularVector() const
@@ -201,7 +197,7 @@ Vector2D Vector2D::rotatedBy(float angle) const
 {
 	float s = float(sin(angle));
 	float c = float(cos(angle));
-	return Vector2D(this->XValue * c + this->YValue*s,- this->XValue * s + this->YValue * c);
+	return Vector2D(this->XValue * c + this->YValue * s,- this->XValue * s + this->YValue * c);
 	
 }
 

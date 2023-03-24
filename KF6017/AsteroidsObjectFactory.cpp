@@ -19,66 +19,66 @@ AsteroidsObjectFactory::~AsteroidsObjectFactory()
 {
 }
 
-std::weak_ptr<GameObject> AsteroidsObjectFactory::Create(ObjectType type, std::weak_ptr<ServiceManager> serviceManager, Vector2D initPosition, float initAngle, float initScale)
+std::weak_ptr<GameObject> AsteroidsObjectFactory::Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, Vector2D initPosition, float initAngle, float initScale)
 {
-	std::shared_ptr<ObjectManager> pObjectManager = serviceManager.lock()->GetObjectManager().lock();
+	std::shared_ptr<ObjectManager> pObjectManager = pServiceManager.lock()->GetObjectManager().lock();
 	if (!pObjectManager)
 	{
 		ErrorLogger::Writeln(L"AsteroidsObjectFactory::Create() - Failed to fetch object manager.");
 		return std::weak_ptr<GameObject>();
 	}
 
-	std::shared_ptr<GameObject> asGameObject = nullptr;
-	std::shared_ptr<ICollidableObject> asCollidableObject = nullptr;
+	std::shared_ptr<GameObject> pAsGameObject = nullptr;
+	std::shared_ptr<ICollidableObject> pAsCollidableObject = nullptr;
 
 	if (type == ObjectType::spaceship)
 	{
-		std::shared_ptr<Spaceship> obj = std::make_shared<Spaceship>(serviceManager);
-		asGameObject = std::static_pointer_cast<GameObject>(obj);
-		asCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
+		std::shared_ptr<Spaceship> pObj = std::make_shared<Spaceship>(pServiceManager);
+		pAsGameObject = std::static_pointer_cast<GameObject>(pObj);
+		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(pObj);
 	} 
 	else if (type == ObjectType::spacerock)
 	{
-		std::shared_ptr<SpaceRock> obj = std::make_shared<SpaceRock>(serviceManager);
-		asGameObject = std::static_pointer_cast<GameObject>(obj);
-		asCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
+		std::shared_ptr<SpaceRock> obj = std::make_shared<SpaceRock>(pServiceManager);
+		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
+		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
 	}
 	else if (type == ObjectType::bullet)
 	{
-		std::shared_ptr<Bullet> obj = std::make_shared<Bullet>(serviceManager);
-		asGameObject = std::static_pointer_cast<GameObject>(obj);
-		asCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
+		std::shared_ptr<Bullet> obj = std::make_shared<Bullet>(pServiceManager);
+		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
+		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
 	}
 	else if (type == ObjectType::explosion)
 	{
-		std::shared_ptr<Explosion> obj = std::make_shared<Explosion>(serviceManager);
-		asGameObject = std::static_pointer_cast<GameObject>(obj);
+		std::shared_ptr<Explosion> obj = std::make_shared<Explosion>(pServiceManager);
+		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
 	}
 
-	if (!asGameObject)
+	if (!pAsGameObject)
 	{
 		ErrorLogger::Writeln(L"AsteroidsObjectFactory::Create() - Failed to cast to GameObject.");
 		return std::weak_ptr<GameObject>();
 	}
 
-	InitialiseGameObject(asGameObject, initPosition, initAngle, initScale);
+	InitialiseGameObject(pAsGameObject, initPosition, initAngle, initScale);
 
-	if(asCollidableObject)
-		pObjectManager->AddCollidableObject(asGameObject, asCollidableObject);
+	if(pAsCollidableObject)
+		pObjectManager->AddCollidableObject(pAsGameObject, pAsCollidableObject);
 	else
-		pObjectManager->AddObject(asGameObject);
+		pObjectManager->AddObject(pAsGameObject);
 
-	return asGameObject;
+	return pAsGameObject;
 }
 
-void AsteroidsObjectFactory::InitialiseGameObject(std::shared_ptr<GameObject>& obj, Vector2D initPosition, float initAngle, float initScale)
+void AsteroidsObjectFactory::InitialiseGameObject(std::shared_ptr<GameObject>& rpObj, Vector2D initPosition, float initAngle, float initScale)
 {
 	if (initPosition == GetDefaultPositionValue())
-		obj->Initialise();
+		rpObj->Initialise();
 	else if (initAngle == GetDefaultAngleValue())
-		obj->Initialise(initPosition);
+		rpObj->Initialise(initPosition);
 	else if (initScale == GetDefaultScaleValue())
-		obj->Initialise(initPosition, initAngle);
+		rpObj->Initialise(initPosition, initAngle);
 	else
-		obj->Initialise(initPosition, initAngle, initScale);
+		rpObj->Initialise(initPosition, initAngle, initScale);
 }

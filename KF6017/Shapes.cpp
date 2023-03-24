@@ -28,22 +28,22 @@ IShape2D::~IShape2D()
 
 Point2D::Point2D()
 {
-	this->mPosition.set(0,0);
+	mPosition.set(0,0);
 }
 
 Point2D::Point2D(float x, float y)
 {
-	this->mPosition.set(x,y);
+	mPosition.set(x,y);
 }
 
-Point2D::Point2D(const Vector2D &copy)
+Point2D::Point2D(const Vector2D& rCopy)
 {
-	this->mPosition=copy;
+	mPosition = rCopy;
 }
 
-void Point2D::PlaceAt(const Vector2D &position)
+void Point2D::PlaceAt(const Vector2D& rPosition)
 {
-	this->mPosition = position;
+	mPosition = rPosition;
 }
 
 Vector2D Point2D::GetPosition() const
@@ -51,27 +51,27 @@ Vector2D Point2D::GetPosition() const
 	return mPosition;
 }
 
-bool Point2D::Intersects(const Point2D &other) const
+bool Point2D::Intersects(const Point2D& rOther) const
 {
-	return(this->mPosition == other.mPosition);
+	return(mPosition == rOther.mPosition);
 }
 
-float Point2D::Distance(const Point2D &other) const
+float Point2D::Distance(const Point2D& rOther) const
 {
-	return (this->mPosition - other.mPosition).magnitude();
+	return (mPosition - rOther.mPosition).magnitude();
 }
 
-Vector2D Point2D::Intersection(const Point2D &other) const
+Vector2D Point2D::Intersection(const Point2D& rOther) const
 {	
 	// Uhh... Closest point on a point IS the point.
-	return this->mPosition;
+	return mPosition;
 }
 
-bool Point2D::Intersects(const Segment2D &other) const
+bool Point2D::Intersects(const Segment2D& rOther) const
 {
-	double t1 =other.GetTFromX(this->mPosition.XValue);
-	double t2 =other.GetTFromY(this->mPosition.YValue);
-	if(t2==t1)	// On LINE
+	double t1 = rOther.GetTFromX(this->mPosition.XValue);
+	double t2 = rOther.GetTFromY(this->mPosition.YValue);
+	if(t2 == t1)	// On LINE
 	{
 		return (t2>=0 && t2<1.0);	// Within ends of segment
 	}
@@ -79,135 +79,135 @@ bool Point2D::Intersects(const Segment2D &other) const
 		return false;
 }
 
-bool Point2D::Intersects(const IShape2D& other) const
+bool Point2D::Intersects(const IShape2D& rOther) const
 {
 	// Is it a rectangle?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a circle?
-	if (typeid(other) == typeid(Circle2D))
-		return dynamic_cast<const Circle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Circle2D))
+		return dynamic_cast<const Circle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a segment?
-	if (typeid(other) == typeid(Segment2D))
-		return dynamic_cast<const Segment2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Segment2D))
+		return dynamic_cast<const Segment2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Point2D))
-		return dynamic_cast<const Point2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Point2D))
+		return dynamic_cast<const Point2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it an angled rectangle?
-	if (typeid(other) == typeid(AngledRectangle2D))
-		return dynamic_cast<const AngledRectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(AngledRectangle2D))
+		return dynamic_cast<const AngledRectangle2D*> (&rOther)->Intersects(*this);
 
 	return false;
 }
 
-float Point2D::Distance(const Segment2D &other) const
+float Point2D::Distance(const Segment2D& rOther) const
 {
 	// Project the point onto the line and find the parameter, t
 	// using parametric equation.
 	// Hmm. Should be ((C - S) . ( E - S ) ) / L^2
 
-	return other.Distance(*this);
+	return rOther.Distance(*this);
 }
 
-Vector2D Point2D::Intersection(const Segment2D &other) const
+Vector2D Point2D::Intersection(const Segment2D& rOther) const
 {
 	return mPosition;
 }
 
-bool Point2D::Intersects(const Circle2D &other) const
+bool Point2D::Intersects(const Circle2D& rOther) const
 {
 
-	return ((mPosition-other.GetCentre()).magnitude()<other.GetRadius());
+	return ((mPosition - rOther.GetCentre()).magnitude() < rOther.GetRadius());
 }
 
-float Point2D::Distance(const Circle2D &other) const
+float Point2D::Distance(const Circle2D& rOther) const
 {
-	return ( (mPosition-other.GetCentre()).magnitude()-other.GetRadius() );
+	return ( (mPosition - rOther.GetCentre()).magnitude() - rOther.GetRadius() );
 }
 
-Vector2D Point2D::Intersection(const Circle2D &other) const
+Vector2D Point2D::Intersection(const Circle2D& rOther) const
 {
 	// Uhh... Closest point on a point IS the point.
-	return this->mPosition;
+	return mPosition;
 }
 
-bool Point2D::Intersects(const Rectangle2D &other) const
+bool Point2D::Intersects(const Rectangle2D& rOther) const
 {
-	if( mPosition.XValue < other.GetCorner1().XValue
-		|| mPosition.XValue > other.GetCorner2().XValue
-		|| mPosition.YValue < other.GetCorner1().YValue
-		|| mPosition.YValue > other.GetCorner2().YValue)
+	if( mPosition.XValue < rOther.GetCorner1().XValue
+		|| mPosition.XValue > rOther.GetCorner2().XValue
+		|| mPosition.YValue < rOther.GetCorner1().YValue
+		|| mPosition.YValue > rOther.GetCorner2().YValue)
 		return false;
 	else
 		return true;
 }
 
-bool Point2D::Intersects(const AngledRectangle2D &other) const
+bool Point2D::Intersects(const AngledRectangle2D& rOther) const
 {
-   return other.Intersects(*this);
+   return rOther.Intersects(*this);
 }
 
-float Point2D::Distance(const Rectangle2D &other) const
+float Point2D::Distance(const Rectangle2D& rOther) const
 {
 	// 9 possibilities
-	if(mPosition.XValue< other.GetCorner1().XValue)
+	if(mPosition.XValue < rOther.GetCorner1().XValue)
 	{	// Left side
-		if(mPosition.YValue<other.GetCorner1().YValue)
+		if(mPosition.YValue < rOther.GetCorner1().YValue)
 		{	// Top left
-			return (mPosition-other.GetCorner1()).magnitude();
+			return (mPosition - rOther.GetCorner1()).magnitude();
 		}
-		else if(mPosition.YValue>=other.GetCorner2().YValue)
+		else if(mPosition.YValue >= rOther.GetCorner2().YValue)
 		{	// Bottom left
-			Vector2D bl(other.GetCorner1().XValue, other.GetCorner2().YValue);
+			Vector2D bl(rOther.GetCorner1().XValue, rOther.GetCorner2().YValue);
 			return (mPosition-bl).magnitude();
 		}
 		else
 		{	// Middle left
-			return other.GetCorner1().XValue-mPosition.XValue;
+			return rOther.GetCorner1().XValue-mPosition.XValue;
 		}
 
 	}
-	else if(mPosition.XValue >= other.GetCorner2().XValue)
+	else if(mPosition.XValue >= rOther.GetCorner2().XValue)
 	{	// Right side
-		if(mPosition.YValue<other.GetCorner1().YValue)
+		if(mPosition.YValue< rOther.GetCorner1().YValue)
 		{	// Top right
-			Vector2D tr(other.GetCorner2().XValue, other.GetCorner1().YValue);
+			Vector2D tr(rOther.GetCorner2().XValue, rOther.GetCorner1().YValue);
 			return (mPosition-tr).magnitude();
 		}
-		else if(mPosition.YValue>=other.GetCorner2().YValue)
+		else if(mPosition.YValue >= rOther.GetCorner2().YValue)
 		{	// Bottom right
-			return (mPosition-other.GetCorner2()).magnitude();
+			return (mPosition - rOther.GetCorner2()).magnitude();
 		}
 		else
 		{	// Middle right
-			return mPosition.XValue-other.GetCorner2().XValue;
+			return mPosition.XValue - rOther.GetCorner2().XValue;
 		}
 	}
 	else
 	{	// Centre line
-		if(mPosition.YValue<other.GetCorner1().YValue)
+		if(mPosition.YValue < rOther.GetCorner1().YValue)
 		{	// Top 
-			return other.GetCorner1().YValue-mPosition.YValue;
+			return rOther.GetCorner1().YValue-mPosition.YValue;
 		}
-		else if(mPosition.YValue>=other.GetCorner2().YValue)
+		else if(mPosition.YValue >= rOther.GetCorner2().YValue)
 		{	// Bottom
-			return mPosition.YValue-other.GetCorner2().YValue;
+			return mPosition.YValue - rOther.GetCorner2().YValue;
 		}
 		else
 		{	// Inside rectangle  get distances to edges
 			float t,b,l,r;
-			t=mPosition.YValue-other.GetCorner1().YValue;
-			b=other.GetCorner2().YValue-mPosition.YValue;
-			l=mPosition.XValue-other.GetCorner1().XValue;
-			r=other.GetCorner2().XValue-mPosition.XValue;
+			t = mPosition.YValue - rOther.GetCorner1().YValue;
+			b = rOther.GetCorner2().YValue-mPosition.YValue;
+			l = mPosition.XValue - rOther.GetCorner1().XValue;
+			r = rOther.GetCorner2().XValue-mPosition.XValue;
 
 			float smallest = t;
 			if(smallest>b)
@@ -222,10 +222,10 @@ float Point2D::Distance(const Rectangle2D &other) const
 	}
 }
 
-Vector2D Point2D::Intersection(const Rectangle2D &other) const
+Vector2D Point2D::Intersection(const Rectangle2D& rOther) const
 {
 	// Uhh... Closest point on a point IS the point.
-	return this->mPosition;
+	return mPosition;
 }
 
 // ****************************************************************
@@ -237,10 +237,10 @@ Segment2D::Segment2D(): mStart(0,0), mEnd(0,0)
 
 }
 
-void Segment2D::PlaceAt(const Vector2D &start, const Vector2D &end)
+void Segment2D::PlaceAt(const Vector2D &rStart, const Vector2D &rEnd)
 {
-	this->mStart=start;
-	this->mEnd=end;
+	mStart=rStart;
+	mEnd=rEnd;
 }
 
 Vector2D Segment2D::GetStart() const
@@ -267,19 +267,19 @@ float Segment2D::GetLength() const
 	return (mStart-mEnd).magnitude();
 }
 
-bool Segment2D::Intersects(const Point2D &other) const
+bool Segment2D::Intersects(const Point2D& rOther) const
 {
 
-	return other.Intersects(*this);
+	return rOther.Intersects(*this);
 }
 
-float Segment2D::Distance(const Point2D &other) const
+float Segment2D::Distance(const Point2D& rOther) const
 {
 
-	return (other.GetPosition() - Intersection(other) ).magnitude();
+	return (rOther.GetPosition() - Intersection(rOther) ).magnitude();
 }
 
-Vector2D Segment2D::Intersection(const Point2D &other) const
+Vector2D Segment2D::Intersection(const Point2D& rOther) const
 {
 	// Special case - line with length of zero
 	if(mEnd==mStart) 
@@ -290,7 +290,7 @@ Vector2D Segment2D::Intersection(const Point2D &other) const
 		Vector2D Direction = (mEnd - mStart).unitVector();
 
 		// Projection of the point onto the line
-		float dProjection = (other.GetPosition() - mStart)*Direction;
+		float dProjection = (rOther.GetPosition() - mStart) * Direction;
 
 		float t = dProjection/GetLength();
 			Vector2D vec = mStart + Direction*dProjection;
@@ -307,56 +307,56 @@ Vector2D Segment2D::Intersection(const Point2D &other) const
 	}	// End if line length is not zero
 }
 
-bool Segment2D::Intersects(const IShape2D& other) const
+bool Segment2D::Intersects(const IShape2D& rOther) const
 {
 	// Is it a rectangle?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a circle?
-	if (typeid(other) == typeid(Circle2D))
-		return dynamic_cast<const Circle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Circle2D))
+		return dynamic_cast<const Circle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a segment?
-	if (typeid(other) == typeid(Segment2D))
-		return dynamic_cast<const Segment2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Segment2D))
+		return dynamic_cast<const Segment2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Point2D))
-		return dynamic_cast<const Point2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Point2D))
+		return dynamic_cast<const Point2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it an angled rectangle?
-	if (typeid(other) == typeid(AngledRectangle2D))
-		return dynamic_cast<const AngledRectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(AngledRectangle2D))
+		return dynamic_cast<const AngledRectangle2D*> (&rOther)->Intersects(*this);
 
 	// Undefined shape
 	return false;
 
 }
 
-bool Segment2D::Intersects(const Segment2D &other) const
+bool Segment2D::Intersects(const Segment2D& rOther) const
 {
 	// Check that lines are not parallel
 
-	if(!ParallelTo(other))
+	if(!ParallelTo(rOther))
 	{
 		//Find the t (parametric equation parameter) of the
 		// point of intersection on this line
 
 		// Find t. Big equation from
 		// http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
-		float t1 =(   (other.mEnd.XValue - other.mStart.XValue)*(this->mStart.YValue - other.mStart.YValue)
-			- (other.mEnd.YValue - other.mStart.YValue) * (this->mStart.XValue - other.mStart.XValue)    )
-			/ (    (other.mEnd.YValue - other.mStart.YValue) * (this->mEnd.XValue - this->mStart.XValue)
-			- (other.mEnd.XValue - other.mStart.XValue) * (this->mEnd.YValue - this->mStart.YValue)  );
+		float t1 =(   (rOther.mEnd.XValue - rOther.mStart.XValue)*(this->mStart.YValue - rOther.mStart.YValue)
+			- (rOther.mEnd.YValue - rOther.mStart.YValue) * (this->mStart.XValue - rOther.mStart.XValue)    )
+			/ (    (rOther.mEnd.YValue - rOther.mStart.YValue) * (this->mEnd.XValue - this->mStart.XValue)
+			- (rOther.mEnd.XValue - rOther.mStart.XValue) * (this->mEnd.YValue - this->mStart.YValue)  );
 
 		Vector2D p1(this->PointFromT(t1));		// Point of intersection
 
-		float t2 = other.GetTFromX(p1.XValue);
+		float t2 = rOther.GetTFromX(p1.XValue);
 
 		if(t1>=0 && t1<1.0 && t2>=0 && t2<1.0)	// Intersection
 			return true;
@@ -367,25 +367,25 @@ bool Segment2D::Intersects(const Segment2D &other) const
 		return false;
 }
 
-float Segment2D::Distance(const Segment2D &other) const
+float Segment2D::Distance(const Segment2D& rOther) const
 {
 	// Check that lines are not parallel
 
-	if(!ParallelTo(other))
+	if(!ParallelTo(rOther))
 	{
 		//Find the t (parametric equation parameter) of the
 		// point of intersection on this line
 
 		// Find t. Big equation from
 		// http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
-		float t1 =(   (other.mEnd.XValue - other.mStart.XValue)*(this->mStart.YValue - other.mStart.YValue)
-			- (other.mEnd.YValue - other.mStart.YValue) * (this->mStart.XValue - other.mStart.XValue)    )
-			/ (    (other.mEnd.YValue - other.mStart.YValue) * (this->mEnd.XValue - this->mStart.XValue)
-			- (other.mEnd.XValue - other.mStart.XValue) * (this->mEnd.YValue - this->mStart.YValue)  );
+		float t1 =(   (rOther.mEnd.XValue - rOther.mStart.XValue)*(mStart.YValue - rOther.mStart.YValue)
+			- (rOther.mEnd.YValue - rOther.mStart.YValue) * (mStart.XValue - rOther.mStart.XValue)    )
+			/ (    (rOther.mEnd.YValue - rOther.mStart.YValue) * (mEnd.XValue - mStart.XValue)
+			- (rOther.mEnd.XValue - rOther.mStart.XValue) * (mEnd.YValue - mStart.YValue)  );
 
 		Vector2D p1(this->PointFromT(t1));		// Point of intersection
 
-		float t2 = other.GetTFromX(p1.XValue);
+		float t2 = rOther.GetTFromX(p1.XValue);
 
 		if(t1>=0 && t1<1.0 && t2>=0 && t2<1.0)	// Intersection
 			return 0;							// Return zero separation
@@ -393,10 +393,10 @@ float Segment2D::Distance(const Segment2D &other) const
 		
 	// Intersection not on segments or lines parallel
 	float distances[4];				// Between four points
-	distances[0] = other.Distance(Point2D(mStart));
-	distances[1] = other.Distance(Point2D(mEnd));
-	distances[2] = this->Distance(Point2D(other.mStart));
-	distances[3] = this->Distance(Point2D(other.mEnd));
+	distances[0] = rOther.Distance(Point2D(mStart));
+	distances[1] = rOther.Distance(Point2D(mEnd));
+	distances[2] = this->Distance(Point2D(rOther.mStart));
+	distances[3] = this->Distance(Point2D(rOther.mEnd));
 
 	// Find smallest
 	int smallest = 0;
@@ -409,15 +409,15 @@ float Segment2D::Distance(const Segment2D &other) const
 	return distances[smallest];
 }
 
-bool Segment2D::ParallelTo(const Segment2D &other) const
+bool Segment2D::ParallelTo(const Segment2D& rOther) const
 {
-	return ParallelTo(other.mEnd-other.mStart);
+	return ParallelTo(rOther.mEnd - rOther.mStart);
 }
 
-bool Segment2D::ParallelTo(const Vector2D &other) const
+bool Segment2D::ParallelTo(const Vector2D& rOther) const
 {
-	Vector2D direction = mEnd -mStart;
-	double dotProduct = direction.unitVector()*other.unitVector();
+	Vector2D direction = mEnd - mStart;
+	double dotProduct = direction.unitVector()* rOther.unitVector();
 	if(dotProduct<1.00001 && dotProduct>0.99999)
 		return true;
 	if(dotProduct>-1.00001 && dotProduct<-0.99999)
@@ -425,25 +425,25 @@ bool Segment2D::ParallelTo(const Vector2D &other) const
 	else return false;
 }
 
-Vector2D Segment2D::Intersection(const Segment2D &other) const
+Vector2D Segment2D::Intersection(const Segment2D& rOther) const
 {
 	// Check that lines are not parallel
 
-	if(!ParallelTo(other))
+	if(!ParallelTo(rOther))
 	{
 		//Find the t (parametric equation parameter) of the
 		// point of intersection on this line
 
 		// Find t. Big equation from
 		// http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
-		float t1 =(   (other.mEnd.XValue - other.mStart.XValue)*(this->mStart.YValue - other.mStart.YValue)
-			- (other.mEnd.YValue - other.mStart.YValue) * (this->mStart.XValue - other.mStart.XValue)    )
-			/ (    (other.mEnd.YValue - other.mStart.YValue) * (this->mEnd.XValue - this->mStart.XValue)
-			- (other.mEnd.XValue - other.mStart.XValue) * (this->mEnd.YValue - this->mStart.YValue)  );
+		float t1 =(   (rOther.mEnd.XValue - rOther.mStart.XValue)*(mStart.YValue - rOther.mStart.YValue)
+			- (rOther.mEnd.YValue - rOther.mStart.YValue) * (mStart.XValue - rOther.mStart.XValue)    )
+			/ (    (rOther.mEnd.YValue - rOther.mStart.YValue) * (mEnd.XValue - mStart.XValue)
+			- (rOther.mEnd.XValue - rOther.mStart.XValue) * (mEnd.YValue - mStart.YValue)  );
 
 		Vector2D p1(this->PointFromT(t1));		// Point of intersection
 
-		float t2 = other.GetTFromX(p1.XValue);
+		float t2 = rOther.GetTFromX(p1.XValue);
 
 		if(t1>=0 && t1<1.0 && t2>=0 && t2<1.0)	// Intersection
 			return p1;							// Return the point
@@ -451,10 +451,10 @@ Vector2D Segment2D::Intersection(const Segment2D &other) const
 		
 	// Intersection not on segments or lines parallel
 	double distances[4];				// Between four points
-	distances[0] = other.Distance(Point2D(mStart));
-	distances[1] = other.Distance(Point2D(mEnd));
-	distances[2] = this->Distance(Point2D(other.mStart));
-	distances[3] = this->Distance(Point2D(other.mEnd));
+	distances[0] = rOther.Distance(Point2D(mStart));
+	distances[1] = rOther.Distance(Point2D(mEnd));
+	distances[2] = this->Distance(Point2D(rOther.mStart));
+	distances[3] = this->Distance(Point2D(rOther.mEnd));
 
 	// Find smallest
 	int smallest = 0;
@@ -469,67 +469,64 @@ Vector2D Segment2D::Intersection(const Segment2D &other) const
 	else if(smallest == 1)		// My end closest to other segment
 		return mEnd;
 	else if(smallest == 2)		// Other line's start closest to my segment
-		return Intersection(Point2D(other.mStart));
+		return Intersection(Point2D(rOther.mStart));
 	else						// other line's end closest to my segment
-		return Intersection(Point2D(other.mEnd));
+		return Intersection(Point2D(rOther.mEnd));
 	
 }
 
-bool Segment2D::Intersects(const Circle2D &other) const
+bool Segment2D::Intersects(const Circle2D& rOther) const
 {
-	return (Distance( other )<0);
+	return (Distance(rOther)<0);
 }
 
-float Segment2D::Distance(const Circle2D &other) const
+float Segment2D::Distance(const Circle2D& rOther) const
 {
 	// Get distance to the centre and subtract the radius
-	return (Distance( Point2D(other.GetCentre()))-other.GetRadius());;
+	return (Distance( Point2D(rOther.GetCentre())) - rOther.GetRadius());;
 }
 
-Vector2D Segment2D::Intersection(const Circle2D &other) const
+Vector2D Segment2D::Intersection(const Circle2D& rOther) const
 {
 
-	return Intersection(Point2D(other.mCentre));
+	return Intersection(Point2D(rOther.mCentre));
 }
 
-bool Segment2D::Intersects(const Rectangle2D &other) const
+bool Segment2D::Intersects(const Rectangle2D& rOther) const
 {
 	if(GetLength()==0)	// Special case
 	{
-		return(other.Intersects(Point2D(mEnd)));
+		return(rOther.Intersects(Point2D(mEnd)));
 	}
-	Segment2D clipped = other.Clip(*this);
+	Segment2D clipped = rOther.Clip(*this);
 	return (clipped.GetLength()>0);
 }
 
-bool Segment2D::Intersects(const AngledRectangle2D &other) const
+bool Segment2D::Intersects(const AngledRectangle2D& rOther) const
 {
-   return other.Intersects(*this);
+   return rOther.Intersects(*this);
 }
 
-float Segment2D::Distance(const Rectangle2D &other) const
+float Segment2D::Distance(const Rectangle2D& rOther) const
 {
 	// Slow
-	if(Intersects(other))
+	if(Intersects(rOther))
 		return 0.0;
-	return Distance(Point2D(Intersection(other)));
+	return Distance(Point2D(Intersection(rOther)));
 }
 
-Vector2D Segment2D::FirstIntersection(const Rectangle2D &other) const
+Vector2D Segment2D::FirstIntersection(const Rectangle2D& rOther) const
 {
-	Segment2D clipped = other.Clip(*this);
+	Segment2D clipped = rOther.Clip(*this);
 	if(clipped.GetLength()==0)	// No intersection
 		return mEnd;
 	else
 		return clipped.mStart;
 }
 
-
-
-
-Vector2D Segment2D::Intersection(const Rectangle2D &other) const
+Vector2D Segment2D::Intersection(const Rectangle2D& rOther) const
 {
-	Segment2D clipped = other.Clip(*this);
+	Segment2D clipped = rOther.Clip(*this);
 	if(clipped.GetLength()>0)	// If intersects
 		return (clipped.PointFromT(0.5)); // return mid-point of the clipped line
 
@@ -540,12 +537,12 @@ Vector2D Segment2D::Intersection(const Rectangle2D &other) const
 								// each line edge to the rectangle
 
 		// Get distances - this is gonna be slow
-		distances[0] = Distance(Point2D(other.GetTopLeft()));
-		distances[1] = Distance(Point2D(other.GetTopRight()));
-		distances[2] = Distance(Point2D(other.GetBottomLeft()));
-		distances[3] = Distance(Point2D(other.GetBottomRight()));
-		distances[4] = Point2D(mStart).Distance(other);
-		distances[5] = Point2D(mEnd).Distance(other);
+		distances[0] = Distance(Point2D(rOther.GetTopLeft()));
+		distances[1] = Distance(Point2D(rOther.GetTopRight()));
+		distances[2] = Distance(Point2D(rOther.GetBottomLeft()));
+		distances[3] = Distance(Point2D(rOther.GetBottomRight()));
+		distances[4] = Point2D(mStart).Distance(rOther);
+		distances[5] = Point2D(mEnd).Distance(rOther);
 
 		// Find smallest
 		int smallest = 0;
@@ -557,27 +554,27 @@ Vector2D Segment2D::Intersection(const Rectangle2D &other) const
 
 		if(smallest == 0)	// Top Left
 		{
-			return Intersection(Point2D(other.GetTopLeft()));
+			return Intersection(Point2D(rOther.GetTopLeft()));
 		}
 		else if(smallest == 1)	// Top right
 		{
-			return Intersection(Point2D(other.GetTopRight()));
+			return Intersection(Point2D(rOther.GetTopRight()));
 		}
 		else if(smallest == 2)	// Bottom left
 		{
-			return Intersection(Point2D(other.GetBottomLeft()));
+			return Intersection(Point2D(rOther.GetBottomLeft()));
 		}
 		else if(smallest == 3)	// Bottom right
 		{
-			return Intersection(Point2D(other.GetBottomRight()));
+			return Intersection(Point2D(rOther.GetBottomRight()));
 		}
 		else if(smallest == 4)	// Start of line closest to an edge
 		{
-			return Point2D(mStart).Intersection(other);
+			return Point2D(mStart).Intersection(rOther);
 		}
 		else 	//End of line closest to an edge
 		{
-			return Point2D(mEnd).Intersection(other);
+			return Point2D(mEnd).Intersection(rOther);
 		}
 	}
 }
@@ -586,18 +583,18 @@ float Segment2D::GetTFromX(float x) const
 {
 	if(mEnd.XValue-mStart.XValue == 0.0)
 	{
-		if(x==mEnd.XValue)
+		if(x == mEnd.XValue)
 			return 1.0;
 		else
 			return 0;
 	}
 	else
-		return (x-mStart.XValue)/(mEnd.XValue-mStart.XValue);
+		return (x - mStart.XValue) / (mEnd.XValue - mStart.XValue);
 }
 
 float Segment2D::GetTFromY(float y) const
 {
-	if(mEnd.YValue-mStart.YValue == 0.0)
+	if(mEnd.YValue - mStart.YValue == 0.0)
 	{
 		if(y==mEnd.YValue)
 			return 1.0;
@@ -629,31 +626,31 @@ void Segment2D::SetEndTo(float t)
 
 Circle2D::Circle2D(): mdRadius(0)
 {
-	this->mCentre.set(0,0);
+	mCentre.set(0,0);
 }
 
-Circle2D::Circle2D(const Vector2D &centre, float radius)
+Circle2D::Circle2D(const Vector2D& rCentre, float radius)
 {
-	this->mCentre=centre;
+	mCentre = rCentre;
 	if(radius>=0)
-		this->mdRadius=radius;
+		mdRadius=radius;
 	else
-		this->mdRadius=-radius;
+		mdRadius=-radius;
 }
 
 
-void Circle2D::PlaceAt(const Vector2D &centre, float radius)
+void Circle2D::PlaceAt(const Vector2D& rCentre, float radius)
 {
-	PlaceAt(centre);
-	if(radius>=0)
-		this->mdRadius=radius;
+	PlaceAt(rCentre);
+	if(radius >= 0)
+		mdRadius = radius;
 	else
-		this->mdRadius=-radius;
+		mdRadius =- radius;
 }
 
-void Circle2D::PlaceAt(const Vector2D& centre)
+void Circle2D::PlaceAt(const Vector2D& rCentre)
 {
-	this->mCentre = centre;
+	mCentre = rCentre;
 }
 
 
@@ -673,127 +670,127 @@ float Circle2D::GetArea() const
 	return 3.141593f * mdRadius*mdRadius;
 }
 
-bool Circle2D::Intersects(const Point2D &other) const
+bool Circle2D::Intersects(const Point2D& rOther) const
 {
-	return((other.GetPosition()-mCentre).magnitude()<mdRadius);
+	return((rOther.GetPosition()-mCentre).magnitude()<mdRadius);
 }
 
-float Circle2D::Distance(const Point2D &other) const
+float Circle2D::Distance(const Point2D& rOther) const
 {
-	return((other.GetPosition()-mCentre).magnitude()-mdRadius);
+	return((rOther.GetPosition()-mCentre).magnitude()-mdRadius);
 }
 
-Vector2D Circle2D::Intersection(const Point2D &other) const
+Vector2D Circle2D::Intersection(const Point2D& rOther) const
 {
-	Vector2D toPoint = other.mPosition - mCentre;
+	Vector2D toPoint = rOther.mPosition - mCentre;
 	toPoint = toPoint.unitVector();
 	return mCentre+toPoint*mdRadius;
 }
 
-bool Circle2D::Intersects(const Segment2D &other) const
+bool Circle2D::Intersects(const Segment2D& rOther) const
 {
-	return other.Intersects(*this);
+	return rOther.Intersects(*this);
 }
 
-bool Circle2D::Intersects(const IShape2D& other) const
+bool Circle2D::Intersects(const IShape2D& rOther) const
 {
 	// Is it a rectangle?
-	if(typeid(other)==typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if(typeid(rOther)==typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a circle?
-	if (typeid(other) == typeid(Circle2D))
-		return dynamic_cast<const Circle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Circle2D))
+		return dynamic_cast<const Circle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a segment?
-	if (typeid(other) == typeid(Segment2D))
-		return dynamic_cast<const Segment2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Segment2D))
+		return dynamic_cast<const Segment2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Point2D))
-		return dynamic_cast<const Point2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Point2D))
+		return dynamic_cast<const Point2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it an angled rectangle?
-	if (typeid(other) == typeid(AngledRectangle2D))
-		return dynamic_cast<const AngledRectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(AngledRectangle2D))
+		return dynamic_cast<const AngledRectangle2D*> (&rOther)->Intersects(*this);
 
 	// Undefined shape
 	return false;
 }
 
-float Circle2D::Distance(const Segment2D &other) const
+float Circle2D::Distance(const Segment2D& rOther) const
 {
-	return Distance(other.Intersection(mCentre));
+	return Distance(rOther.Intersection(mCentre));
 }
 
-Vector2D Circle2D::Intersection(const Segment2D &other) const
+Vector2D Circle2D::Intersection(const Segment2D& rOther) const
 {
-	return Intersection(other.Intersection(*this));	// Implicit cast to Point2D
+	return Intersection(rOther.Intersection(*this));	// Implicit cast to Point2D
 }
 
-bool Circle2D::Intersects(const Circle2D &other) const
+bool Circle2D::Intersects(const Circle2D& rOther) const
 {
-	return( (other.GetCentre()-mCentre).magnitude() < (mdRadius+other.GetRadius()) );
+	return( (rOther.GetCentre()-mCentre).magnitude() < (mdRadius + rOther.GetRadius()) );
 }
 
-float Circle2D::Distance(const Circle2D &other) const
+float Circle2D::Distance(const Circle2D& rOther) const
 {
-	return( (other.GetCentre()-mCentre).magnitude() - (mdRadius+other.GetRadius()) );
+	return( (rOther.GetCentre()-mCentre).magnitude() - (mdRadius+ rOther.GetRadius()) );
 }
 
-Vector2D Circle2D::Intersection(const Circle2D &other) const
+Vector2D Circle2D::Intersection(const Circle2D& rOther) const
 {
-	return Intersection(Point2D(other.mCentre));
+	return Intersection(Point2D(rOther.mCentre));
 }
 
-bool Circle2D::Intersects(const Rectangle2D &other) const
+bool Circle2D::Intersects(const Rectangle2D& rOther) const
 {
 	Point2D c(this->mCentre);
-	if(c.Distance(other)<this->mdRadius)
+	if(c.Distance(rOther)<this->mdRadius)
 		return true;
 	else
 		return false;
 }
 
-bool Circle2D::Intersects(const AngledRectangle2D &other) const
+bool Circle2D::Intersects(const AngledRectangle2D& rOther) const
 {
-   return other.Intersects(*this);
+   return rOther.Intersects(*this);
 }
 
-float Circle2D::Distance(const Rectangle2D &other) const
+float Circle2D::Distance(const Rectangle2D& rOther) const
 {
 	Point2D c(this->mCentre);
-	return(c.Distance(other)-mdRadius);
+	return(c.Distance(rOther)-mdRadius);
 }
 
-Vector2D Circle2D::Intersection(const Rectangle2D &other) const
+Vector2D Circle2D::Intersection(const Rectangle2D& rOther) const
 {
-	Vector2D otherEdge = other.Intersection(*this)-mCentre;
+	Vector2D otherEdge = rOther.Intersection(*this)-mCentre;
 	return (mCentre + otherEdge.unitVector()*mdRadius);
 }
 
-Vector2D Circle2D::CollisionNormal(const Point2D& other) const
+Vector2D Circle2D::CollisionNormal(const Point2D& rOther) const
 {
-	return (other.mPosition-mCentre).unitVector();
+	return (rOther.mPosition-mCentre).unitVector();
 }
 
-Vector2D Circle2D::CollisionNormal(const Circle2D& other) const
+Vector2D Circle2D::CollisionNormal(const Circle2D& rOther) const
 {
-	return (other.mCentre-mCentre).unitVector();
+	return (rOther.mCentre-mCentre).unitVector();
 }
 
-Vector2D Circle2D::CollisionNormal(const Rectangle2D& other) const
+Vector2D Circle2D::CollisionNormal(const Rectangle2D& rOther) const
 {
-	return (other.Intersection(*this)-mCentre).unitVector();
+	return (rOther.Intersection(*this)-mCentre).unitVector();
 }
 
-Vector2D Circle2D::CollisionNormal(const Segment2D& other) const
+Vector2D Circle2D::CollisionNormal(const Segment2D& rOther) const
 {
-	return (other.Intersection(*this)-mCentre).unitVector();
+	return (rOther.Intersection(*this)-mCentre).unitVector();
 }
 
 
@@ -888,19 +885,19 @@ float Rectangle2D::GetArea() const
 	else return a;
 }
 
-bool Rectangle2D::Intersects(const Point2D &other) const
+bool Rectangle2D::Intersects(const Point2D& rOther) const
 {
-	return other.Intersects(*this);
+	return rOther.Intersects(*this);
 }
 
-Vector2D Rectangle2D::CollisionNormal(const Point2D &other)const
+Vector2D Rectangle2D::CollisionNormal(const Point2D& rOther)const
 {
 	Vector2D answer;
 		double t,b,l,r;
-		t=other.GetPosition().YValue-GetCorner1().YValue;
-		b=GetCorner2().YValue-other.GetPosition().YValue;
-		l=other.GetPosition().XValue-GetCorner1().XValue;
-		r=GetCorner2().XValue-other.GetPosition().XValue;
+		t = rOther.GetPosition().YValue-GetCorner1().YValue;
+		b = GetCorner2().YValue - rOther.GetPosition().YValue;
+		l = rOther.GetPosition().XValue-GetCorner1().XValue;
+		r = GetCorner2().XValue - rOther.GetPosition().XValue;
 
 		double smallest = t;
 		{
@@ -928,63 +925,63 @@ Vector2D Rectangle2D::CollisionNormal(const Point2D &other)const
 		return answer;
 }
 
-float Rectangle2D::Distance(const Point2D &other) const
+float Rectangle2D::Distance(const Point2D& rOther) const
 {
 		
-	return other.Distance(*this);
+	return rOther.Distance(*this);
 }
 
-Vector2D Rectangle2D::Intersection(const Point2D &other) const
+Vector2D Rectangle2D::Intersection(const Point2D& rOther) const
 {
 	// 9 possibilities
-	if(other.mPosition.XValue< mCorner1.XValue)
+	if(rOther.mPosition.XValue < mCorner1.XValue)
 	{	// Left side
-		if(other.mPosition.YValue<mCorner1.YValue)
+		if(rOther.mPosition.YValue<mCorner1.YValue)
 		{	// Top left
 			return mCorner1;
 		}
-		else if(other.mPosition.YValue>=GetCorner2().YValue)
+		else if(rOther.mPosition.YValue>=GetCorner2().YValue)
 		{	// Bottom left
 			return GetBottomLeft();
 		}
 		else
 		{	// Middle left
-			return Vector2D(mCorner1.XValue, other.mPosition.YValue);
+			return Vector2D(mCorner1.XValue, rOther.mPosition.YValue);
 		}
 
 	}
-	else if(other.mPosition.XValue >= mCorner2.XValue)
+	else if(rOther.mPosition.XValue >= mCorner2.XValue)
 	{	// Right side
-		if(other.mPosition.YValue<mCorner1.YValue)
+		if(rOther.mPosition.YValue < mCorner1.YValue)
 		{	// Top right
 			return GetTopRight();
 		}
-		else if(other.mPosition.YValue>=mCorner2.YValue)
+		else if(rOther.mPosition.YValue >= mCorner2.YValue)
 		{	// Bottom right
 			return mCorner2;
 		}
 		else
 		{	// Middle right
-			return Vector2D(mCorner2.XValue, other.mPosition.YValue);
+			return Vector2D(mCorner2.XValue, rOther.mPosition.YValue);
 		}
 	}
 	else
 	{	// Centre line
-		if(other.mPosition.YValue<mCorner1.YValue)
+		if(rOther.mPosition.YValue < mCorner1.YValue)
 		{	// Top 
-			return Vector2D( other.mPosition.XValue, mCorner1.YValue);
+			return Vector2D(rOther.mPosition.XValue, mCorner1.YValue);
 		}
-		else if(other.mPosition.YValue>=mCorner2.YValue)
+		else if(rOther.mPosition.YValue>=mCorner2.YValue)
 		{	// Bottom
-			return Vector2D( other.mPosition.XValue, mCorner2.YValue);
+			return Vector2D(rOther.mPosition.XValue, mCorner2.YValue);
 		}
 		else
 		{	// Inside rectangle  get distances to edges
 			double t,b,l,r;
-			t=other.mPosition.YValue-mCorner1.YValue;
-			b=mCorner2.YValue-other.mPosition.YValue;
-			l=other.mPosition.XValue-mCorner1.XValue;
-			r=mCorner2.XValue-other.mPosition.XValue;
+			t = rOther.mPosition.YValue-mCorner1.YValue;
+			b = mCorner2.YValue - rOther.mPosition.YValue;
+			l = rOther.mPosition.XValue-mCorner1.XValue;
+			r = mCorner2.XValue - rOther.mPosition.XValue;
 
 			double smallest = t;
 			if(smallest>b)
@@ -995,82 +992,80 @@ Vector2D Rectangle2D::Intersection(const Point2D &other) const
 				smallest =r;
 
 			if(smallest == t)
-				return Vector2D( other.mPosition.XValue, mCorner1.YValue);
+				return Vector2D(rOther.mPosition.XValue, mCorner1.YValue);
 			else if(smallest == b)
-				return Vector2D( other.mPosition.XValue, mCorner2.YValue);
+				return Vector2D(rOther.mPosition.XValue, mCorner2.YValue);
 			else if(smallest == l)
-				return Vector2D(mCorner1.XValue, other.mPosition.YValue);
+				return Vector2D(mCorner1.XValue, rOther.mPosition.YValue);
 			else		// Smallest ==r
-				return Vector2D(mCorner2.XValue, other.mPosition.YValue);
+				return Vector2D(mCorner2.XValue, rOther.mPosition.YValue);
 		}
 	}
 
 }
 
-bool Rectangle2D::Intersects(const Segment2D &other) const
+bool Rectangle2D::Intersects(const Segment2D& rOther) const
 {
-	return other.Intersects(*this);
+	return rOther.Intersects(*this);
 }
 
-bool Rectangle2D::Intersects(const AngledRectangle2D &other) const
+bool Rectangle2D::Intersects(const AngledRectangle2D& rOther) const
 {
-   return other.Intersects(*this);
+   return rOther.Intersects(*this);
 }
 
-bool Rectangle2D::Intersects(const IShape2D& other) const
+bool Rectangle2D::Intersects(const IShape2D& rOther) const
 {
 	// Is it a rectangle?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a circle?
-	if (typeid(other) == typeid(Circle2D))
-		return dynamic_cast<const Circle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Circle2D))
+		return dynamic_cast<const Circle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a segment?
-	if (typeid(other) == typeid(Segment2D))
-		return dynamic_cast<const Segment2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Segment2D))
+		return dynamic_cast<const Segment2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Point2D))
-		return dynamic_cast<const Point2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Point2D))
+		return dynamic_cast<const Point2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it an angled rectangle?
-	if (typeid(other) == typeid(AngledRectangle2D))
-		return dynamic_cast<const AngledRectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(AngledRectangle2D))
+		return dynamic_cast<const AngledRectangle2D*> (&rOther)->Intersects(*this);
 
 	// Undefined shape
 	return false;
 }
 
-
-
-Vector2D Rectangle2D::Intersection(const Segment2D &other) const
+Vector2D Rectangle2D::Intersection(const Segment2D& rOther) const
 {
 	// Get the intersection point on the other segment
 	// and return the point closest to it
-	return Intersection(other.Intersection(*this));
+	return Intersection(rOther.Intersection(*this));
 }
 
-bool Rectangle2D::Intersects(const Circle2D &other) const
+bool Rectangle2D::Intersects(const Circle2D& rOther) const
 {
-	return other.Intersects(*this);
+	return rOther.Intersects(*this);
 }
 
-float Rectangle2D::Distance(const Circle2D &other) const
+float Rectangle2D::Distance(const Circle2D& rOther) const
 {
 
-	return other.Distance(*this);
+	return rOther.Distance(*this);
 }
 
-Vector2D Rectangle2D::Intersection(const Circle2D &other) const
+Vector2D Rectangle2D::Intersection(const Circle2D& rOther) const
 {
 		// Return the point closest to the centre of the circle
-	return Intersection(other.mCentre);
+	return Intersection(rOther.mCentre);
 }
 
 Segment2D Rectangle2D::Clip(Segment2D other) const
@@ -1169,20 +1164,20 @@ Segment2D Rectangle2D::Clip(Segment2D other) const
 	return other;
 }
 
-bool Rectangle2D::Intersects(const Rectangle2D &other) const
+bool Rectangle2D::Intersects(const Rectangle2D& rOther) const
 {
-	if(other.mCorner1.XValue >= this->mCorner2.XValue
-		|| other.mCorner2.XValue <= this->mCorner1.XValue
-		|| other.mCorner1.YValue >= this->mCorner2.YValue
-		|| other.mCorner2.YValue <= this->mCorner1.YValue)
+	if(rOther.mCorner1.XValue >= this->mCorner2.XValue
+		|| rOther.mCorner2.XValue <= this->mCorner1.XValue
+		|| rOther.mCorner1.YValue >= this->mCorner2.YValue
+		|| rOther.mCorner2.YValue <= this->mCorner1.YValue)
 		return false;
 	else
 		return true;
 }
 
-float Rectangle2D::Distance(const Rectangle2D &other) const
+float Rectangle2D::Distance(const Rectangle2D& rOther) const
 {
-	Rectangle2D clipRect = other;		// A rectangle that describes the overlap
+	Rectangle2D clipRect = rOther;		// A rectangle that describes the overlap
 										// between the two rectangles
 	// Clip the left side
 	if(clipRect.mCorner1.XValue<this->mCorner1.XValue)
@@ -1218,9 +1213,9 @@ float Rectangle2D::Distance(const Rectangle2D &other) const
 	return (clipRect.mCorner1- clipRect.mCorner2).magnitude();
 }
 
-Vector2D Rectangle2D::Intersection(const Rectangle2D &other) const
+Vector2D Rectangle2D::Intersection(const Rectangle2D& rOther) const
 {	
-	Rectangle2D clipRect = other;		// A rectangle that describes the overlap
+	Rectangle2D clipRect = rOther;		// A rectangle that describes the overlap
 										// between the two rectangles
 	// Clip the left side
 	if(clipRect.mCorner1.XValue<this->mCorner1.XValue)
@@ -1247,21 +1242,21 @@ Vector2D Rectangle2D::Intersection(const Rectangle2D &other) const
 	return Intersection(clipRect.GetCentre());
 }
 
-float Rectangle2D::LengthThrough(const Segment2D &other) const
+float Rectangle2D::LengthThrough(const Segment2D& rOther) const
 {
-	Segment2D seg = this->Clip(other);
+	Segment2D seg = this->Clip(rOther);
 	return seg.GetLength();
 }
 
-Vector2D Rectangle2D::CollisionNormal(const Circle2D& other) const
+Vector2D Rectangle2D::CollisionNormal(const Circle2D& rOther) const
 {
-	if(Intersects(Vector2D(other.mCentre)))		// Centre of circle inside rectangle
+	if(Intersects(Vector2D(rOther.mCentre)))		// Centre of circle inside rectangle
 	{
 		float t,b,l,r;
-		t=other.mCentre.YValue-mCorner1.YValue;
-		b=mCorner2.YValue-other.mCentre.YValue;
-		l=other.mCentre.XValue-mCorner1.XValue;
-		r=mCorner2.XValue-other.mCentre.XValue;
+		t = rOther.mCentre.YValue-mCorner1.YValue;
+		b = mCorner2.YValue - rOther.mCentre.YValue;
+		l = rOther.mCentre.XValue - mCorner1.XValue;
+		r = mCorner2.XValue - rOther.mCentre.XValue;
 
 		float smallest = t;
 		if(smallest>b)
@@ -1282,43 +1277,43 @@ Vector2D Rectangle2D::CollisionNormal(const Circle2D& other) const
 	}
 	else		// Centre of circle outside rectangle
 	{
-		Vector2D edge = Intersection(Point2D(other.mCentre));
-		Vector2D normal = other.mCentre - edge;
+		Vector2D edge = Intersection(Point2D(rOther.mCentre));
+		Vector2D normal = rOther.mCentre - edge;
 		return normal.unitVector();
 	}
 }
-Vector2D Rectangle2D::CollisionNormal(const Rectangle2D& other) const
+Vector2D Rectangle2D::CollisionNormal(const Rectangle2D& rOther) const
 {
 	Vector2D answer(0,1);		// Assume an upwards collision
 	// Get distance between this bottom and other top
-	float distance = abs(this->mCorner1.YValue - other.mCorner2.YValue);
+	float distance = abs(this->mCorner1.YValue - rOther.mCorner2.YValue);
 	
 	// See if downwards collision is smaller
-	if(distance > abs(this->mCorner2.YValue - other.mCorner1.YValue))
+	if(distance > abs(this->mCorner2.YValue - rOther.mCorner1.YValue))
 	{
 		answer.set(0, -1);
-		distance = abs(this->mCorner2.YValue - other.mCorner1.YValue);
+		distance = abs(this->mCorner2.YValue - rOther.mCorner1.YValue);
 	}
 
 	// See if leftwards collision is smaller
-	if(distance > abs(this->mCorner1.XValue - other.mCorner2.XValue))
+	if(distance > abs(this->mCorner1.XValue - rOther.mCorner2.XValue))
 	{
 		answer.set(-1, 0);
-		distance = abs(this->mCorner1.XValue - other.mCorner2.XValue);
+		distance = abs(this->mCorner1.XValue - rOther.mCorner2.XValue);
 	}
 
 	// See if rightwards collision is smaller
-	if(distance > abs(this->mCorner2.XValue - other.mCorner1.XValue))
+	if(distance > abs(this->mCorner2.XValue - rOther.mCorner1.XValue))
 	{
 		answer.set(1, 0);
-		distance = abs(this->mCorner2.XValue - other.mCorner1.XValue);
+		distance = abs(this->mCorner2.XValue - rOther.mCorner1.XValue);
 	}
 
 	return answer;
 }
-Vector2D Rectangle2D::CollisionNormal(const Segment2D& other) const
+Vector2D Rectangle2D::CollisionNormal(const Segment2D& rOther) const
 {
-	return CollisionNormal(other.Intersection(*this));
+	return CollisionNormal(rOther.Intersection(*this));
 }
 
 
@@ -1331,8 +1326,6 @@ AngledRectangle2D::AngledRectangle2D()
    mAngle = 0;
    UpdateTrivialRejector();
 }
-
-
 
 // Constructs an AngledRectangle2D at rotation 0, with the given height
 // and width and centre
@@ -1412,79 +1405,79 @@ Vector2D AngledRectangle2D::TranformBackFromLocal(Vector2D v) const
 
 
 // Returns true if the AngledRectangle intersects with other shapes
-bool AngledRectangle2D::Intersects(const IShape2D& other) const
+bool AngledRectangle2D::Intersects(const IShape2D& rOther) const
 {
 	// Is it a rectangle?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a circle?
-	if (typeid(other) == typeid(Circle2D))
-		return dynamic_cast<const Circle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Circle2D))
+		return dynamic_cast<const Circle2D*> (&rOther)->Intersects(*this);
 
 	// Is it a segment?
-	if (typeid(other) == typeid(Segment2D))
-		return dynamic_cast<const Segment2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Segment2D))
+		return dynamic_cast<const Segment2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Point2D))
-		return dynamic_cast<const Point2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Point2D))
+		return dynamic_cast<const Point2D*> (&rOther)->Intersects(*this);
 
 	// Is it a point?
-	if (typeid(other) == typeid(Rectangle2D))
-		return dynamic_cast<const Rectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(Rectangle2D))
+		return dynamic_cast<const Rectangle2D*> (&rOther)->Intersects(*this);
 
 	// Is it an angled rectangle?
-	if (typeid(other) == typeid(AngledRectangle2D))
-		return dynamic_cast<const AngledRectangle2D*> (&other)->Intersects(*this);
+	if (typeid(rOther) == typeid(AngledRectangle2D))
+		return dynamic_cast<const AngledRectangle2D*> (&rOther)->Intersects(*this);
 
 	// Undefined shape
 	return false;
 }
 
-bool AngledRectangle2D::Intersects(const Point2D& other) const
+bool AngledRectangle2D::Intersects(const Point2D& rOther) const
 {
-   if (!other.Intersects(mTrivialRejector))
+   if (!rOther.Intersects(mTrivialRejector))
    {
       return false;
    }
    else
    {
-      Vector2D p = TransformToLocal(other.GetPosition());
+      Vector2D p = TransformToLocal(rOther.GetPosition());
       return mLocalRectangle.Intersects(p);
    }
 }
 
-bool AngledRectangle2D::Intersects(const Circle2D& other) const
+bool AngledRectangle2D::Intersects(const Circle2D& rOther) const
 {
-   if (!other.Intersects(mTrivialRejector))
+   if (!rOther.Intersects(mTrivialRejector))
    {
       return false;
    }
    else
    {
-      Circle2D c(TransformToLocal(other.mCentre), other.mdRadius);
+      Circle2D c(TransformToLocal(rOther.mCentre), rOther.mdRadius);
       return mLocalRectangle.Intersects(c);
    }
 }
 
-bool AngledRectangle2D::Intersects(const Segment2D& other) const
+bool AngledRectangle2D::Intersects(const Segment2D& rOther) const
 {
-   if (!other.Intersects(mTrivialRejector))
+   if (!rOther.Intersects(mTrivialRejector))
    {
       return false;
    }
    else
    {
       Segment2D s;
-      s.PlaceAt(TransformToLocal(other.mStart), TransformToLocal(other.mEnd));
+      s.PlaceAt(TransformToLocal(rOther.mStart), TransformToLocal(rOther.mEnd));
       return mLocalRectangle.Intersects(s);
    }
 }
 
-bool AngledRectangle2D::Intersects(const Rectangle2D& other) const
+bool AngledRectangle2D::Intersects(const Rectangle2D& rOther) const
 {
-   if (!other.Intersects(mTrivialRejector))
+   if (!rOther.Intersects(mTrivialRejector))
    {
       return false;
    }
@@ -1493,40 +1486,40 @@ bool AngledRectangle2D::Intersects(const Rectangle2D& other) const
       // Do your corners intersect it?
       Vector2D p1(mWidth / 2, mHeight / 2);
       p1 = p1.rotatedBy(mAngle);
-      if (other.Intersects(mCentre + p1))
+      if (rOther.Intersects(mCentre + p1))
          return true;
       Vector2D p3 = -p1;
-      if (other.Intersects(mCentre + p3))
+      if (rOther.Intersects(mCentre + p3))
          return true;
       Vector2D p2(mWidth / 2, -mHeight / 2);
       p2 = p2.rotatedBy(mAngle);
-      if (other.Intersects(mCentre + p2))
+      if (rOther.Intersects(mCentre + p2))
          return true;
       Vector2D p4 = -p2;
-      if (other.Intersects(mCentre + p4))
+      if (rOther.Intersects(mCentre + p4))
          return true;
 
       // Do your segments intersect it?
       Segment2D s;
       s.PlaceAt(p1 + mCentre, p2 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
       s.PlaceAt(p2 + mCentre, p3 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
       s.PlaceAt(p3 + mCentre, p4 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
       s.PlaceAt(p4 + mCentre, p1 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
       return false;
    }
 }
 
-bool AngledRectangle2D::Intersects(const AngledRectangle2D& other) const
+bool AngledRectangle2D::Intersects(const AngledRectangle2D& rOther) const
 {
-   if (!other.Intersects(mTrivialRejector))
+   if (!rOther.Intersects(mTrivialRejector))
    {
       return false;
    }
@@ -1535,32 +1528,32 @@ bool AngledRectangle2D::Intersects(const AngledRectangle2D& other) const
       // Do your corners intersect it?
       Vector2D p1(mWidth / 2, mHeight / 2);
       p1 = p1.rotatedBy(mAngle);
-      if (other.Intersects(mCentre + p1))
+      if (rOther.Intersects(mCentre + p1))
          return true;
       Vector2D p3 = -p1;
-      if (other.Intersects(mCentre + p3))
+      if (rOther.Intersects(mCentre + p3))
          return true;
       Vector2D p2(mWidth / 2, -mHeight / 2);
       p2 = p2.rotatedBy(mAngle);
-      if (other.Intersects(mCentre + p2))
+      if (rOther.Intersects(mCentre + p2))
          return true;
       Vector2D p4 = -p2;
-      if (other.Intersects(mCentre + p4))
+      if (rOther.Intersects(mCentre + p4))
          return true;
 
       // Do your segments intersect it?
       Segment2D s;
       s.PlaceAt(p1+mCentre, p2 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
       s.PlaceAt(p2 + mCentre, p3 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
       s.PlaceAt(p3 + mCentre, p4 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
       s.PlaceAt(p4 + mCentre, p1 + mCentre);
-      if (other.Intersects(s))
+      if (rOther.Intersects(s))
          return true;
 
       return false;

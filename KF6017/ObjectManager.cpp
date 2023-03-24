@@ -14,28 +14,28 @@ ObjectManager::ObjectManager()
 
 ObjectManager::~ObjectManager()
 {
-	gameObjects.clear();
+	mGameObjectsList.clear();
 }
 
-void ObjectManager::AddObject(std::shared_ptr<GameObject>& newObject)
+void ObjectManager::AddObject(std::shared_ptr<GameObject>& rpNewObject)
 {
-	gameObjects.push_back(newObject);
+	mGameObjectsList.push_back(rpNewObject);
 }
 
-void ObjectManager::AddCollidableObject(std::shared_ptr<GameObject>& asGameObject, std::shared_ptr<ICollidableObject>& asCollidableObject)
+void ObjectManager::AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObject, std::shared_ptr<ICollidableObject>& rpAsCollidableObject)
 {
-	AddObject(asGameObject);
-	collidableObjectsLookup.emplace(asGameObject, asCollidableObject); 
+	AddObject(rpAsGameObject);
+	mObjectsCollidableMap.emplace(rpAsGameObject, rpAsCollidableObject);
 }
 
 ErrorType ObjectManager::UpdateAll(double deltaTime)
 {
-	for (const std::shared_ptr<GameObject>& gameObject : gameObjects)
+	for (const std::shared_ptr<GameObject>& rpGameObject : mGameObjectsList)
 	{
-		if (!gameObject)
+		if (!rpGameObject)
 			continue;
 
-		if (FAILED(gameObject->Update(deltaTime)))
+		if (FAILED(rpGameObject->Update(deltaTime)))
 			return FAILURE;
 	}
 
@@ -47,44 +47,44 @@ ErrorType ObjectManager::UpdateAll(double deltaTime)
 
 void ObjectManager::Clear()
 {
-	gameObjects.clear();
-	collidableObjectsLookup.clear();
+	mGameObjectsList.clear();
+	mObjectsCollidableMap.clear();
 }
 
 int ObjectManager::GetNumberOfObjects() const
 {
-	return gameObjects.size();
+	return mGameObjectsList.size();
 }
 
 void ObjectManager::CheckCollisions()
 {
 	std::list<std::shared_ptr<GameObject>>::iterator it1;
 	std::list<std::shared_ptr<GameObject>>::iterator it2;
-	for (it1 = gameObjects.begin(); it1 != gameObjects.end(); it1++)
+	for (it1 = mGameObjectsList.begin(); it1 != mGameObjectsList.end(); it1++)
 	{
-		for (it2 = std::next(it1); it2 != gameObjects.end(); it2++)
+		for (it2 = std::next(it1); it2 != mGameObjectsList.end(); it2++)
 		{
-			std::shared_ptr<GameObject> go1 = *it1;
-			std::shared_ptr<GameObject> go2 = *it2;
+			std::shared_ptr<GameObject> pGO1 = *it1;
+			std::shared_ptr<GameObject> pGO2 = *it2;
 
 			// Check that both objects exist and are active
-			if (!go1 || !go2 || !go1->IsActive() || !go2->IsActive())
+			if (!pGO1 || !pGO2 || !pGO1->IsActive() || !pGO2->IsActive())
 				continue;
 
 			// Check that both objects are collidable.
-			if (!collidableObjectsLookup[go1] || !collidableObjectsLookup[go2])
+			if (!mObjectsCollidableMap[pGO1] || !mObjectsCollidableMap[pGO2])
 				continue;
 
-			std::shared_ptr<ICollidableObject> co1 = collidableObjectsLookup[go1];
-			std::shared_ptr<ICollidableObject> co2 = collidableObjectsLookup[go2];
+			std::shared_ptr<ICollidableObject> pCO1 = mObjectsCollidableMap[pGO1];
+			std::shared_ptr<ICollidableObject> pCO2 = mObjectsCollidableMap[pGO2];
 			
-			std::shared_ptr<IShape2D> shape1 = co1->GetShape().lock();
-			std::shared_ptr<IShape2D> shape2 = co2->GetShape().lock();
+			std::shared_ptr<IShape2D> shape1 = pCO1->GetShape().lock();
+			std::shared_ptr<IShape2D> shape2 = pCO2->GetShape().lock();
 
 			if (shape1->Intersects(*(shape2.get())))
 			{
-				co1->HandleCollision(go2);
-				co2->HandleCollision(go1);
+				pCO1->HandleCollision(pGO2);
+				pCO2->HandleCollision(pGO1);
 			}
 		}
 	}
@@ -92,14 +92,14 @@ void ObjectManager::CheckCollisions()
 
 void ObjectManager::RemoveDeletedObjects()
 {
-	for (std::shared_ptr<GameObject>& gameObject : gameObjects)
+	for (std::shared_ptr<GameObject>& rpGameObject : mGameObjectsList)
 	{
-		if (gameObject.get()->IsRemoved())
+		if (rpGameObject.get()->IsRemoved())
 		{
-			collidableObjectsLookup.erase(gameObject);
-			gameObject.reset();
+			mObjectsCollidableMap.erase(rpGameObject);
+			rpGameObject.reset();
 		}
 	}
 
-	gameObjects.remove(nullptr);
+	mGameObjectsList.remove(nullptr);
 }

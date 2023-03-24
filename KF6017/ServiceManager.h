@@ -6,7 +6,6 @@
 class ObjectManager;
 class GameObjectFactory;
 class MyDrawEngine;
-//class MySoundEngine;
 class SFXManager;
 class MyInputs;
 
@@ -28,10 +27,10 @@ public:
 protected:
 	ServiceManager(); // abstract
 
-	std::shared_ptr<ObjectManager> objectManager;
-	std::shared_ptr<GameObjectFactory> objectFactory;
-	std::shared_ptr<MyDrawEngine> drawEngine;
-	std::shared_ptr<SFXManager> sfxManager;
-	std::shared_ptr<MyInputs> inputs;
+	std::shared_ptr<ObjectManager> mpObjectManager;
+	std::shared_ptr<GameObjectFactory> mpObjectFactory;
+	std::shared_ptr<MyDrawEngine> mpDrawEngine;
+	std::shared_ptr<SFXManager> mpSfxManager;
+	std::shared_ptr<MyInputs> mpInputs;
 };
 

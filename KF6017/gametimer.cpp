@@ -9,18 +9,18 @@
 
 GameTimer::GameTimer()
 {
-	if(QueryPerformanceFrequency(&freq)==0)		// Find the timer frequency
+	if(QueryPerformanceFrequency(&mFrequency)==0)		// Find the timer frequency
 	{
-		freq.QuadPart=0;									// Set to zero if function failed
+		mFrequency.QuadPart=0;									// Set to zero if function failed
 
 	}
 
-	mdGameRate = 1.0;                   // Can adjust this to make the game faster/slower
+	mGameRate = 1.0;                   // Can adjust this to make the game faster/slower
                                        // Trivial to add functions that let the programmer adjust this.
                                        // I just haven't done it.
-	mdMinimumFrameTime=0;
-	mdThrottledFrameTime = mdMinimumFrameTime;
-	mdFrameTime = 0;
+	mMinimumFrameTime=0;
+	mThrottledFrameTime = mMinimumFrameTime;
+	mFrameTime = 0;
 }
 
 // Use to set the frameTime. Call this once each frame. 
@@ -36,49 +36,49 @@ GameTimer::GameTimer()
 void GameTimer::mark()
 {
 
-	if (freq.QuadPart<=0)		// If frequency is zero (if QueryPerformanceCounter failed)
+	if (mFrequency.QuadPart<=0)		// If frequency is zero (if QueryPerformanceCounter failed)
 	{
-		last.QuadPart=0;			// Set everything to zero. Something is badly wrong.
-		mdFrameTime=0;
+		mLast.QuadPart=0;			// Set everything to zero. Something is badly wrong.
+		mFrameTime=0;
 	}
 	else
 	{
 		LARGE_INTEGER now;
-		mdFrameTime=0.0;						      // Set to zero, ready for loop
-		while(mdFrameTime<= mdThrottledFrameTime)	// This is a loop that causes a delay until minimum frame time has elapsed
+		mFrameTime=0.0;						      // Set to zero, ready for loop
+		while(mFrameTime<= mThrottledFrameTime)	// This is a loop that causes a delay until minimum frame time has elapsed
                                              // Using "sleep" is just not accurate enough
 		{
 
 			QueryPerformanceCounter(&now);		// Get current time
 
-			mdFrameTime=(now.QuadPart - last.QuadPart)/(double)freq.QuadPart;
+			mFrameTime=(now.QuadPart - mLast.QuadPart)/(double)mFrequency.QuadPart;
 											// Find time elapsed since last mark, and divide by
 											// frequency to convert to seconds
 		}
 
-		mdFrameTime = mdFrameTime * mdGameRate;
-		last=now;						// Update mark time with current time
+		mFrameTime = mFrameTime * mGameRate;
+		mLast=now;						// Update mark time with current time
 
 		// If the throttle is faster than the game can keep up with
-		if (mdThrottledFrameTime < mdFrameTime)
+		if (mThrottledFrameTime < mFrameTime)
 		{
 			// Set the throttle to the current speed
-			mdThrottledFrameTime = mdFrameTime;
+			mThrottledFrameTime = mFrameTime;
 		}
 
 		// Gradually ease off the throttling
-		mdThrottledFrameTime *= 0.5;
+		mThrottledFrameTime *= 0.5;
 
 		// Don't let throttle go faster than requested speed
-		if (mdThrottledFrameTime < mdMinimumFrameTime)
+		if (mThrottledFrameTime < mMinimumFrameTime)
 		{
-			mdThrottledFrameTime = mdMinimumFrameTime;
+			mThrottledFrameTime = mMinimumFrameTime;
 		}
 
 		// And never slower that 10 fps
-		if (mdThrottledFrameTime > 0.1)
+		if (mThrottledFrameTime > 0.1)
 		{
-			mdThrottledFrameTime = 0.1;
+			mThrottledFrameTime = 0.1;
 		}
 	}
 }
@@ -96,10 +96,10 @@ void GameTimer::setMinimumFrameTime(double minTime)
 {
 	if(minTime>0.0)      // Can't have a negative minimum time
 	{
-		mdMinimumFrameTime = minTime;
+		mMinimumFrameTime = minTime;
 	}
 	else 
-		mdMinimumFrameTime=0.0;
+		mMinimumFrameTime=0.0;
 
-	mdThrottledFrameTime = mdMinimumFrameTime;
+	mThrottledFrameTime = mMinimumFrameTime;
 }

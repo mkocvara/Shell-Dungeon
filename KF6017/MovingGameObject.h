@@ -11,15 +11,15 @@ public:
 	virtual ErrorType Update(double deltaTime) override;
 
 protected:
-	MovingGameObject(std::weak_ptr<ServiceManager> serviceManager, float friction = 0.f);
+	MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager, float mFriction = 0.f);
 
 	// In units per second.
-	Vector2D velocity;
+	Vector2D mVelocity;
 
 	virtual void Move(double deltaTime);
 
 private:
 	// Fraction of velocity per second which gets applied in the opposite direction. Must be negative.
-	float friction = 0.f;
+	float mFriction = 0.f;
 };
 

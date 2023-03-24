@@ -11,10 +11,9 @@
 
 // PUBLIC
 
-Spaceship::Spaceship(std::weak_ptr<ServiceManager> serviceManager) :
-	Super(serviceManager, -0.5)
+Spaceship::Spaceship(std::weak_ptr<ServiceManager> pServiceManager) : Super(pServiceManager, -0.5)
 {
-	objectType = ObjectType::spaceship;
+	mObjectType = ObjectType::spaceship;
 }
 
 Spaceship::~Spaceship()
@@ -23,13 +22,13 @@ Spaceship::~Spaceship()
 
 void Spaceship::Initialise(Vector2D position, float angle, float scale)
 {
-	SetRenderSprite(renderSpritePath);
+	SetRenderSprite(mRenderSpritePath);
 
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager.lock()->GetDrawEngine().lock();
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
 	int spriteHeight, spriteWidth;
-	pDrawEngine->GetDimensions(renderSprite, spriteHeight, spriteWidth);
-	boundingShape = std::make_shared<AngledRectangle2D>(position, (float)spriteHeight, (float)spriteWidth);
-	boundingShape->SetAngle(rotationAngle);
+	pDrawEngine->GetDimensions(mRenderSprite, spriteHeight, spriteWidth);
+	mpBoundingShape = std::make_shared<AngledRectangle2D>(position, (float)spriteHeight, (float)spriteWidth);
+	mpBoundingShape->SetAngle(mRotationAngle);
 
 	Super::Initialise(position, angle, scale);
 	return;
@@ -40,8 +39,8 @@ ErrorType Spaceship::Update(double deltaTime)
 	if (!IsActive())
 		return SUCCESS;
 	
-	boundingShape->SetCentre(position);
-	boundingShape->SetAngle(rotationAngle);
+	mpBoundingShape->SetCentre(mPosition);
+	mpBoundingShape->SetAngle(mRotationAngle);
 
 	HandleInputs(deltaTime);
 
@@ -55,12 +54,12 @@ ErrorType Spaceship::Update(double deltaTime)
 
 std::weak_ptr<IShape2D> Spaceship::GetShape() const
 {
-	return boundingShape;
+	return mpBoundingShape;
 }
 
-void Spaceship::HandleCollision(std::shared_ptr<GameObject> otherObject)
+void Spaceship::HandleCollision(std::shared_ptr<GameObject> pOtherObject)
 {
-	if (otherObject->GetObjectType() == ObjectType::spacerock)
+	if (pOtherObject->GetObjectType() == ObjectType::spacerock)
 	{
 		Die();
 	}
@@ -71,7 +70,7 @@ void Spaceship::HandleCollision(std::shared_ptr<GameObject> otherObject)
 
 void Spaceship::HandleInputs(double deltaTime)
 {
-	std::shared_ptr<MyInputs> pInputs = serviceManager.lock()->GetInputs().lock();
+	std::shared_ptr<MyInputs> pInputs = mpServiceManager.lock()->GetInputs().lock();
 	pInputs->SampleKeyboard();
 	pInputs->SampleMouse();
 
@@ -83,15 +82,15 @@ void Spaceship::HandleInputs(double deltaTime)
 	else if (pInputs->KeyPressed(DIK_RIGHT) || pInputs->KeyPressed(DIK_D))
 		rotDir = +1;
 
-	rotationAngle += rotDir * rotationSpeed * static_cast<float>(deltaTime);
+	mRotationAngle += rotDir * mRotationSpeed * static_cast<float>(deltaTime);
 
 	// Movement
 	if (pInputs->KeyPressed(DIK_UP) || pInputs->KeyPressed(DIK_W))
 	{
 		// accelerate
 		Vector2D a;
-		a.setBearing(rotationAngle, acceleration);
-		velocity += a;
+		a.setBearing(mRotationAngle, mAcceleration);
+		mVelocity += a;
 	}
 
 	// FIRING
@@ -103,16 +102,16 @@ void Spaceship::HandleInputs(double deltaTime)
 
 void Spaceship::Shoot()
 {
-	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManager.lock()->GetObjectFactory().lock();
+	std::shared_ptr<GameObjectFactory> pObjectFactory = mpServiceManager.lock()->GetObjectFactory().lock();
 	if (!pObjectFactory)
 	{
 		ErrorLogger::Writeln(L"Spaceship failed to retreive object factory.");
 		return;
 	}
 
-	pObjectFactory->Create(ObjectType::bullet, serviceManager, position, rotationAngle, 1.5f);
+	pObjectFactory->Create(ObjectType::bullet, mpServiceManager, mPosition, mRotationAngle, 1.5f);
 
-	std::shared_ptr<SFXManager> pSFXManager = serviceManager.lock()->GetSFXManager().lock();
+	std::shared_ptr<SFXManager> pSFXManager = mpServiceManager.lock()->GetSFXManager().lock();
 	if (!pSFXManager)
 	{
 		ErrorLogger::Writeln(L"Spaceship failed to retreive SFX manager.");
@@ -122,10 +121,10 @@ void Spaceship::Shoot()
 	bool castSuccess = false;
 	if (typeid(*pSFXManager) == typeid(AsteroidsSFXManager))
 	{
-		std::shared_ptr<AsteroidsSFXManager> sfx = std::static_pointer_cast<AsteroidsSFXManager>(pSFXManager);
-		if (sfx)
+		std::shared_ptr<AsteroidsSFXManager> pSFXManager = std::static_pointer_cast<AsteroidsSFXManager>(pSFXManager);
+		if (pSFXManager)
 		{
-			sfx->PlayShot();
+			pSFXManager->PlayShot();
 			castSuccess = true;
 		}
 	}
@@ -141,9 +140,9 @@ void Spaceship::Die()
 {
 	Remove();
 
-	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManager.lock()->GetObjectFactory().lock();
+	std::shared_ptr<GameObjectFactory> pObjectFactory = mpServiceManager.lock()->GetObjectFactory().lock();
 	if (!pObjectFactory)
 		return;
 
-	pObjectFactory->Create(ObjectType::explosion, serviceManager, position, 0.f, 2.f);
+	pObjectFactory->Create(ObjectType::explosion, mpServiceManager, mPosition, 0.f, 2.f);
 }

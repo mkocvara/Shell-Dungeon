@@ -8,7 +8,7 @@ class AngledRectangle2D;
 class Spaceship : public MovingGameObject, public ICollidableObject
 {
 public:
-	Spaceship(std::weak_ptr<ServiceManager> serviceManager);
+	Spaceship(std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~Spaceship(); 
 
 	typedef MovingGameObject Super;
@@ -17,22 +17,22 @@ public:
 	virtual ErrorType Update(double deltaTime) override;
 
 	virtual std::weak_ptr<IShape2D> GetShape() const override;
-	virtual void HandleCollision(std::shared_ptr<GameObject> otherObject) override;
+	virtual void HandleCollision(std::shared_ptr<GameObject> pOtherObject) override;
 
 protected:	
-	const float rotationSpeed = 2.f; 
-	const float acceleration = 5.f;
-	// friction = -0.5; see constructor
+	const float mRotationSpeed = 2.f; 
+	const float mAcceleration = 5.f;
+	// mFriction = -0.5; see constructor
 
 	virtual void HandleInputs(double deltaTime);
 
 	void Shoot();
 
-	std::shared_ptr<AngledRectangle2D> boundingShape;
+	std::shared_ptr<AngledRectangle2D> mpBoundingShape;
 
 	void Die();
 
 private:
-	const wchar_t* renderSpritePath = L"Assets/basic.bmp";
+	const wchar_t* mRenderSpritePath = L"Assets/basic.bmp";
 };
 

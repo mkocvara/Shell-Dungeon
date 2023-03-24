@@ -19,24 +19,24 @@ ServiceManager::~ServiceManager()
 }
 
 // Create the engines - this should be done before creating other DDraw objects
-ErrorType ServiceManager::StartServices(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
+ErrorType ServiceManager::StartServices(bool fullScreen, HWND hwnd, HINSTANCE hinstance)
 {
-	drawEngine = std::make_shared<MyDrawEngine>(hwnd);
-	if (!drawEngine || FAILED(drawEngine->Start(bFullScreen)))
+	mpDrawEngine = std::make_shared<MyDrawEngine>(hwnd);
+	if (!mpDrawEngine || FAILED(mpDrawEngine->Start(fullScreen)))
 	{
 		ErrorLogger::Writeln(L"Failed to start MyDrawEngine");
 		return FAILURE;
 	}
 
-	inputs = std::make_shared<MyInputs>(hinstance, hwnd);
-	if (!inputs)
+	mpInputs = std::make_shared<MyInputs>(hinstance, hwnd);
+	if (!mpInputs)
 	{
 		ErrorLogger::Writeln(L"Failed to start MyInputs");
 		return FAILURE;
 	}
 
-	objectManager = std::make_shared<ObjectManager>();
-	if (!objectManager)
+	mpObjectManager = std::make_shared<ObjectManager>();
+	if (!mpObjectManager)
 	{
 		ErrorLogger::Writeln(L"Failed to create ObjectManager");
 		return FAILURE;
@@ -50,25 +50,25 @@ ErrorType ServiceManager::StartServices(bool bFullScreen, HWND hwnd, HINSTANCE h
 
 std::weak_ptr<ObjectManager> ServiceManager::GetObjectManager()
 {
-	return objectManager;
+	return mpObjectManager;
 }
 
 std::weak_ptr<GameObjectFactory> ServiceManager::GetObjectFactory()
 {
-	return objectFactory;
+	return mpObjectFactory;
 }
 
 std::weak_ptr<MyDrawEngine> ServiceManager::GetDrawEngine()
 {
-	return drawEngine;
+	return mpDrawEngine;
 }
 
 std::weak_ptr<SFXManager> ServiceManager::GetSFXManager()
 {
-	return sfxManager;
+	return mpSfxManager;
 }
 
 std::weak_ptr<MyInputs> ServiceManager::GetInputs()
 {
-	return inputs;
+	return mpInputs;
 }

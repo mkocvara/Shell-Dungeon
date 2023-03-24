@@ -13,9 +13,9 @@
 // a scale to make the screen have a height of 2000 using world coordinates.
 // So the top of the screen is 1000. Bottom of the screen is -1000.
 // Left and right will depend on screen aspect
-Camera::Camera(MyDrawEngine* engine)
+Camera::Camera(MyDrawEngine* pDrawEngine)
 {
-	m_drawEngine = engine;
+	mpDrawEngine = pDrawEngine;
 	Reset();
 }
 
@@ -24,7 +24,7 @@ Camera::Camera(MyDrawEngine* engine)
 Vector2D Camera::Transform(Vector2D objectPosition) const
 {
 	objectPosition.YValue = -objectPosition.YValue;
-	objectPosition = m_zoom*(objectPosition-m_worldPosition) + m_screenCentre;
+	objectPosition = mZoom*(objectPosition-mWorldPosition) + mScreenCentre;
 	return objectPosition;
 }
 
@@ -32,7 +32,7 @@ Vector2D Camera::Transform(Vector2D objectPosition) const
 // using the current camera settings
 Vector2D Camera::ReverseTransform(Vector2D screenPosition) const
 {
-	screenPosition = m_worldPosition + (screenPosition - m_screenCentre) / m_zoom;
+	screenPosition = mWorldPosition + (screenPosition - mScreenCentre) / mZoom;
 	screenPosition.YValue = -screenPosition.YValue;
 	return screenPosition;
 }
@@ -40,7 +40,7 @@ Vector2D Camera::ReverseTransform(Vector2D screenPosition) const
 // Returns the product of the size and the current scale
 float Camera::Transform(float size) const
 {
-	return size*m_zoom;
+	return size*mZoom;
 }
 
 // Returns a circle on the screen from the given world rectangle
@@ -78,10 +78,10 @@ void Camera::Reset()
 	int height = 0;
 	int width = 0;
 
-	if(m_drawEngine->IsStarted())			// Draw engine is initialised
+	if(mpDrawEngine->IsStarted())			// Draw engine is initialised
 	{
-		height = m_drawEngine->GetScreenHeight();
-		width = m_drawEngine->GetScreenWidth();
+		height = mpDrawEngine->GetScreenHeight();
+		width = mpDrawEngine->GetScreenWidth();
 	}
 	else					// Use windows instead
 	{
@@ -89,18 +89,18 @@ void Camera::Reset()
 		height = GetSystemMetrics(SM_CYSCREEN);
 	}
 
-	m_screenCentre.set(width/2.0f, height/2.0f);
-	m_zoom = height/2000.0f;
+	mScreenCentre.set(width/2.0f, height/2.0f);
+	mZoom = height/2000.0f;
 }
 
 // Places the centre of the camera to the specified position
 void Camera::PlaceAt(Vector2D worldPosition)
 {
-	m_worldPosition = worldPosition;
+	mWorldPosition = worldPosition;
 }
 
 // Sets the camera zoom
 void Camera::SetZoom(float zoom)
 {
-	m_zoom = zoom;
+	mZoom = zoom;
 }

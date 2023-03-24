@@ -17,7 +17,7 @@
 // *************************************************************
 
 
-ErrorType MyDrawEngine::Start(bool bFullScreen)
+ErrorType MyDrawEngine::Start(bool fullScreen)
 {
 	// Start the window for Windows
 	if(FAILED(StartWindow()))
@@ -30,14 +30,14 @@ ErrorType MyDrawEngine::Start(bool bFullScreen)
 	AddFont(L"Ariel", 24, false, false);
 	
 	// If user has requested windowed mode
-	if(!bFullScreen)
+	if(!fullScreen)
 		GoWindowed();
 
 	// Clear everything
 	Flip();
 	ClearBackBuffer();
 
-	m_started = true;
+	mStarted = true;
 
 	return SUCCESS;
 }
@@ -49,23 +49,23 @@ ErrorType MyDrawEngine::Start(bool bFullScreen)
 MyDrawEngine::MyDrawEngine(HWND hwnd)
 {
 	// Set pointers to NULL
-	m_lpD3D = nullptr;
-	m_lpD3DDevice = nullptr;
+	mpLPD3D = nullptr;
+	mpLPD3DDevice = nullptr;
 
-	m_Hwnd = hwnd;				// Remember the window handle
+	mHwnd = hwnd;				// Remember the window handle
 
-	m_bFullScreen = true;		// Start off fullscreen
+	mFullScreen = true;		// Start off fullscreen
 
 	// The first font to be created will be at position 0
-	m_pNextFont = 0;
+	mNextFont = 0;
 
 	// First image to be created will be at position 1
-	m_NextPictureIndex=1;
+	mNextPictureIndex=1;
 
-	m_lpSprite = nullptr;
+	mLPSprite = nullptr;
 
-	camera = std::make_unique<Camera>(this);
-	m_CameraActive = true;
+	mpCamera = std::make_unique<Camera>(this);
+	mCameraActive = true;
 
 }		// Constructor
 
@@ -83,19 +83,19 @@ MyDrawEngine::~MyDrawEngine()
 ErrorType MyDrawEngine::StartWindow()
 {
 	// Connect to direct 3D 9
-	m_lpD3D=Direct3DCreate9(D3D_SDK_VERSION);
-	if (m_lpD3D == nullptr)
+	mpLPD3D=Direct3DCreate9(D3D_SDK_VERSION);
+	if (mpLPD3D == nullptr)
 	{
 		ErrorLogger::Writeln(L"Could not connect to Direct3D");
 		return FAILURE;		            // No point going any further
 	}
 
 	// Get native resolution
-	m_NativeScreenWidth=GetSystemMetrics(SM_CXSCREEN);
-	m_NativeScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+	mNativeScreenWidth=GetSystemMetrics(SM_CXSCREEN);
+	mNativeScreenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	m_ScreenHeight = m_NativeScreenHeight;
-	m_ScreenWidth = m_NativeScreenWidth;
+	mScreenHeight = mNativeScreenHeight;
+	mScreenWidth = mNativeScreenWidth;
 
 	// Set the presentation parameters options
 	D3DPRESENT_PARAMETERS d3dpp;		         // Order form for options
@@ -103,39 +103,39 @@ ErrorType MyDrawEngine::StartWindow()
 
 	d3dpp.Windowed = false;				         // Whatever the user requested
 	d3dpp.SwapEffect = D3DSWAPEFFECT_FLIP;	   // Slightly slower, but allows access to previous back buffer if ever needed.
-	d3dpp.hDeviceWindow = m_Hwnd;			      // Handle to the window
-	d3dpp.BackBufferWidth = m_ScreenWidth;	   // Requested screen width
-	d3dpp.BackBufferHeight = m_ScreenHeight;  // Requested screen height
+	d3dpp.hDeviceWindow = mHwnd;			      // Handle to the window
+	d3dpp.BackBufferWidth = mScreenWidth;	   // Requested screen width
+	d3dpp.BackBufferHeight = mScreenHeight;  // Requested screen height
 	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8; // Back buffer formattaed to 32 bit XRGB
 
 	// Create the device
 	HRESULT err;			// To store the error result
-	err=m_lpD3D->CreateDevice(D3DADAPTER_DEFAULT,		// Default graphics adapter
+	err=mpLPD3D->CreateDevice(D3DADAPTER_DEFAULT,		// Default graphics adapter
                       D3DDEVTYPE_HAL,			// Requesting hardware abstraction layer
-                      m_Hwnd,					   // Handle to the window. Again.
+                      mHwnd,					   // Handle to the window. Again.
                       D3DCREATE_MIXED_VERTEXPROCESSING,	// Process vertices in software !!!!!!
                       &d3dpp,					   // The presentation parameters
-                      &m_lpD3DDevice);			// Pointer to the device
+                      &mpLPD3DDevice);			// Pointer to the device
 
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to create the device");
 		ErrorLogger::Writeln(ERRORSTRING(err));
-		m_lpD3D->Release();
-		m_lpD3D=nullptr;
+		mpLPD3D->Release();
+		mpLPD3D=nullptr;
 		return FAILURE;		// No point going any further
 	}
 
-	err = D3DXCreateSprite(m_lpD3DDevice, &m_lpSprite );
+	err = D3DXCreateSprite(mpLPD3DDevice, &mLPSprite );
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to create sprite");
 		ErrorLogger::Writeln(ERRORSTRING(err));
 
-		m_lpD3D->Release();
-		m_lpD3D=nullptr;
-		m_lpD3DDevice->Release();
-		m_lpD3DDevice = nullptr;
+		mpLPD3D->Release();
+		mpLPD3D=nullptr;
+		mpLPD3DDevice->Release();
+		mpLPD3DDevice = nullptr;
 		return FAILURE;		// No point going any further
 	}
 
@@ -152,24 +152,24 @@ ErrorType MyDrawEngine::Release()
 	ReleaseFonts();
 
 	// Release the sprite
-	if(m_lpSprite)
+	if(mLPSprite)
 	{
-		m_lpSprite->Release();
-		m_lpSprite = nullptr;
+		mLPSprite->Release();
+		mLPSprite = nullptr;
 	}
 
 	// Release Direct3D interface
-	if(m_lpD3D)
+	if(mpLPD3D)
 	{
-		m_lpD3D->Release();
-		m_lpD3D = nullptr;
+		mpLPD3D->Release();
+		mpLPD3D = nullptr;
 	}
 
 	// Release the graphics device
-	if(m_lpD3DDevice)
+	if(mpLPD3DDevice)
 	{
-		m_lpD3DDevice->Release();
-		m_lpD3DDevice = nullptr;
+		mpLPD3DDevice->Release();
+		mpLPD3DDevice = nullptr;
 	}
 
 	return SUCCESS;
@@ -187,22 +187,22 @@ ErrorType MyDrawEngine::ResetDevice()
 	D3DPRESENT_PARAMETERS d3dpp;			      // Order form
 	ZeroMemory(&d3dpp, sizeof(d3dpp));		   // Set it all to zero
 
-	d3dpp.Windowed = !m_bFullScreen;			   // Whatever the user requested
+	d3dpp.Windowed = !mFullScreen;			   // Whatever the user requested
 	d3dpp.SwapEffect = D3DSWAPEFFECT_FLIP;	   // Slightly slower, but allows access to previous back buffer if ever needed.
-	d3dpp.hDeviceWindow = m_Hwnd;			      // Handle to the window
-	d3dpp.BackBufferWidth = m_ScreenWidth;	   // Requested screen width
-	d3dpp.BackBufferHeight = m_ScreenHeight;	// Requested screen height
+	d3dpp.hDeviceWindow = mHwnd;			      // Handle to the window
+	d3dpp.BackBufferWidth = mScreenWidth;	   // Requested screen width
+	d3dpp.BackBufferHeight = mScreenHeight;	// Requested screen height
 	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;	// Format is 32 bit XRGB
 
 	// Need to release all bitmaps and fonts
 	ReleaseBitmaps();
 	ReleaseFonts();
-	if(m_lpSprite)
-		m_lpSprite->Release();
-	m_lpSprite = nullptr;
+	if(mLPSprite)
+		mLPSprite->Release();
+	mLPSprite = nullptr;
 
 	// Reset the device
-	HRESULT err = m_lpD3DDevice->Reset(&d3dpp);
+	HRESULT err = mpLPD3DDevice->Reset(&d3dpp);
 
 	// Did it work?
 	if(FAILED(err))
@@ -216,7 +216,7 @@ ErrorType MyDrawEngine::ResetDevice()
 	ReloadBitmaps();
 	ReloadFonts();
 
-	HRESULT err2 = D3DXCreateSprite(m_lpD3DDevice, &m_lpSprite );
+	HRESULT err2 = D3DXCreateSprite(mpLPD3DDevice, &mLPSprite );
 	if(FAILED(err2))
 	{
 		ErrorLogger::Writeln(L"Failed to create sprite on device reset");
@@ -224,10 +224,10 @@ ErrorType MyDrawEngine::ResetDevice()
 	}
 
 	// Position the window in case needed
-    SetWindowPos(m_Hwnd, HWND_NOTOPMOST,
+    SetWindowPos(mHwnd, HWND_NOTOPMOST,
                      0, 0,
-                     m_ScreenWidth,
-                     m_ScreenHeight,
+                     mScreenWidth,
+                     mScreenHeight,
                      SWP_SHOWWINDOW);
 
 	if(FAILED(err))
@@ -244,18 +244,18 @@ ErrorType MyDrawEngine::ResetDevice()
 void MyDrawEngine::ReleaseBitmaps()
 {
 	// Start at the beginning
-	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.begin();
+	std::map<PictureIndex, MyPicture>::iterator picit = mIndexPictureMap.begin();
 
 	// Loop through all bitmaps
-	for(;picit!=m_MyPictureList.end();picit++)
+	for(;picit!=mIndexPictureMap.end();picit++)
 	{
-		if(picit->second.lpTheTexture)
-			picit->second.lpTheTexture->Release();
-		picit->second.lpTheTexture = nullptr;
+		if(picit->second.mLpdTheTexture)
+			picit->second.mLpdTheTexture->Release();
+		picit->second.mLpdTheTexture = nullptr;
 	}
 
-	m_MyPictureList.clear();
-	m_FilenameList.clear();
+	mIndexPictureMap.clear();
+	mFilenameIndexMap.clear();
 }	// Release bitmaps
 
 // *******************************************************
@@ -264,10 +264,10 @@ void MyDrawEngine::ReleaseBitmaps()
 void MyDrawEngine::ReloadBitmaps()
 {
 	// Start at the beginning
-	std::map<PictureIndex, MyPicture>::iterator it = m_MyPictureList.begin();
+	std::map<PictureIndex, MyPicture>::iterator it = mIndexPictureMap.begin();
 
 	// Loop through all bitmaps
-	for(;it!=m_MyPictureList.end();it++)
+	for(;it!=mIndexPictureMap.end();it++)
 	{
 		// Could be faster by loading in-place, but file loading is much slower anyway
 		ReloadPicture(it->first);
@@ -281,14 +281,14 @@ void MyDrawEngine::ReloadBitmaps()
 void MyDrawEngine::ReleaseFonts()
 {
 	// Start at the beginning
-	std::map<FontIndex, MyFont>::iterator fit = m_MyFontList.begin();
+	std::map<FontIndex, MyFont>::iterator fit = mIndexFontMap.begin();
 
 	// Loop through all fonts
-	for(;fit!=m_MyFontList.end();fit++)
+	for(;fit!=mIndexFontMap.end();fit++)
 	{
-		if(fit->second.m_pFont)
-			fit->second.m_pFont->Release();
-		fit->second.m_pFont = nullptr;
+		if(fit->second.mFont)
+			fit->second.mFont->Release();
+		fit->second.mFont = nullptr;
 	}
 }	// ReleaseFonts
 
@@ -299,29 +299,29 @@ void MyDrawEngine::ReleaseFonts()
 void MyDrawEngine::ReloadFonts()
 {
 	// Start at the beginning
-	std::map<FontIndex, MyFont>::iterator fit = m_MyFontList.begin();
+	std::map<FontIndex, MyFont>::iterator fit = mIndexFontMap.begin();
 
 	// Loop through fonts
-	for(;fit!=m_MyFontList.end();fit++)
+	for(;fit!=mIndexFontMap.end();fit++)
 	{
-		MyFont& currentFont = fit->second;
+		MyFont& rCurrentFont = fit->second;
 
 		// Set requested boldness
 		UINT boldness =FW_MEDIUM;
-		if(fit->second.m_bold == true)
+		if(fit->second.mBold == true)
 			boldness = FW_BOLD;
 
 		HRESULT err;
 
 		// Create a font, using recorded parameters from when first loaded
-		err = D3DXCreateFont(m_lpD3DDevice, currentFont.m_height, 0, boldness, 0, currentFont.m_italic, 
+		err = D3DXCreateFont(mpLPD3DDevice, rCurrentFont.mHeight, 0, boldness, 0, rCurrentFont.mItalic, 
 			DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 
-			DEFAULT_PITCH | FF_DONTCARE, currentFont.m_fontName.c_str(), &currentFont.m_pFont );
+			DEFAULT_PITCH | FF_DONTCARE, rCurrentFont.mFontName.c_str(), &rCurrentFont.mFont );
 
 		if(FAILED(err))
 		{
 			ErrorLogger::Write(L"Failed to reload a font - ");
-			ErrorLogger::Writeln(currentFont.m_fontName.c_str());
+			ErrorLogger::Writeln(rCurrentFont.mFontName.c_str());
 			ErrorLogger::Writeln(ERRORSTRING(err));
 		}
 	}
@@ -333,14 +333,14 @@ void MyDrawEngine::ReloadFonts()
 // Switch to windowed mode
 ErrorType MyDrawEngine::GoWindowed()
 {
-	if(m_bFullScreen == false)
+	if(mFullScreen == false)
 	{
 		// Already windowed
 		return SUCCESS;			// That will be fifty quid, please
 	}
 
 	// remember it is now windowed
-	m_bFullScreen = false;
+	mFullScreen = false;
 
 	// Reset the device
 	HRESULT err= ResetDevice();
@@ -367,14 +367,14 @@ ErrorType MyDrawEngine::GoWindowed()
 ErrorType MyDrawEngine::GoFullScreen()
 {
 
-	if(m_bFullScreen == true)
+	if(mFullScreen == true)
 	{
 		// Already full screen
 		return SUCCESS;			// That will be fifty quid, please
 	}
 
 	// Remember you are now full screen
-	m_bFullScreen=true;
+	mFullScreen=true;
 
 	// Reset the graphics card
    // This includes reloading everything
@@ -394,7 +394,7 @@ ErrorType MyDrawEngine::GoFullScreen()
 
 bool MyDrawEngine::IsWindowFullScreen() const
 {
-	return m_bFullScreen;
+	return mFullScreen;
 }
 
 // ****************************************************************
@@ -402,10 +402,10 @@ bool MyDrawEngine::IsWindowFullScreen() const
 ErrorType MyDrawEngine::ChangeResolution(int width, int height)
 {
    // Change the information
-	int oldWidth = m_ScreenWidth;
-	int oldHeight = m_ScreenHeight;
-	m_ScreenWidth = width;
-	m_ScreenHeight = height;
+	int oldWidth = mScreenWidth;
+	int oldHeight = mScreenHeight;
+	mScreenWidth = width;
+	mScreenHeight = height;
 
    // Needs to fully reset
 	ErrorType err = ResetDevice();
@@ -414,8 +414,8 @@ ErrorType MyDrawEngine::ChangeResolution(int width, int height)
 	if(FAILED(err))
 	{
       // Change back to old configuration
-		m_ScreenWidth = oldWidth;
-		m_ScreenHeight = oldHeight;	
+		mScreenWidth = oldWidth;
+		mScreenHeight = oldHeight;	
 		ResetDevice();       // Reset again. What if this also fails?
 		ErrorLogger::Writeln(L"Failed to change resolution. Reverting to previous.");
 	}
@@ -425,18 +425,18 @@ ErrorType MyDrawEngine::ChangeResolution(int width, int height)
 
 ErrorType MyDrawEngine::ChangeToNativeResolution()
 {
-	int oldWidth = m_ScreenWidth;
-	int oldHeight = m_ScreenHeight;
+	int oldWidth = mScreenWidth;
+	int oldHeight = mScreenHeight;
 	// Get native resolution
-	m_ScreenWidth=m_NativeScreenWidth;
-	m_ScreenHeight = m_NativeScreenHeight;
+	mScreenWidth=mNativeScreenWidth;
+	mScreenHeight = mNativeScreenHeight;
 
 	ErrorType err = ResetDevice();
 
 	if(FAILED(err))         // It could not reset
 	{
-		m_ScreenWidth = oldWidth;
-		m_ScreenHeight = oldHeight;	
+		mScreenWidth = oldWidth;
+		mScreenHeight = oldHeight;	
 		ResetDevice();       // Reset again. What if this also fails?
 		ErrorLogger::Writeln(L"Failed to change resolution. Reverting to previous.");
 	}
@@ -450,34 +450,34 @@ ErrorType MyDrawEngine::ChangeToNativeResolution()
 ErrorType MyDrawEngine::ReloadPicture(PictureIndex pic)
 {
 	// Set the iterator to the row we are looking for in the list of pictures.
-	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.find(pic);
+	std::map<PictureIndex, MyPicture>::iterator picit = mIndexPictureMap.find(pic);
 
 	// If could not find the picture requested.
-	if(picit==m_MyPictureList.end())
+	if(picit==mIndexPictureMap.end())
 	{
 		ErrorLogger::Writeln(L"Attempting to reload an invalid PictureIndex in RelocadPicture.");
 		return FAILURE;
 	}
 
 	// Release the old picture if it is present.
-	if(picit->second.lpTheTexture)
+	if(picit->second.mLpdTheTexture)
 	{
-		picit->second.lpTheTexture->Release();
-		picit->second.lpTheTexture = nullptr;
+		picit->second.mLpdTheTexture->Release();
+		picit->second.mLpdTheTexture = nullptr;
 	}
 
 	// Reload the picture using mostly default settings
-	HRESULT err = D3DXCreateTextureFromFileEx(m_lpD3DDevice,
-		(picit->second.m_SourceFileName).c_str(), D3DX_DEFAULT, D3DX_DEFAULT, 1, 0, D3DFMT_UNKNOWN, D3DPOOL_DEFAULT,
+	HRESULT err = D3DXCreateTextureFromFileEx(mpLPD3DDevice,
+		(picit->second.mSourceFileName).c_str(), D3DX_DEFAULT, D3DX_DEFAULT, 1, 0, D3DFMT_UNKNOWN, D3DPOOL_DEFAULT,
 		D3DX_FILTER_LINEAR, D3DX_FILTER_LINEAR,
 		0xff000000,				// Colour key is black
 		NULL, NULL,
-		&(picit->second.lpTheTexture) );
+		&(picit->second.mLpdTheTexture) );
 
 	if(FAILED(err))
 	{
 		ErrorLogger::Write(L"Failed to create texture from file in ReloadPicture: ");
-		ErrorLogger::Writeln(picit->second.m_SourceFileName.c_str());
+		ErrorLogger::Writeln(picit->second.mSourceFileName.c_str());
 		ErrorLogger::Writeln(ERRORSTRING(err));
 		return FAILURE;
 	}
@@ -491,7 +491,7 @@ ErrorType MyDrawEngine::ReloadPicture(PictureIndex pic)
 ErrorType MyDrawEngine::ClearBackBuffer()
 {
 	//Clear
-	HRESULT err = m_lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, 0,1.0f,0);
+	HRESULT err = mpLPD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET, 0,1.0f,0);
 
 	if(FAILED(err))
 	{
@@ -512,9 +512,9 @@ ErrorType MyDrawEngine::Flip()
 	HRESULT err;		// To store error result
 
 	// End the scene
-	m_lpD3DDevice->EndScene();
+	mpLPD3DDevice->EndScene();
 	// Present
-	err= m_lpD3DDevice->Present(NULL, NULL, NULL, NULL);
+	err= mpLPD3DDevice->Present(NULL, NULL, NULL, NULL);
 
 	if(FAILED(err))
 	{
@@ -524,7 +524,7 @@ ErrorType MyDrawEngine::Flip()
 	}
 
 	// Start the next one
-	m_lpD3DDevice->BeginScene();
+	mpLPD3DDevice->BeginScene();
 
 	if(FAILED(err))
 	{
@@ -547,24 +547,24 @@ bool MyDrawEngine::IsOnCamera(Vector2D point) const
 }
 
 // Returns true if the specified point is fully or partially visible from the current camera position
-bool MyDrawEngine::IsOnCamera(const IShape2D& shape)const
+bool MyDrawEngine::IsOnCamera(const IShape2D& rShape)const
 {
-	return shape.Intersects(GetViewport());
+	return rShape.Intersects(GetViewport());
 }
 
 // Returns a rectangle describing the area of the world that is visible from the current camera position
 Rectangle2D MyDrawEngine::GetViewport() const
 {
 	Vector2D tl(0.0f, 0.0f);
-	Vector2D bq((float)m_ScreenWidth,(float)m_ScreenHeight);
+	Vector2D bq((float)mScreenWidth,(float)mScreenHeight);
 	Rectangle2D screen;
-	screen.PlaceAt(camera->ReverseTransform(tl), camera->ReverseTransform(bq));
+	screen.PlaceAt(mpCamera->ReverseTransform(tl), mpCamera->ReverseTransform(bq));
 	return screen;
 }
 
 void MyDrawEngine::UseCamera(bool activate)
 {
-	m_CameraActive = activate;
+	mCameraActive = activate;
 }
 
 
@@ -576,10 +576,10 @@ void MyDrawEngine::UseCamera(bool activate)
 PictureIndex MyDrawEngine::FindPicture(const wchar_t* filename)
 {
 	// Find the picture
-	std::map<std::wstring, PictureIndex>::iterator picit = m_FilenameList.find(filename);
+	std::map<std::wstring, PictureIndex>::iterator picit = mFilenameIndexMap.find(filename);
 
 	// If not found
-	if (picit == m_FilenameList.end())
+	if (picit == mFilenameIndexMap.end())
 	{
 		return -1;
 	}
@@ -591,7 +591,7 @@ PictureIndex MyDrawEngine::FindPicture(const wchar_t* filename)
 
 bool MyDrawEngine::IsStarted() const
 {
-	return m_started;
+	return mStarted;
 }
 
 // Loading a picture
@@ -606,15 +606,15 @@ PictureIndex MyDrawEngine::LoadPicture(const wchar_t* filename)
 	else					                  // File not already loaded
 	{
 		MyPicture tempMyPicture;			// To store picture if it ever loads
-		tempMyPicture.m_SourceFileName = filename;	// Remember the filename
+		tempMyPicture.mSourceFileName = filename;	// Remember the filename
 
 		// Load the picture using mostly default settings
-		HRESULT err = D3DXCreateTextureFromFileEx(m_lpD3DDevice,
+		HRESULT err = D3DXCreateTextureFromFileEx(mpLPD3DDevice,
 			filename, D3DX_DEFAULT, D3DX_DEFAULT, 1, 0, D3DFMT_UNKNOWN, D3DPOOL_DEFAULT,
 			D3DX_FILTER_LINEAR, D3DX_FILTER_LINEAR,
 			0xff000000,				         // Colour key is black
 			NULL, NULL,
-			&tempMyPicture.lpTheTexture);
+			&tempMyPicture.mLpdTheTexture);
 
 		if (FAILED(err))		            // Probably a bad filename
 		{
@@ -626,22 +626,22 @@ PictureIndex MyDrawEngine::LoadPicture(const wchar_t* filename)
 
 		// Get information from the picture
 		D3DSURFACE_DESC desc;
-		tempMyPicture.lpTheTexture->GetLevelDesc(0, &desc);
+		tempMyPicture.mLpdTheTexture->GetLevelDesc(0, &desc);
 
 		// Record the height and width
-		tempMyPicture.m_height = desc.Height;
-		tempMyPicture.m_width = desc.Width;
+		tempMyPicture.mHeight = desc.Height;
+		tempMyPicture.mWidth = desc.Width;
 
 		// Set the default centre in the middle of the picture
-		tempMyPicture.m_Centre.set(float(tempMyPicture.m_width / 2), float(tempMyPicture.m_height / 2));
+		tempMyPicture.mCentre.set(float(tempMyPicture.mWidth / 2), float(tempMyPicture.mHeight / 2));
 
 		// Add the picture to the map
-		m_MyPictureList.insert(std::pair<PictureIndex, MyPicture>(m_NextPictureIndex, tempMyPicture));
+		mIndexPictureMap.insert(std::pair<PictureIndex, MyPicture>(mNextPictureIndex, tempMyPicture));
 
-		m_FilenameList.insert(std::pair<std::wstring, PictureIndex>(filename, m_NextPictureIndex));
+		mFilenameIndexMap.insert(std::pair<std::wstring, PictureIndex>(filename, mNextPictureIndex));
 
 		// Increase the number of the next picture, and return the old number.
-		return m_NextPictureIndex++;
+		return mNextPictureIndex++;
 	}
 
 }		// LoadPicture
@@ -649,13 +649,13 @@ PictureIndex MyDrawEngine::LoadPicture(const wchar_t* filename)
 // ****************************************************************
 
 // Request the size of a picture
-void MyDrawEngine::GetDimensions(PictureIndex pic, int& height, int& width)
+void MyDrawEngine::GetDimensions(PictureIndex pic, int& rHeight, int& rWidth)
 {
 	// Find the picture
-	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.find(pic);
+	std::map<PictureIndex, MyPicture>::iterator picit = mIndexPictureMap.find(pic);
 
 	// If not found
-	if(picit==m_MyPictureList.end())
+	if(picit==mIndexPictureMap.end())
 	{
 		ErrorLogger::Writeln(L"Attempting to get an invalid PictureIndex in GetDimensions.");
 
@@ -663,8 +663,8 @@ void MyDrawEngine::GetDimensions(PictureIndex pic, int& height, int& width)
 	else
 	{
 		// Set the return-by-reference data
-		height = picit->second.m_height;
-		width = picit->second.m_width;
+		rHeight = picit->second.mHeight;
+		rWidth = picit->second.mWidth;
 	}
 }	// GetDimensions
 
@@ -678,10 +678,10 @@ void MyDrawEngine::GetDimensions(PictureIndex pic, int& height, int& width)
 ErrorType MyDrawEngine::SetCentre(PictureIndex pic, Vector2D centre)
 {
 	// Find the picture
-	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.find(pic);
+	std::map<PictureIndex, MyPicture>::iterator picit = mIndexPictureMap.find(pic);
 
 	// If not found
-	if(picit==m_MyPictureList.end())
+	if(picit==mIndexPictureMap.end())
 	{
 		ErrorLogger::Writeln(L"Attempting to set centre of an invalid PictureIndex in SetCentre.");
 		return FAILURE;
@@ -689,7 +689,7 @@ ErrorType MyDrawEngine::SetCentre(PictureIndex pic, Vector2D centre)
 	else
 	{
 		// Set the centre
-		picit->second.m_Centre = centre;
+		picit->second.mCentre = centre;
 		return SUCCESS;
 	}
 
@@ -703,25 +703,25 @@ ErrorType MyDrawEngine::SetCentre(PictureIndex pic, Vector2D centre)
 void MyDrawEngine::ReleasePicture(PictureIndex pic)
 {
 	// Find the picture in the map
-	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.find(pic);
+	std::map<PictureIndex, MyPicture>::iterator picit = mIndexPictureMap.find(pic);
 
 	// If not found
-	if(picit==m_MyPictureList.end())
+	if(picit==mIndexPictureMap.end())
 	{
 		ErrorLogger::Writeln(L"Attempting to release an invalid PictureIndex in ReleasePicture.");
 		return;
 	}
 
 	// Release it and set to null
-	if(picit->second.lpTheTexture)
-		picit->second.lpTheTexture->Release();
-	picit->second.lpTheTexture = nullptr;
+	if(picit->second.mLpdTheTexture)
+		picit->second.mLpdTheTexture->Release();
+	picit->second.mLpdTheTexture = nullptr;
 
 	// Remove it from the map
-	m_MyPictureList.erase(picit);
+	mIndexPictureMap.erase(picit);
 
 	// Remove it from the filename map
-	m_FilenameList.erase(picit->second.m_SourceFileName);
+	mFilenameIndexMap.erase(picit->second.mSourceFileName);
 
 }		// ReleasePicture
 
@@ -739,10 +739,10 @@ FontIndex MyDrawEngine::AddFont(const wchar_t* FontName, int height, bool bold, 
 {
 	MyFont temp;			// To hold the font being created
 	// Record requested parameters
-	temp.m_bold = bold;
-	temp.m_fontName = FontName;
-	temp.m_height = height;
-	temp.m_italic = italic;
+	temp.mBold = bold;
+	temp.mFontName = FontName;
+	temp.mHeight = height;
+	temp.mItalic = italic;
 
 	// Set up the value of "THICKNESS" needed in D3DXCreateFont
 	UINT boldness =FW_MEDIUM;
@@ -752,24 +752,24 @@ FontIndex MyDrawEngine::AddFont(const wchar_t* FontName, int height, bool bold, 
 	HRESULT err;
 
 	// Create the font, as requested
-	err = D3DXCreateFont(m_lpD3DDevice, height, 0, boldness, 0, italic, 
+	err = D3DXCreateFont(mpLPD3DDevice, height, 0, boldness, 0, italic, 
 		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 
-		DEFAULT_PITCH | FF_DONTCARE, FontName, &temp.m_pFont );
+		DEFAULT_PITCH | FF_DONTCARE, FontName, &temp.mFont );
 
 	if(FAILED(err))
 	{
 		ErrorLogger::Write(L"Failed to create font ");
 		ErrorLogger::Writeln(FontName);
 		ErrorLogger::Writeln(ERRORSTRING(err));
-		if(temp.m_pFont)
-			temp.m_pFont->Release();
+		if(temp.mFont)
+			temp.mFont->Release();
 		return 0;
 	}
 	else
 	{
 		// Add it to the map
-		m_MyFontList.insert(std::pair<FontIndex, MyFont>(m_pNextFont, temp));
-		return m_pNextFont++;		// Return the number of the font
+		mIndexFontMap.insert(std::pair<FontIndex, MyFont>(mNextFont, temp));
+		return mNextFont++;		// Return the number of the font
 	}
 }
  
@@ -781,8 +781,8 @@ ErrorType MyDrawEngine::WriteText(int x, int y, const wchar_t text[], int colour
 {
 	// Find the requested font
 	std::map<FontIndex, MyFont>::iterator fit;	// Iterator to point to the font requested
-	fit = m_MyFontList.find(fontIndex);				// Find the font
-	if(fit == m_MyFontList.end())						// If font not found
+	fit = mIndexFontMap.find(fontIndex);				// Find the font
+	if(fit == mIndexFontMap.end())						// If font not found
 	{
 		ErrorLogger::Writeln(L"Write Text called with invalid FontIndex.");
 		return FAILURE;
@@ -796,11 +796,11 @@ ErrorType MyDrawEngine::WriteText(int x, int y, const wchar_t text[], int colour
 	rect.bottom = y+50;
 
 	// Nonna-Raymond call to DrawText. Calculates the rect, but does not draw
-	fit->second.m_pFont->DrawText(NULL, text, -1, &rect, DT_CALCRECT , colour);
+	fit->second.mFont->DrawText(NULL, text, -1, &rect, DT_CALCRECT , colour);
 
 	// Now make the real call.
 	HRESULT err;
-	err = fit->second.m_pFont->DrawText(NULL, text, -1, &rect, 0 , colour);
+	err = fit->second.mFont->DrawText(NULL, text, -1, &rect, 0 , colour);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"WriteText failed to draw text.");
@@ -837,27 +837,27 @@ ErrorType MyDrawEngine::WriteInt(int x, int y, int num, int colour, FontIndex fo
 
 ErrorType MyDrawEngine::WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex)
 {
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		position = camera->Transform(position);
+		position = mpCamera->Transform(position);
 	}
 	return WriteText(int(position.XValue), int(position.YValue), text, colour, fontIndex);
 }
 
 ErrorType MyDrawEngine::WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex )
 {
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		position = camera->Transform(position);
+		position = mpCamera->Transform(position);
 	}
 	return WriteInt(int(position.XValue), int(position.YValue), num, colour, fontIndex);
 }
 
 ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, FontIndex fontIndex )
 {
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		position = camera->Transform(position);
+		position = mpCamera->Transform(position);
 	}
 	return WriteDouble(int(position.XValue), int(position.YValue), num, colour, fontIndex);
 }
@@ -872,35 +872,35 @@ ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, F
 ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scale, float angle, float transparency)
 {
 	// Find the picture
-	std::map<PictureIndex, MyPicture>::iterator picit = m_MyPictureList.find(pic);
+	std::map<PictureIndex, MyPicture>::iterator picit = mIndexPictureMap.find(pic);
 
 	Vector2D originalPosition = position;
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		position = camera->Transform(position);
-		scale = camera->Transform(scale);
+		position = mpCamera->Transform(position);
+		scale = mpCamera->Transform(scale);
       angle = -angle;
 	}
 
 	// If not found
-	if(picit==m_MyPictureList.end())
+	if(picit==mIndexPictureMap.end())
 	{
 		ErrorLogger::Writeln(L"Attempting to draw an invalid PictureIndex in DrawAt.");
 		WriteText(originalPosition, L"No Image", WHITE);
 		return FAILURE;	
 	}
 	
-	MyPicture& thePicture = picit->second;		// Reference to the picture for easy coding
+	MyPicture& rPicture = picit->second;		// Reference to the picture for easy coding
 
 	// Check texture is loaded
-	if(!thePicture.lpTheTexture)
+	if(!rPicture.mLpdTheTexture)
 	{
 		ErrorLogger::Writeln(L"Cannot render MyPicture in DrawAt. MyPicture not initialised.");
 		return FAILURE;
 	}
 
 	// Start drawing
-	HRESULT err = m_lpSprite->Begin(D3DXSPRITE_ALPHABLEND);		// Alpha Blending requested
+	HRESULT err = mLPSprite->Begin(D3DXSPRITE_ALPHABLEND);		// Alpha Blending requested
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to begin sprite render in DrawAt");
@@ -910,37 +910,37 @@ ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scale,
 
 	// Specify the centre of the sprite - will be (height/2,width/2) unless user has asked for something 
 	// different.
-	D3DXVECTOR2 centre (thePicture.m_Centre.XValue, thePicture.m_Centre.YValue);
+	D3DXVECTOR2 centre (rPicture.mCentre.XValue, rPicture.mCentre.YValue);
 
 	// Create a transformation matrix for the requested scale, rotation and position.
 	D3DXMATRIX transform;
 	D3DXVECTOR2 scaling(scale, scale);
 	D3DXVECTOR2 pos;
-	pos.x = (position - thePicture.m_Centre).XValue;
-	pos.y = (position - thePicture.m_Centre).YValue;
+	pos.x = (position - rPicture.mCentre).XValue;
+	pos.y = (position - rPicture.mCentre).YValue;
 	D3DXMatrixTransformation2D(&transform, &centre, 0.0, &scaling, &centre, -angle, &pos);
 	
 	// Set the transformation matrix
-	m_lpSprite->SetTransform(&transform);
+	mLPSprite->SetTransform(&transform);
 
 	// Modulate the colour to add transparency
 	unsigned int alpha = int(255-255*transparency)%256;
 	unsigned int colour = 0xFFFFFF+(alpha<<24);
 
 	// Draw the sprite
-	err = m_lpSprite->Draw(thePicture.lpTheTexture, NULL, NULL, NULL, colour);
+	err = mLPSprite->Draw(rPicture.mLpdTheTexture, NULL, NULL, NULL, colour);
 
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw sprite in DrawAt");
 		ErrorLogger::Writeln(ERRORSTRING(err));
 	
-		m_lpSprite->End();
+		mLPSprite->End();
 		return FAILURE;
 	}
 
 	// Complete the sprite
-	m_lpSprite->End();
+	mLPSprite->End();
 
 	return SUCCESS;
 }	// DrawAt
@@ -952,10 +952,10 @@ ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scale,
 // Draws a line between the two coordinates
 ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int colour)
 {
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		start = camera->Transform(start);
-		end = camera->Transform(end);
+		start = mpCamera->Transform(start);
+		end = mpCamera->Transform(end);
 	}
 
 	// Vertex array with two vertices needed
@@ -968,7 +968,7 @@ ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int co
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 
 	// Create the buffer using my default format
-	HRESULT err =m_lpD3DDevice->CreateVertexBuffer(2*sizeof(MYVERTEX),
+	HRESULT err =mpLPD3DDevice->CreateVertexBuffer(2*sizeof(MYVERTEX),
 							   0,
 							   MYFVF,
 							   D3DPOOL_MANAGED,
@@ -1007,7 +1007,7 @@ ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int co
 	}
 
 	// Set the vertex format
-	err = m_lpD3DDevice->SetFVF(MYFVF);
+	err = mpLPD3DDevice->SetFVF(MYFVF);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to set FVF in DrawLine");
@@ -1016,10 +1016,10 @@ ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int co
 		return FAILURE;
 	}
 	// Set a default stream
-	m_lpD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
+	mpLPD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
 
 	// Draw, as a line list, starting at vertex 0.
-	err= m_lpD3DDevice->DrawPrimitive(D3DPT_LINELIST, 0,1);
+	err= mpLPD3DDevice->DrawPrimitive(D3DPT_LINELIST, 0,1);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw a primitive in DrawLine");
@@ -1040,10 +1040,10 @@ ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int co
 // Fill a circle
 ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int colour)
 {
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		centre = camera->Transform(centre);
-		radius = camera->Transform(radius);
+		centre = mpCamera->Transform(centre);
+		radius = mpCamera->Transform(radius);
 	}
 
 	// Force a minimum radius
@@ -1057,25 +1057,25 @@ ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int 
 	float angle = -6.285f / (numVertices-2);
 
 	// Create an array of the vertex locations
-	Vector2D* Points = new Vector2D[numVertices];
+	Vector2D* pPoints = new Vector2D[numVertices];
 
 	// First vertex in the middle
-	Points[0].XValue = centre.XValue;
-	Points[0].YValue = centre.YValue;
+	pPoints[0].XValue = centre.XValue;
+	pPoints[0].YValue = centre.YValue;
 
 	// Next vertex is directly below it, 2radius" pixels away
 	Vector2D bottom = Vector2D(0, radius);
 	// Find the remaining vertex locations - slow
 	for(int i=1;i<numVertices;i++)
 	{
-		Points[i] =bottom.rotatedBy(angle*i)+centre;
+		pPoints[i] =bottom.rotatedBy(angle*i)+centre;
 	}
 
 	// Vertex buffer to hold the vertices
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 	HRESULT err;
 	// Create a vertex buffer using my format and default values
-	err = m_lpD3DDevice->CreateVertexBuffer(sizeof(MYVERTEX)*numVertices,
+	err = mpLPD3DDevice->CreateVertexBuffer(sizeof(MYVERTEX)*numVertices,
 							   0,
 							   MYFVF,
 							   D3DPOOL_MANAGED,
@@ -1104,8 +1104,8 @@ ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int 
 	MYVERTEX* pVertices = (MYVERTEX*)pBuff;
 	for( int i=0;i<numVertices;i++)
 	{
-		pVertices[i].x = Points[i].XValue;
-		pVertices[i].y = Points[i].YValue;
+		pVertices[i].x = pPoints[i].XValue;
+		pVertices[i].y = pPoints[i].YValue;
 		pVertices[i].z = 0.0f;
 		pVertices[i].rhw=1.0f;
 		pVertices[i].colour = colour;
@@ -1115,23 +1115,23 @@ ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int 
 	vertexBuffer->Unlock();
 
 	// Set my vertex format and a default stream source
-	m_lpD3DDevice->SetFVF(MYFVF);
-	m_lpD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
+	mpLPD3DDevice->SetFVF(MYFVF);
+	mpLPD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
 
 	// Draw using a triangle fan
-	err= m_lpD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0,numVertices-2);
+	err= mpLPD3DDevice->DrawPrimitive(D3DPT_TRIANGLEFAN, 0,numVertices-2);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw primitive in DrawPoint");
 		ErrorLogger::Writeln(ERRORSTRING(err));
 		vertexBuffer->Release();
-		delete[] Points;
+		delete[] pPoints;
 		return FAILURE;
 	}
 	// Release the buffer
 	vertexBuffer->Release();
 	// Delete the array
-	delete[] Points;
+	delete[] pPoints;
 	return SUCCESS;
 }	// FillCircle
 
@@ -1143,9 +1143,9 @@ ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int 
 ErrorType MyDrawEngine::FillRect(Rectangle2D destinationRect, unsigned int colour, float angle)
 {
 
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		destinationRect = camera->Transform(destinationRect);
+		destinationRect = mpCamera->Transform(destinationRect);
 	}
 
 	// Four corners
@@ -1175,7 +1175,7 @@ ErrorType MyDrawEngine::FillRect(Rectangle2D destinationRect, unsigned int colou
 	// Create a vertex buffer for drawing
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 	HRESULT err;
-	err = m_lpD3DDevice->CreateVertexBuffer(4*sizeof(MYVERTEX),
+	err = mpLPD3DDevice->CreateVertexBuffer(4*sizeof(MYVERTEX),
 							   0,
 							   MYFVF,
 							   D3DPOOL_MANAGED,
@@ -1207,11 +1207,11 @@ ErrorType MyDrawEngine::FillRect(Rectangle2D destinationRect, unsigned int colou
 	vertexBuffer->Unlock();
 
 	// Set my vertex format and a default stream
-	m_lpD3DDevice->SetFVF(MYFVF);
-	m_lpD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
+	mpLPD3DDevice->SetFVF(MYFVF);
+	mpLPD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
 
 	// Draw using a triangle strip
-	err= m_lpD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0,2);
+	err= mpLPD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0,2);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw primitive in FillRect");
@@ -1231,9 +1231,9 @@ ErrorType MyDrawEngine::FillRect(Rectangle2D destinationRect, unsigned int colou
 ErrorType MyDrawEngine::BlendRect(Rectangle2D destinationRect, unsigned int colour, float transparency, float angle)
 {
 
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		destinationRect = camera->Transform(destinationRect);
+		destinationRect = mpCamera->Transform(destinationRect);
 	}
 
 	// Calculate transparency as an integer 0-255
@@ -1272,7 +1272,7 @@ ErrorType MyDrawEngine::BlendRect(Rectangle2D destinationRect, unsigned int colo
 	// Create a buffer
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 	HRESULT err;
-	err = m_lpD3DDevice->CreateVertexBuffer(4*sizeof(MYVERTEX),
+	err = mpLPD3DDevice->CreateVertexBuffer(4*sizeof(MYVERTEX),
 							   0,
 							   MYFVF,
 							   D3DPOOL_MANAGED,
@@ -1305,17 +1305,17 @@ ErrorType MyDrawEngine::BlendRect(Rectangle2D destinationRect, unsigned int colo
 	vertexBuffer->Unlock();
 
 	// Set a vertex format and stream source
-	m_lpD3DDevice->SetFVF(MYFVF);
-	m_lpD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
+	mpLPD3DDevice->SetFVF(MYFVF);
+	mpLPD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
 
 	// Enable alpha blending
-	m_lpD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_lpD3DDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-	m_lpD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_lpD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	mpLPD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	mpLPD3DDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	mpLPD3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	mpLPD3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	// Draw rectangle as a triangle strip - two triangles, starting at zero.
-	err= m_lpD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0,2);
+	err= mpLPD3DDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0,2);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw primitive in BlendRect");
@@ -1334,9 +1334,9 @@ ErrorType MyDrawEngine::BlendRect(Rectangle2D destinationRect, unsigned int colo
 ErrorType MyDrawEngine::DrawPoint(Vector2D point, unsigned int colour)
 {
 
-	if (m_CameraActive)
+	if (mCameraActive)
 	{
-		point = camera->Transform(point);
+		point = mpCamera->Transform(point);
 	}
 	// An "array" with one entry
 	MYVERTEX Vertices[] = {
@@ -1346,7 +1346,7 @@ ErrorType MyDrawEngine::DrawPoint(Vector2D point, unsigned int colour)
 	// Create a vertex buffer
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 	HRESULT err;
-	err = m_lpD3DDevice->CreateVertexBuffer(sizeof(MYVERTEX),
+	err = mpLPD3DDevice->CreateVertexBuffer(sizeof(MYVERTEX),
 							   0,
 							   MYFVF,
 							   D3DPOOL_MANAGED,
@@ -1377,11 +1377,11 @@ ErrorType MyDrawEngine::DrawPoint(Vector2D point, unsigned int colour)
 	vertexBuffer->Unlock();
 
 	// Set a vertex format and stream source
-	m_lpD3DDevice->SetFVF(MYFVF);
-	m_lpD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
+	mpLPD3DDevice->SetFVF(MYFVF);
+	mpLPD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
 
 	// Draw a point list, with a single entry
-	err= m_lpD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0,1);
+	err= mpLPD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0,1);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw primitive in DrawPoint");
@@ -1406,7 +1406,7 @@ ErrorType MyDrawEngine::DrawPointList(Vector2D points[], unsigned int colours[],
 	// Create a vertex buffer
 	LPDIRECT3DVERTEXBUFFER9 vertexBuffer;
 	HRESULT err;
-	err = m_lpD3DDevice->CreateVertexBuffer(sizeof(MYVERTEX)*numPoints,
+	err = mpLPD3DDevice->CreateVertexBuffer(sizeof(MYVERTEX)*numPoints,
 							   0,
 							   MYFVF,
 							   D3DPOOL_MANAGED,
@@ -1436,9 +1436,9 @@ ErrorType MyDrawEngine::DrawPointList(Vector2D points[], unsigned int colours[],
 	for(unsigned int i=0;i<numPoints;i++)
 	{
 		Vector2D p = points[i];
-		if (m_CameraActive)
+		if (mCameraActive)
 		{
-			p = camera->Transform(p);
+			p = mpCamera->Transform(p);
 		}
 		pVertices[i].x = p.XValue;
 		pVertices[i].y = p.YValue;
@@ -1451,11 +1451,11 @@ ErrorType MyDrawEngine::DrawPointList(Vector2D points[], unsigned int colours[],
 	vertexBuffer->Unlock();
 
 	// Set a vertex format and stream source
-	m_lpD3DDevice->SetFVF(MYFVF);
-	m_lpD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
+	mpLPD3DDevice->SetFVF(MYFVF);
+	mpLPD3DDevice->SetStreamSource(0, vertexBuffer, 0, sizeof(MYVERTEX));
 
 	// Draw using a point list
-	err= m_lpD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0,numPoints);
+	err= mpLPD3DDevice->DrawPrimitive(D3DPT_POINTLIST, 0,numPoints);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw primitive in DrawPoint");
@@ -1477,7 +1477,7 @@ ErrorType MyDrawEngine::DrawPointList(Vector2D points[], unsigned int colours[],
 // MyFont constructor - just set pointer to NULL
 MyDrawEngine::MyFont::MyFont()
 {
-	m_pFont = nullptr;
+	mFont = nullptr;
 }
 
 // **************************************************************
@@ -1485,9 +1485,9 @@ MyDrawEngine::MyFont::MyFont()
 // MyPicture constructor -  set pointer to NULL and dimensions to zero
 MyDrawEngine::MyPicture::MyPicture()
 {
-	lpTheTexture = nullptr;
-	m_width =0;
-	m_height=0;
+	mLpdTheTexture = nullptr;
+	mWidth =0;
+	mHeight=0;
 }
 
 

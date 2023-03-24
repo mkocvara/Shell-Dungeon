@@ -15,16 +15,16 @@
 class GameTimer
 {
 private:
-	LARGE_INTEGER freq;		// Stores the frequency of the performance counter ("ticks" per second)
-	LARGE_INTEGER last;		// Stores the time of the last mark time (in ticks)
-	double mdMinimumFrameTime;	// The minumim frame time that mark() will allow
-	double mdThrottledFrameTime;	// The minimum frame time currently allowed. This will gradually reset
+	LARGE_INTEGER mFrequency;		// Stores the frequency of the performance counter ("ticks" per second)
+	LARGE_INTEGER mLast;		// Stores the time of the last mark time (in ticks)
+	double mMinimumFrameTime;	// The minumim frame time that mark() will allow
+	double mThrottledFrameTime;	// The minimum frame time currently allowed. This will gradually reset
 									// to the minimum frame time to smooth frame rate changes.
 				
 
 public:
-	double mdFrameTime;		// The duration between the last two uses of the mark() function in seconds
-	double mdGameRate;		// A number to set the "speed" of your game. Keep at 1.0 for normal rates
+	double mFrameTime;		// The duration between the last two uses of the mark() function in seconds
+	double mGameRate;		// A number to set the "speed" of your game. Keep at 1.0 for normal rates
 							      // Set to lower values for slow-time. Set to higher values for speedy effects.
 							      // This number is in effect a modifier to your FrameTime. mdFrameTime will
 							      // be multiplied by mdGameRate when you call "mark()".

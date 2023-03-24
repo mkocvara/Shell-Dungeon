@@ -6,9 +6,9 @@
 
 // PUBLIC
 
-SpaceRock::SpaceRock(std::weak_ptr<ServiceManager> serviceManager) : Super(serviceManager)
+SpaceRock::SpaceRock(std::weak_ptr<ServiceManager> pServiceManager) : Super(pServiceManager)
 {
-	objectType = ObjectType::spacerock;
+	mObjectType = ObjectType::spacerock;
 }
 
 SpaceRock::~SpaceRock()
@@ -17,27 +17,27 @@ SpaceRock::~SpaceRock()
 
 void SpaceRock::Initialise(Vector2D position, float angle, float scale)
 {
-	int randSprite = RandUtil::randRangeInt(0, renderSpritePaths.size()-1);	
+	int randSprite = RandUtil::randRangeInt(0, mRenderSpritePaths.size()-1);	
 	float randAngle = RandUtil::randRangeDouble(0, 360);
 	float randScale = RandUtil::randRangeDouble(0.6f, 1.f);
 	Vector2D moveDir(RandUtil::randRangeDouble(0.f, 1.f), RandUtil::randRangeDouble(0.f, 1.f));
 	float randSpeed = RandUtil::randRangeDouble(15.f, 25.f);
-	velocity = moveDir * randSpeed;
+	mVelocity = moveDir * randSpeed;
 
-	std::shared_ptr<MyDrawEngine> pDrawEngine = serviceManager.lock()->GetDrawEngine().lock();
-	Vector2D randPos = pDrawEngine->camera->ReverseTransform(Vector2D(
+	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
+	Vector2D randPos = pDrawEngine->mpCamera->ReverseTransform(Vector2D(
 		RandUtil::randRangeDouble(0.f, pDrawEngine->GetScreenWidth()), 
 		RandUtil::randRangeDouble(0.f, pDrawEngine->GetScreenHeight())
 	));
 
-	SetRenderSprite(renderSpritePaths[randSprite]);
+	SetRenderSprite(mRenderSpritePaths[randSprite]);
 
 	int spriteHeight, spriteWidth;
-	pDrawEngine->GetDimensions(renderSprite, spriteHeight, spriteWidth);
+	pDrawEngine->GetDimensions(mRenderSprite, spriteHeight, spriteWidth);
 	spriteHeight *= randScale;
 	spriteWidth *= randScale;
 	const float diameter = (float)(spriteHeight < spriteWidth ? spriteHeight : spriteWidth);
-	boundingShape = std::make_shared<Circle2D>(position, diameter/2);
+	mpBoundingShape = std::make_shared<Circle2D>(position, diameter/2);
 
 	Super::Initialise(randPos, randAngle, randScale);
 	return;
@@ -48,7 +48,7 @@ ErrorType SpaceRock::Update(double deltaTime)
 	if (!IsActive())
 		return SUCCESS;
 
-	boundingShape->PlaceAt(position);
+	mpBoundingShape->PlaceAt(mPosition);
 
 	if (FAILED(Super::Update(deltaTime)))
 	{
@@ -60,12 +60,12 @@ ErrorType SpaceRock::Update(double deltaTime)
 
 std::weak_ptr<IShape2D> SpaceRock::GetShape() const
 {
-	return boundingShape;
+	return mpBoundingShape;
 }
 
-void SpaceRock::HandleCollision(std::shared_ptr<GameObject> otherObject)
+void SpaceRock::HandleCollision(std::shared_ptr<GameObject> pOtherObject)
 {
-	if (otherObject->GetObjectType() == ObjectType::bullet)
+	if (pOtherObject->GetObjectType() == ObjectType::bullet)
 	{
 		Remove();
 	}

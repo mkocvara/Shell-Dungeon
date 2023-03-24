@@ -9,11 +9,11 @@
 // *************************************************************************************
 // Implementation of the global EnumerateJoystick function 
 
-LPDIRECTINPUTDEVICE8 MyInputs::lpdijoystick=nullptr;	// The dirextInput joystick
-LPDIRECTINPUTDEVICE8 MyInputs::lpdikeyboard=nullptr;	// The directInput keyboard
-LPDIRECTINPUTDEVICE8 MyInputs::lpdimouse=nullptr;		// The directInput mouse	
-LPDIRECTINPUT8 MyInputs::lpdi=nullptr;	
-LPDIRECTINPUTEFFECT MyInputs::mrglpdiEffectList[3];
+LPDIRECTINPUTDEVICE8 MyInputs::sLpdiJoystick=nullptr;	// The dirextInput joystick
+LPDIRECTINPUTDEVICE8 MyInputs::sLpdiKeyboard=nullptr;	// The directInput keyboard
+LPDIRECTINPUTDEVICE8 MyInputs::sLpdiMouse=nullptr;		// The directInput mouse	
+LPDIRECTINPUT8 MyInputs::sLpdi=nullptr;	
+LPDIRECTINPUTEFFECT MyInputs::sLpdiEffectList[3];
 
 BOOL CALLBACK MyInputs::EnumerateJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID pDeviceFoundGUID)
 // Nothing to see here, folks. Move along. Move along.
@@ -21,8 +21,8 @@ BOOL CALLBACK MyInputs::EnumerateJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID pDev
 	HRESULT err;
 
     // Obtain an interface to the enumerated joystick.
-    err = lpdi->CreateDevice(lpddi->guidInstance,  
-                                &lpdijoystick, NULL);
+    err = sLpdi->CreateDevice(lpddi->guidInstance,  
+                                &sLpdiJoystick, NULL);
 
    if(FAILED(err)) 
    {
@@ -38,26 +38,26 @@ BOOL CALLBACK MyInputs::EnumerateJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID pDev
 // Implementation of the MyInputs member functions
 
 MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
-:mkiMaxJoystickAxis(100)
+:mMaxJoystickAxis(100)
 {
-	lpdi=nullptr;
+	sLpdi=nullptr;
 
-	lpdikeyboard=nullptr;
-	lpdimouse=nullptr;
-	lpdijoystick=nullptr;
+	sLpdiKeyboard=nullptr;
+	sLpdiMouse=nullptr;
+	sLpdiJoystick=nullptr;
 
-	miMouseDX=0;
-	miMouseDY=0;
-	mbMouseLeft=false;
-	mbMouseRight = false;
-	mbMouseMiddle = false;
+	mMouseDX=0;
+	mMouseDY=0;
+	mMouseLeft=false;
+	mMouseRight = false;
+	mMouseMiddle = false;
 
-	mrglpdiEffectList[PULL]=nullptr;
-	mrglpdiEffectList[SHAKE]=nullptr;
-	mrglpdiEffectList[CENTRE]=nullptr;
+	sLpdiEffectList[PULL]=nullptr;
+	sLpdiEffectList[SHAKE]=nullptr;
+	sLpdiEffectList[CENTRE]=nullptr;
 
 	
-	HRESULT err =DirectInput8Create(hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&lpdi, NULL);
+	HRESULT err =DirectInput8Create(hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&sLpdi, NULL);
 	if (FAILED(err))
 	{
 		// Failed to get DInput.
@@ -68,7 +68,7 @@ MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 	}
 
 	// Direct input is set up - handle the keyboard next ********************
-	err=lpdi->CreateDevice(GUID_SysKeyboard, &lpdikeyboard, NULL);
+	err=sLpdi->CreateDevice(GUID_SysKeyboard, &sLpdiKeyboard, NULL);
 	if (FAILED(err))
 	{
 		// Failed to get a keyboard!
@@ -77,37 +77,37 @@ MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 	}
 
 	// Setting format for the device to be a default keyboard
-	if(lpdikeyboard)
+	if(sLpdiKeyboard)
 	{
-		err=lpdikeyboard->SetDataFormat(&c_dfDIKeyboard);
+		err=sLpdiKeyboard->SetDataFormat(&c_dfDIKeyboard);
 		if (FAILED(err))
 		{
 			// Failed to set format
 			ErrorLogger::Writeln(L"Failed to set keyboard format\n");
 			ErrorLogger::Writeln(ERRORSTRING(err));
-			lpdikeyboard->Release();
-			lpdikeyboard=nullptr;
+			sLpdiKeyboard->Release();
+			sLpdiKeyboard=nullptr;
 		}
 	}
 
 	// Setting cooperation level to BACKGROUND (gets input whether on top or not)
 	//   and EXCLUSIVE (let other programs use the keyboard, too)
-	if(lpdikeyboard)
+	if(sLpdiKeyboard)
 	{
-		err=lpdikeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+		err=sLpdiKeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 		if (FAILED(err))
 		{
 			// Failed to set cooperative level
 			ErrorLogger::Writeln(L"Failed to set keyboard cooperative level");
 			ErrorLogger::Writeln(ERRORSTRING(err));
-			lpdikeyboard->Release();
-			lpdikeyboard=nullptr;
+			sLpdiKeyboard->Release();
+			sLpdiKeyboard=nullptr;
 		}
 	}
 	// Acquire keyboard
-	if(lpdikeyboard)
+	if(sLpdiKeyboard)
 	{
-		err=lpdikeyboard->Acquire();
+		err=sLpdiKeyboard->Acquire();
 		if (FAILED(err))
 		{
 			// Failed to set cooperative level
@@ -115,17 +115,17 @@ MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 			ErrorLogger::Writeln(ERRORSTRING(err));
 
 			// Commenting out - Don't release the keyboard, just try to reacquire next time around
-			//lpdikeyboard->Release();
-			//lpdikeyboard=NULL;
+			//sLpdiKeyboard->Release();
+			//sLpdiKeyboard=NULL;
 		}
 	}
 
 	// Set all of the keyboard array to zero
-	memset(mrgcKeystate, 0, KEYMAPSIZE);
-	memset(mrgcOldKeystate, 0, KEYMAPSIZE);
+	memset(mKeystates, 0, KEYMAPSIZE);
+	memset(mOldKeystates, 0, KEYMAPSIZE);
 
 	// Keyboard ready. Next is the mouse **************************************
-	err=lpdi->CreateDevice(GUID_SysMouse, &lpdimouse, NULL);
+	err=sLpdi->CreateDevice(GUID_SysMouse, &sLpdiMouse, NULL);
 	if (FAILED(err))
 	{
 		// Failed to get a mouse
@@ -135,44 +135,44 @@ MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 
 	// Setting cooperation level to FOREGROUND (only gets input when on top)
 	//   and EXCLUSIVE (let other programs use the mouse, too)
-	if(lpdimouse)
+	if(sLpdiMouse)
 	{
-		err=lpdimouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND|DISCL_EXCLUSIVE);
+		err=sLpdiMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND|DISCL_EXCLUSIVE);
 		if (FAILED(err))
 		{
 			// Failed to set cooperative level
 			ErrorLogger::Writeln(L"Failed to set mouse cooperative level");
 			ErrorLogger::Writeln(ERRORSTRING(err));
-			lpdimouse->Release();
-			lpdimouse=nullptr;
+			sLpdiMouse->Release();
+			sLpdiMouse=nullptr;
 		}
 	}
 
 	// Setting format for the device to be a default mouse
-	if(lpdimouse)
+	if(sLpdiMouse)
 	{
-		err=lpdimouse->SetDataFormat(&c_dfDIMouse);
+		err=sLpdiMouse->SetDataFormat(&c_dfDIMouse);
 		if (FAILED(err))
 		{
 			// Failed to set format
 			ErrorLogger::Writeln(L"Failed to set mouse format");
 			ErrorLogger::Writeln(ERRORSTRING(err));
-			lpdimouse->Release();
-			lpdimouse=nullptr;
+			sLpdiMouse->Release();
+			sLpdiMouse=nullptr;
 		}
 	}
 
 	// Aquire mouse
-	if(lpdimouse)
+	if(sLpdiMouse)
 	{
-		err=lpdimouse->Acquire();
+		err=sLpdiMouse->Acquire();
 		if (FAILED(err))
 		{
 			// Failed to set cooperative level
 			ErrorLogger::Writeln(L"Failed to acquire mouse");
 			ErrorLogger::Writeln(ERRORSTRING(err));
-			lpdimouse->Release();
-			lpdimouse=nullptr;
+			sLpdiMouse->Release();
+			sLpdiMouse=nullptr;
 
 		}
 	}
@@ -183,9 +183,9 @@ MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 	// (a bit simple - alternative is to give users a choice from a list, but too much hassle.)
 
 	// Enumerate the attached joystick devices. This will repeatedly call my "EnumerateJoysticks()
-	//  function, and will put the joystick address in lpdijoystick.
+	//  function, and will put the joystick address in sLpdiJoystick.
 
-	err=lpdi->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumerateJoystick, NULL, DIEDFL_ATTACHEDONLY);
+	err=sLpdi->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumerateJoystick, NULL, DIEDFL_ATTACHEDONLY);
 	if (FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to enumerate joystick devices.");
@@ -194,14 +194,14 @@ MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 
 	// Set the cooperative level - want exclusive access
 
-	if(lpdijoystick)
+	if(sLpdiJoystick)
 	{
-		err=lpdijoystick->SetCooperativeLevel(hwnd, DISCL_BACKGROUND | DISCL_EXCLUSIVE);
+		err=sLpdiJoystick->SetCooperativeLevel(hwnd, DISCL_BACKGROUND | DISCL_EXCLUSIVE);
 		if(FAILED(err))
 		{
 			// Could not set cooperative level
-			lpdijoystick->Release();
-			lpdijoystick=nullptr;
+			sLpdiJoystick->Release();
+			sLpdiJoystick=nullptr;
 			ErrorLogger::Writeln(L"Could not set joystick cooperative level\n");
 			ErrorLogger::Writeln(ERRORSTRING(err));
 		}
@@ -209,84 +209,84 @@ MyInputs::MyInputs(HINSTANCE hinst, HWND hwnd)
 
 	// Set the data format for the joystick
 
-	if(lpdijoystick)
+	if(sLpdiJoystick)
 	{
-		err=lpdijoystick->SetDataFormat(&c_dfDIJoystick);
+		err=sLpdiJoystick->SetDataFormat(&c_dfDIJoystick);
 		if(FAILED(err))
 		{
 			// Could not set data format
-			lpdijoystick->Release();
-			lpdijoystick=nullptr;
+			sLpdiJoystick->Release();
+			sLpdiJoystick=nullptr;
 			ErrorLogger::Writeln(L"Could not set joystick data format");
 			ErrorLogger::Writeln(ERRORSTRING(err));
 		}
 	}
 
-	if(lpdijoystick)
+	if(sLpdiJoystick)
 	{
 		// Set joystick ranges - start with x axis
     // No error reporting here. Any problems are probably just because it does not have the specified axis
 
 		DIPROPRANGE joystickAxisRange;		// A struct to store the details of the range you want to set
 
-		joystickAxisRange.lMax = mkiMaxJoystickAxis;				// Set max range to the constant
-		joystickAxisRange.lMin = -mkiMaxJoystickAxis;				// Same for min range
+		joystickAxisRange.lMax = mMaxJoystickAxis;				// Set max range to the constant
+		joystickAxisRange.lMin = -mMaxJoystickAxis;				// Same for min range
 		joystickAxisRange.diph.dwSize=sizeof(DIPROPRANGE);			// Tell it its own size
 		joystickAxisRange.diph.dwHeaderSize=sizeof(DIPROPHEADER);	// Tell it the size of its header
 		joystickAxisRange.diph.dwObj = DIJOFS_X;					// Setting the x-axis
 		joystickAxisRange.diph.dwHow = DIPH_BYOFFSET;				// Use offset (as always) for getting data
 
-		lpdijoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
+		sLpdiJoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
 
 		// Y-axis next
-		joystickAxisRange.lMax = mkiMaxJoystickAxis;				// Set max range to the constant
-		joystickAxisRange.lMin = -mkiMaxJoystickAxis;				// Same for min range
+		joystickAxisRange.lMax = mMaxJoystickAxis;				// Set max range to the constant
+		joystickAxisRange.lMin = -mMaxJoystickAxis;				// Same for min range
 		joystickAxisRange.diph.dwSize=sizeof(DIPROPRANGE);			// Tell it its own size
 		joystickAxisRange.diph.dwHeaderSize=sizeof(DIPROPHEADER);	// Tell it the size of its header
 		joystickAxisRange.diph.dwObj = DIJOFS_Y;					// Setting the y-axis
 		joystickAxisRange.diph.dwHow = DIPH_BYOFFSET;				// Use offset (as always) for getting data
 
-		lpdijoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
+		sLpdiJoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
 
 		// twist-axis
-		joystickAxisRange.lMax = mkiMaxJoystickAxis;				// Set max range to the constant
-		joystickAxisRange.lMin = -mkiMaxJoystickAxis;				// Same for min range
+		joystickAxisRange.lMax = mMaxJoystickAxis;				// Set max range to the constant
+		joystickAxisRange.lMin = -mMaxJoystickAxis;				// Same for min range
 		joystickAxisRange.diph.dwSize=sizeof(DIPROPRANGE);			// Tell it its own size
 		joystickAxisRange.diph.dwHeaderSize=sizeof(DIPROPHEADER);	// Tell it the size of its header
 		joystickAxisRange.diph.dwObj = DIJOFS_RZ;					// Setting the z-axis
 		joystickAxisRange.diph.dwHow = DIPH_BYOFFSET;				// Use offset (as always) for getting data
 		
-		lpdijoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
+		sLpdiJoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
 
 		// Finally, throttle-axis
-		joystickAxisRange.lMax = mkiMaxJoystickAxis;				// Set max range to the constant
+		joystickAxisRange.lMax = mMaxJoystickAxis;				// Set max range to the constant
 		joystickAxisRange.lMin = 0;				// Same for min range
 		joystickAxisRange.diph.dwSize=sizeof(DIPROPRANGE);			// Tell it its own size
 		joystickAxisRange.diph.dwHeaderSize=sizeof(DIPROPHEADER);	// Tell it the size of its header
 		joystickAxisRange.diph.dwObj = DIJOFS_SLIDER(0);					// Setting the z-axis
 		joystickAxisRange.diph.dwHow = DIPH_BYOFFSET;				// Use offset (as always)
 		
-		err=lpdijoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
+		err=sLpdiJoystick->SetProperty(DIPROP_RANGE, &joystickAxisRange.diph);
 	}
 
    // If, after all of that, we don't have a pointer to the joystick,
    // then it probably is simply not there
-	if(lpdijoystick)
+	if(sLpdiJoystick)
 	{
 		// Finally, acquire the joystick
-		if(FAILED(lpdijoystick->Acquire()))
+		if(FAILED(sLpdiJoystick->Acquire()))
 		{
             // If that failed, release everything
-			lpdijoystick->Release();
-			lpdijoystick=nullptr;
+			sLpdiJoystick->Release();
+			sLpdiJoystick=nullptr;
 			ErrorLogger::Writeln(L"Failed to aquire joystick");
 			ErrorLogger::Writeln(ERRORSTRING(err));
 		}
 	}
 
 	// Enumerate the effects
-	if(lpdijoystick)
-		err = lpdijoystick->EnumEffects(&(this->DIEnumEffectsCallback), lpdijoystick, DIEFT_ALL);
+	if(sLpdiJoystick)
+		err = sLpdiJoystick->EnumEffects(&(this->DIEnumEffectsCallback), sLpdiJoystick, DIEFT_ALL);
 }
 
 
@@ -295,20 +295,20 @@ MyInputs::~MyInputs()
 	// Need to stop all effects
 	// -> Stop does not seem to work
 	PullJoystick(0, .1, 0);
-	if (mrglpdiEffectList[SHAKE])
+	if (sLpdiEffectList[SHAKE])
 	{
-		mrglpdiEffectList[SHAKE]->Stop();
-		mrglpdiEffectList[SHAKE]->Release();
+		sLpdiEffectList[SHAKE]->Stop();
+		sLpdiEffectList[SHAKE]->Release();
 	}
-	if (mrglpdiEffectList[PULL])
+	if (sLpdiEffectList[PULL])
 	{
-		mrglpdiEffectList[PULL]->Stop();
-		mrglpdiEffectList[PULL]->Release();
+		sLpdiEffectList[PULL]->Stop();
+		sLpdiEffectList[PULL]->Release();
 	}
-	if (mrglpdiEffectList[CENTRE])
+	if (sLpdiEffectList[CENTRE])
 	{
-		mrglpdiEffectList[CENTRE]->Stop();
-		mrglpdiEffectList[CENTRE]->Release();
+		sLpdiEffectList[CENTRE]->Stop();
+		sLpdiEffectList[CENTRE]->Release();
 	}
 
 	Release();
@@ -317,27 +317,27 @@ MyInputs::~MyInputs()
 void MyInputs::Release()
 {
 	// Release all objects
-	if (lpdimouse)
+	if (sLpdiMouse)
 	{
-		lpdimouse->Release();
-		lpdi=nullptr;
+		sLpdiMouse->Release();
+		sLpdi=nullptr;
 	}
-	if (lpdikeyboard)
+	if (sLpdiKeyboard)
 	{
-		lpdikeyboard->Release();
-		lpdikeyboard=nullptr;
-	}
-
-	if (lpdijoystick)
-	{
-		lpdijoystick->Release();
-		lpdijoystick=nullptr;
+		sLpdiKeyboard->Release();
+		sLpdiKeyboard=nullptr;
 	}
 
-	if (lpdi) 
+	if (sLpdiJoystick)
 	{
-		lpdi->Release();
-		lpdi=nullptr;
+		sLpdiJoystick->Release();
+		sLpdiJoystick=nullptr;
+	}
+
+	if (sLpdi) 
+	{
+		sLpdi->Release();
+		sLpdi=nullptr;
 	}
 	mJoystickGUID.Data1=NULL;		// Set joystick guid back to null
 }
@@ -347,14 +347,14 @@ void MyInputs::Release()
 
 void MyInputs::SampleMouse()
 {
-	if(!lpdimouse) 
+	if(!sLpdiMouse) 
 	{
 		ErrorLogger::Writeln(L"No mouse - cannot sample.");	
 		return;
 	}
 
 	// Get state of mouse from DInput
-	HRESULT err=lpdimouse->GetDeviceState(sizeof(msMousestate), (LPVOID) &msMousestate);
+	HRESULT err=sLpdiMouse->GetDeviceState(sizeof(mMousestate), (LPVOID) &mMousestate);
 	if(FAILED(err))
 	{	
 		ErrorLogger::Writeln(L"Failed to get mouse state.");
@@ -362,8 +362,8 @@ void MyInputs::SampleMouse()
 		if (err==DIERR_INPUTLOST || err==DIERR_NOTACQUIRED)
 		{
 			ErrorLogger::Write(L"Attempting to reacquire....");
-			lpdimouse->Acquire();
-			err=lpdimouse->GetDeviceState(sizeof(msMousestate), (LPVOID) &msMousestate);
+			sLpdiMouse->Acquire();
+			err=sLpdiMouse->GetDeviceState(sizeof(mMousestate), (LPVOID) &mMousestate);
 			if(FAILED(err))
 				ErrorLogger::Writeln(L"Failed");
 			else
@@ -372,41 +372,41 @@ void MyInputs::SampleMouse()
 	}
 
 	// Record mouse movements in member variables
-	miMouseDX=msMousestate.lX;
-	miMouseDY=msMousestate.lY;
-	miMouseDZ=msMousestate.lZ;
+	mMouseDX=mMousestate.lX;
+	mMouseDY=mMousestate.lY;
+	mMouseDZ=mMousestate.lZ;
 
 	// record state of previous sample
-	mbLastMouseLeft = mbMouseLeft;
-	mbLastMouseRight = mbMouseRight;
-	mbLastMouseMiddle = mbMouseMiddle;
+	mLastMouseLeft = mMouseLeft;
+	mLastMouseRight = mMouseRight;
+	mLastMouseMiddle = mMouseMiddle;
 
 	// See which buttons were down and set accordingly
-	if(msMousestate.rgbButtons[0] & 0x80)
+	if(mMousestate.rgbButtons[0] & 0x80)
 	{
-		mbMouseLeft = true;
+		mMouseLeft = true;
 	}
 	else
 	{
-		mbMouseLeft = false;
+		mMouseLeft = false;
 	}
 
-	if(msMousestate.rgbButtons[1] & 0x80)
+	if(mMousestate.rgbButtons[1] & 0x80)
 	{
-		mbMouseRight = true;
+		mMouseRight = true;
 	}
 	else
 	{
-		mbMouseRight = false;
+		mMouseRight = false;
 	}
 
-	if(msMousestate.rgbButtons[2] & 0x80)
+	if(mMousestate.rgbButtons[2] & 0x80)
 	{
-		mbMouseMiddle = true;
+		mMouseMiddle = true;
 	}
 	else
 	{
-		mbMouseMiddle = false;
+		mMouseMiddle = false;
 	}
 
 
@@ -414,79 +414,79 @@ void MyInputs::SampleMouse()
 
 int MyInputs::GetMouseDX()
 {
-	return miMouseDX;
+	return mMouseDX;
 }
 
 int MyInputs::GetMouseDY()
 {
-	return miMouseDY;
+	return mMouseDY;
 }
 
 int MyInputs::GetMouseDZ()
 {
-	return miMouseDZ;
+	return mMouseDZ;
 }
 
 bool MyInputs::IfMouseNewLeftDown()
 {
-	return(mbMouseLeft && !mbLastMouseLeft);
+	return(mMouseLeft && !mLastMouseLeft);
 }
 
 bool MyInputs::IfMouseNewMiddleDown()
 {
-	return(mbMouseMiddle && !mbLastMouseMiddle);
+	return(mMouseMiddle && !mLastMouseMiddle);
 }
 
 bool MyInputs::IfMouseNewRightDown()
 {
-	return(mbMouseRight && !mbLastMouseRight);
+	return(mMouseRight && !mLastMouseRight);
 }
 
 bool MyInputs::IfMouseNewLeftUp()
 {
-	return(!mbMouseLeft && mbLastMouseLeft);
+	return(!mMouseLeft && mLastMouseLeft);
 }
 
 bool MyInputs::IfMouseNewRightUp()
 {
-	return(!mbMouseRight && mbLastMouseRight);
+	return(!mMouseRight && mLastMouseRight);
 }
 
 bool MyInputs::IfMouseNewMiddleUp()
 {
-	return(!mbMouseMiddle && mbLastMouseMiddle);
+	return(!mMouseMiddle && mLastMouseMiddle);
 }
 
 bool MyInputs::IfMouseLeftDown()
 {
-	return mbMouseLeft;
+	return mMouseLeft;
 }
 
 bool MyInputs::IfMouseRightDown()
 {
-	return mbMouseRight;
+	return mMouseRight;
 }
 
 bool MyInputs::IfMouseMiddleDown()
 {
-	return mbMouseMiddle;
+	return mMouseMiddle;
 }
 
 
 char* MyInputs::GetKeyboardState()
 {
-	return mrgcKeystate;
+	return mKeystates;
 }
 
 bool MyInputs::KeyPressed(unsigned char key)
 {
-	return ((mrgcKeystate[key]&0x80)>0);	// Return true if 0x80 bit set (set if key was pressed)
+	return ((mKeystates[key]&0x80)>0);	// Return true if 0x80 bit set (set if key was pressed)
 }
 
 bool MyInputs::NewKeyPressed(unsigned char key)
 {
-	bool kp = (mrgcKeystate[key]&0x80)>0;
-	bool okp = (mrgcOldKeystate[key]&0x80)>0;
+	bool kp = (mKeystates[key]&0x80)>0;
+	bool okp = (mOldKeystates[key]&0x80)>0;
 
 	return (kp && !okp);	// Return true if 0x80 bit set (set if key was pressed)
 }
@@ -494,10 +494,10 @@ bool MyInputs::NewKeyPressed(unsigned char key)
 
 void MyInputs::SampleKeyboard()
 {
-	if(lpdikeyboard)			// Can't sample keyboard if it was not created
+	if(sLpdiKeyboard)			// Can't sample keyboard if it was not created
 	{
-		memcpy(mrgcOldKeystate, mrgcKeystate, KEYMAPSIZE);
-		HRESULT err=lpdikeyboard->GetDeviceState(KEYMAPSIZE, &mrgcKeystate);
+		memcpy(mOldKeystates, mKeystates, KEYMAPSIZE);
+		HRESULT err=sLpdiKeyboard->GetDeviceState(KEYMAPSIZE, &mKeystates);
 		if(FAILED(err))
 		{
 			ErrorLogger::Writeln(L"Failed to get keyboard state.");
@@ -505,8 +505,8 @@ void MyInputs::SampleKeyboard()
 			if (err==DIERR_INPUTLOST||err==DIERR_NOTACQUIRED)
 			{
 				ErrorLogger::Write(L"Attempting to reacquire....");
-				lpdikeyboard->Acquire();
-				err=lpdikeyboard->GetDeviceState(sizeof(msMousestate), (LPVOID) &msMousestate);
+				sLpdiKeyboard->Acquire();
+				err=sLpdiKeyboard->GetDeviceState(sizeof(mMousestate), (LPVOID) &mMousestate);
 				if(FAILED(err))
 					ErrorLogger::Writeln(L"Failed");
 				else
@@ -520,9 +520,9 @@ void MyInputs::SampleKeyboard()
 
 void MyInputs::SampleJoystick()
 {
-	if(lpdijoystick)			// Can't sample joystick if it was not created
+	if(sLpdiJoystick)			// Can't sample joystick if it was not created
 	{
-		HRESULT err=lpdijoystick->Poll();
+		HRESULT err=sLpdiJoystick->Poll();
 		if(FAILED(err))
 		{
 			ErrorLogger::Writeln(L"Could not poll joystick");
@@ -530,33 +530,33 @@ void MyInputs::SampleJoystick()
 			if(err==DIERR_INPUTLOST || err==DIERR_NOTACQUIRED)
 		
 			{
-				err=lpdijoystick->Acquire();			// Reacquire the keyboard
+				err=sLpdiJoystick->Acquire();			// Reacquire the keyboard
 				ErrorLogger::Write(L"Attempting to reacquire...");
 				if(FAILED(err))
 					ErrorLogger::Writeln(L"Failed");
 				else
 				{
 					ErrorLogger::Writeln(L"Success");
-					lpdijoystick->Poll();
+					sLpdiJoystick->Poll();
 				}
 			}
 		}
 
-		err=lpdijoystick->GetDeviceState(sizeof(msJoystickState), &msJoystickState);
+		err=sLpdiJoystick->GetDeviceState(sizeof(mJoystickState), &mJoystickState);
 		if(FAILED(err))
 		{
 			ErrorLogger::Writeln(L"Could not get joystick state.");
 			ErrorLogger::Writeln(ERRORSTRING(err));
 			if(err==DIERR_INPUTLOST || err==DIERR_NOTACQUIRED)
 			{
-				err=lpdijoystick->Acquire();			// Reacquire the joystick
+				err=sLpdiJoystick->Acquire();			// Reacquire the joystick
 				ErrorLogger::Write(L"Attempting to reacquire...");
 				if(FAILED(err))
 					ErrorLogger::Writeln(L"Failed");
 				else
 				{
 					ErrorLogger::Writeln(L"Success");
-					lpdijoystick->GetDeviceState(sizeof(msJoystickState), &msJoystickState);
+					sLpdiJoystick->GetDeviceState(sizeof(mJoystickState), &mJoystickState);
 				}
 			}
 		}
@@ -567,33 +567,33 @@ void MyInputs::SampleJoystick()
 
 int MyInputs::GetJoystickX()
 {
-	return msJoystickState.lX;
+	return mJoystickState.lX;
 }
 
 int MyInputs::GetJoystickY()
 {
-	return msJoystickState.lY;
+	return mJoystickState.lY;
 }
 
 int MyInputs::GetJoystickTwist()
 {
-	return msJoystickState.lRz;
+	return mJoystickState.lRz;
 }
 
 int MyInputs::GetJoystickThrottle()
 {
-	return 100-msJoystickState.rglSlider[0];
+	return 100-mJoystickState.rglSlider[0];
 }
 
 
 bool MyInputs::IfPOVCentred()
 {
-	return (LOWORD(msJoystickState.rgdwPOV[0]) == 0xFFFF);
+	return (LOWORD(mJoystickState.rgdwPOV[0]) == 0xFFFF);
 }
 
 int MyInputs::GetJoystickPOV()
 {
-	return msJoystickState.rgdwPOV[0]/100;
+	return mJoystickState.rgdwPOV[0]/100;
 }
 
 bool MyInputs::IfJoystickButton(int buttonNumber)
@@ -601,7 +601,7 @@ bool MyInputs::IfJoystickButton(int buttonNumber)
 	if (buttonNumber<0||buttonNumber>31)
 		return false;
 
-	if((msJoystickState.rgbButtons[buttonNumber]&0x80)>0)
+	if((mJoystickState.rgbButtons[buttonNumber]&0x80)>0)
 	{
 		return true;
 	}
@@ -611,18 +611,18 @@ bool MyInputs::IfJoystickButton(int buttonNumber)
 
 bool MyInputs::JoystickIsAvailable()
 {
-	return (lpdijoystick!=nullptr);
+	return (sLpdiJoystick!=nullptr);
 }
 
 
 bool MyInputs::MouseIsAvailable()
 {
-	return (lpdimouse!=nullptr);
+	return (sLpdiMouse!=nullptr);
 }
 
 bool MyInputs::KeyboardIsAvailable()
 {
-	return (lpdikeyboard!=nullptr);
+	return (sLpdiKeyboard!=nullptr);
 }
 
 
@@ -635,7 +635,7 @@ BOOL CALLBACK MyInputs::DIEnumEffectsCallback(LPCDIEFFECTINFO pdei, LPVOID pvRef
 	// effects are called. It works, though.
 	
     HRESULT  err;
-    if((LPDIRECTINPUTDEVICE8)pvRef!= lpdijoystick)		// Wrong joystick
+    if((LPDIRECTINPUTDEVICE8)pvRef!= sLpdiJoystick)		// Wrong joystick
 		return DIENUM_CONTINUE;							// Next effect, please
 
     DIEFFECT             diEffect;						// Params for created effect
@@ -666,19 +666,19 @@ BOOL CALLBACK MyInputs::DIEnumEffectsCallback(LPCDIEFFECTINFO pdei, LPVOID pvRef
 	diEffect.cbTypeSpecificParams    = sizeof(DICONSTANTFORCE);	// Constant force-specific data
 	diEffect.lpvTypeSpecificParams   = &diConstantForce;
 
-	if(mrglpdiEffectList[PULL])							// If already there
-		mrglpdiEffectList[PULL]->Release();
+	if(sLpdiEffectList[PULL])							// If already there
+		sLpdiEffectList[PULL]->Release();
 
-	err = lpdijoystick->CreateEffect(pdei->guid,		// Create it
+	err = sLpdiJoystick->CreateEffect(pdei->guid,		// Create it
                             &diEffect,
-							&mrglpdiEffectList[PULL],	// Pass by reference pointer to created effect (out)
+							&sLpdiEffectList[PULL],	// Pass by reference pointer to created effect (out)
                             NULL);
 
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to create a constant force effect.");
 		ErrorLogger::Writeln(ERRORSTRING(err));
-		mrglpdiEffectList[PULL]=nullptr;
+		sLpdiEffectList[PULL]=nullptr;
 	}
  
 	// Set up the shake effect ***************************************
@@ -720,16 +720,16 @@ BOOL CALLBACK MyInputs::DIEnumEffectsCallback(LPCDIEFFECTINFO pdei, LPVOID pvRef
 	diEffect.cbTypeSpecificParams = sizeof(diPeriodic);
 	diEffect.lpvTypeSpecificParams = &diPeriodic;
 
-	err = lpdijoystick->CreateEffect(GUID_Sine,		// Create it
+	err = sLpdiJoystick->CreateEffect(GUID_Sine,		// Create it
 					&diEffect,
-					&mrglpdiEffectList[SHAKE],		// Pass by reference pointer to created effect (out)
+					&sLpdiEffectList[SHAKE],		// Pass by reference pointer to created effect (out)
                     NULL);
 
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to create a shake effect.");
 		ErrorLogger::Writeln(ERRORSTRING(err));
-		mrglpdiEffectList[SHAKE]=nullptr;
+		sLpdiEffectList[SHAKE]=nullptr;
 	}
 
 	// Set up the centering effect *********************************************
@@ -764,16 +764,16 @@ BOOL CALLBACK MyInputs::DIEnumEffectsCallback(LPCDIEFFECTINFO pdei, LPVOID pvRef
 	diEffect.cbTypeSpecificParams    = sizeof(DICONDITION)*2;			// Constant force-specific data
 	diEffect.lpvTypeSpecificParams   = &diCondition[0];
 
-	err = lpdijoystick->CreateEffect(GUID_Spring,		// Create it
+	err = sLpdiJoystick->CreateEffect(GUID_Spring,		// Create it
 					&diEffect,
-					&mrglpdiEffectList[CENTRE],		// Pass by reference pointer to created effect (out)
+					&sLpdiEffectList[CENTRE],		// Pass by reference pointer to created effect (out)
                     NULL);
 
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to create a centre effect.");
 		ErrorLogger::Writeln(ERRORSTRING(err));
-		mrglpdiEffectList[CENTRE]=nullptr;
+		sLpdiEffectList[CENTRE]=nullptr;
 	}
 
     return DIENUM_STOP;	// As long as basic effects are found, this is OK
@@ -782,7 +782,7 @@ BOOL CALLBACK MyInputs::DIEnumEffectsCallback(LPCDIEFFECTINFO pdei, LPVOID pvRef
 
 ErrorType MyInputs::PullJoystick(int direction, double duration, int magnitude)
 {
-	if(!mrglpdiEffectList[PULL])
+	if(!sLpdiEffectList[PULL])
 		return FAILURE;
 
 	direction = (direction+180)%360;
@@ -808,7 +808,7 @@ ErrorType MyInputs::PullJoystick(int direction, double duration, int magnitude)
 	eff.cbTypeSpecificParams    = sizeof(DICONSTANTFORCE);	// Constant force-specific data
 	eff.lpvTypeSpecificParams   = &diConstantForce;
 
-	HRESULT err = mrglpdiEffectList[PULL]->SetParameters(&eff ,  DIEP_DURATION|DIEP_GAIN|DIEP_DIRECTION);
+	HRESULT err = sLpdiEffectList[PULL]->SetParameters(&eff ,  DIEP_DURATION|DIEP_GAIN|DIEP_DIRECTION);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Could not change pull effect");
@@ -817,7 +817,7 @@ ErrorType MyInputs::PullJoystick(int direction, double duration, int magnitude)
 	}
 	else
 	{
-		err=mrglpdiEffectList[PULL]->Start(1,0);
+		err=sLpdiEffectList[PULL]->Start(1,0);
 		if(FAILED(err))
 		{
 			ErrorLogger::Writeln(L"Could not play pull effect");
@@ -832,7 +832,7 @@ ErrorType MyInputs::PullJoystick(int direction, double duration, int magnitude)
 ErrorType MyInputs::PlayShake(double duration, int magnitude, double frequency, double attack, double fade)
 {
 	HRESULT err;
-	if(!mrglpdiEffectList[SHAKE])		// If effect not present
+	if(!sLpdiEffectList[SHAKE])		// If effect not present
 		return FAILURE;
 
 	DIPERIODIC diPeriodic;				// To control the frequency of the shake
@@ -871,7 +871,7 @@ ErrorType MyInputs::PlayShake(double duration, int magnitude, double frequency, 
 	eff.cbTypeSpecificParams    = sizeof(DIPERIODIC);			// Constant force-specific data
 	eff.lpvTypeSpecificParams   = &diPeriodic;
 
-	err = mrglpdiEffectList[SHAKE]->SetParameters(&eff ,  DIEP_DURATION|DIEP_GAIN|DIEP_START|DIEP_TYPESPECIFICPARAMS);
+	err = sLpdiEffectList[SHAKE]->SetParameters(&eff ,  DIEP_DURATION|DIEP_GAIN|DIEP_START|DIEP_TYPESPECIFICPARAMS);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Could not change shake effect");
@@ -884,10 +884,10 @@ ErrorType MyInputs::PlayShake(double duration, int magnitude, double frequency, 
 
 ErrorType MyInputs::CentreJoystickOff()
 {
-	if(mrglpdiEffectList[CENTRE]==NULL)
+	if(sLpdiEffectList[CENTRE]==NULL)
 		return FAILURE;
 
-	HRESULT err=mrglpdiEffectList[CENTRE]->Stop();
+	HRESULT err=sLpdiEffectList[CENTRE]->Stop();
 
 	if(FAILED(err))
 	{
@@ -904,7 +904,7 @@ ErrorType MyInputs::CentreJoystickOff()
 
 ErrorType MyInputs::CentreJoystickOn(int Xmagnitude, int Ymagnitude)
 {
-	if(mrglpdiEffectList[CENTRE]==nullptr)
+	if(sLpdiEffectList[CENTRE]==nullptr)
 		return FAILURE;
 
 	HRESULT err;
@@ -944,7 +944,7 @@ ErrorType MyInputs::CentreJoystickOn(int Xmagnitude, int Ymagnitude)
 	eff.lpvTypeSpecificParams   = diCondition;
 
 
-	err = mrglpdiEffectList[CENTRE]->SetParameters(&eff ,  DIEP_GAIN|DIEP_START|DIEP_TYPESPECIFICPARAMS);
+	err = sLpdiEffectList[CENTRE]->SetParameters(&eff ,  DIEP_GAIN|DIEP_START|DIEP_TYPESPECIFICPARAMS);
 	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Could not change center effect");
