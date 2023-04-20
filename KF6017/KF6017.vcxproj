@@ -159,6 +159,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="gamecode.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="ICollidableObject.h" />
     <ClInclude Include="ErrorLogger.h" />

@@ -3,7 +3,6 @@
 #include <list>
 #include <map>
 #include "errortype.h"
-#include "Event.h"
 
 class GameObject;
 class ICollidableObject;
@@ -19,7 +18,9 @@ public:
 	void AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObject, std::shared_ptr<ICollidableObject>& rpAsCollidableObject);
 	void Clear();
 	int GetNumberOfObjects() const;
-	void DispatchEvent(const Event& rEvent) const;
+
+	// Mind: this returns a copy of the list with new shared ptrs, sharing ownership!
+	std::list<std::shared_ptr<GameObject>> GetAllObjects() const;
 
 private:
 	void CheckCollisions();

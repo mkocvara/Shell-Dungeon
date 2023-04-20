@@ -7,7 +7,7 @@
 #include "GameObjectFactory.h"
 #include "mydrawengine.h"
 #include "AsteroidsSFXManager.h"
-#include "ObjectManager.h"
+#include "EventManager.h"
 
 
 // PUBLIC
@@ -116,14 +116,14 @@ void Spaceship::Shoot()
 	pObjectFactory->Create(ObjectType::bullet, mpServiceManager, mPosition, mRotationAngle, 1.5f);
 
 	// Dispatch event
-	std::shared_ptr<ObjectManager> pObjectManager = serviceManagerLocked->GetObjectManager().lock();
+	std::shared_ptr<EventManager> pEventManager = serviceManagerLocked->GetEventManager().lock();
 	if (!pObjectFactory)
 	{
-		ErrorLogger::Writeln(L"Spaceship failed to retreive object manager.");
+		ErrorLogger::Writeln(L"Spaceship failed to retreive event manager.");
 		return;
 	}
 	Event shootEvent(EventType::bulletFired, mPosition, this);
-	pObjectManager->DispatchEvent(shootEvent);
+	pEventManager->DispatchEvent(shootEvent);
 
 	// Emmit sound
 	std::shared_ptr<SFXManager> pSFXManager = serviceManagerLocked->GetSFXManager().lock();

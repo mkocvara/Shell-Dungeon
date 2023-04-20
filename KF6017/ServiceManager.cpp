@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "SFXManager.h"
 #include "MyInputs.h"
+#include "EventManager.h"
 
 
 // PUBLIC
@@ -42,6 +43,13 @@ ErrorType ServiceManager::StartServices(bool fullScreen, HWND hwnd, HINSTANCE hi
 		return FAILURE;
 	}
 
+	mpEventManager = std::make_shared<EventManager>(mpObjectManager);
+	if (!mpEventManager)
+	{
+		ErrorLogger::Writeln(L"Failed to create EventManager");
+		return FAILURE;
+	}
+
 	// Child must create an instance of a GameObjectFactory subclass.
 	// Child must create an instance of a SFXManager subclass.
 
@@ -71,4 +79,9 @@ std::weak_ptr<SFXManager> ServiceManager::GetSFXManager()
 std::weak_ptr<MyInputs> ServiceManager::GetInputs()
 {
 	return mpInputs;
+}
+
+std::weak_ptr<EventManager> ServiceManager::GetEventManager()
+{
+	return mpEventManager;
 }

@@ -129,6 +129,9 @@
     <ClCompile Include="AsteroidsSFXManager.cpp">
       <Filter>Source Files\Game\Services</Filter>
     </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Spaceship.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="Event.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

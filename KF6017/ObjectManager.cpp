@@ -51,20 +51,14 @@ void ObjectManager::Clear()
 	mObjectsCollidableMap.clear();
 }
 
+std::list<std::shared_ptr<GameObject>> ObjectManager::GetAllObjects() const
+{
+	return mGameObjectsList;
+}
+
 int ObjectManager::GetNumberOfObjects() const
 {
 	return mGameObjectsList.size();
-}
-
-void ObjectManager::DispatchEvent(const Event& rEvent) const
-{
-	for (const std::shared_ptr<GameObject>& rpGameObject : mGameObjectsList)
-	{
-		if (!rpGameObject)
-			continue;
-
-		rpGameObject->HandleEvent(rEvent);
-	}
 }
 
 void ObjectManager::CheckCollisions()
