@@ -26,7 +26,10 @@ Game::~Game()
 {
 }
 
-Game Game::instance;    // Singleton instance
+
+// PUBLIC
+
+Game Game::instance; 
 
 // Starts the game engines and services, intialises menus
 // This is called soon after the program runs
@@ -69,8 +72,8 @@ ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 }
 
 // This is repeated, called every frame.
-// Flips and clears the back buffer
-// It will run either Update(), MainMenu() or PauseMenu() depending on the game state
+// Flips and clears the back buffer.
+// Decides whether to tun game or menus depending on the game state
 ErrorType Game::Main()
 {
 	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
@@ -95,7 +98,7 @@ ErrorType Game::Main()
 		err = mPauseMenu->Update(); // Player has paused the game
 		break;
 	case GameState::running:					// Playing the actual game
-		err = Update();
+		err = GameUpdate();
 		break;
    case GameState::gameOver:
 		err = FAILURE;				// Error return causes the window loop to exit
@@ -107,54 +110,8 @@ ErrorType Game::Main()
 	return err;
 }
 
-// Use to change the state of the game. Private function
-void Game::ChangeState(GameState newState)
-{
-	// Very crude state system
-	// Close old state
-	switch(mCurrentState)
-	{
-	case GameState::menu:
-      // Not needed
-		break;
-	case GameState::paused:
-      // Not needed
-		break;
-	case GameState::running:
-      // Not needed
-		break;
-	}
-
-	// Change the state
-	mCurrentState = newState;
-
-	// Transition to new state
-	switch(mCurrentState)
-	{
-	case GameState::menu:
-      // Not needed
-		break;
-	case GameState::paused:
-      // Not needed
-		break;
-	case GameState::running:
-      // Not needed
-		break;
-	}
-}
-
-// This is called just before the program exits
-void Game::Shutdown()
-{
-	// Any clean up code here 
-}
-
-// **********************************************************************************************
-// The game !!! *********************************************************************************
-// **********************************************************************************************
-
 // Called at the start of the game - when changing state from MENU to RUNNING
-// Use this to initialise the core game
+// Initialises game.
 ErrorType Game::StartOfGame()
 {
 	std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
@@ -165,11 +122,8 @@ ErrorType Game::StartOfGame()
 	return SUCCESS;
 }
 
-
 // Called each frame when in the RUNNING state.
-// Checks for user pressing escape (which puts the game in the PAUSED state)
-// Gameplay programmer will develop this to create an actual game
-ErrorType Game::Update()
+ErrorType Game::GameUpdate()
 {
 	if(FAILED(HandleInput()))
 		return FAILURE;
@@ -183,6 +137,8 @@ ErrorType Game::Update()
 	return SUCCESS;
 }
 
+// Called from Update() to handle game object agnostic player input.
+// Checks for user pressing escape (which puts the game in the PAUSED state)
 ErrorType Game::HandleInput()
 {
 	// Check for entry to pause menu
@@ -194,12 +150,9 @@ ErrorType Game::HandleInput()
 	return SUCCESS;
 }
 
-// Called when the player ends the game
-// Currently this is done from the PAUSED state, when returning to the main menu
-// but could be done by the gameplay programmer in other situations
-// This will be used by the gameplay programmer to clean up
+// Called when the player ends the game.
+// Currently this is done from the PAUSED state, when returning to the main menu.
 ErrorType Game::EndOfGame()
-// called when the game ends by returning to main menu
 {
 	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
 	if (!pObjectManager)
@@ -210,3 +163,46 @@ ErrorType Game::EndOfGame()
 	return SUCCESS;
 }
 
+// This is called just before the program exits
+void Game::Shutdown()
+{
+	// Any clean up code here 
+}
+
+// PRIVATE
+
+// Changes the state of the game.
+void Game::ChangeState(GameState newState)
+{
+	// Very crude state system
+	// Close old state
+	switch (mCurrentState)
+	{
+	case GameState::menu:
+		// Not needed
+		break;
+	case GameState::paused:
+		// Not needed
+		break;
+	case GameState::running:
+		// Not needed
+		break;
+	}
+
+	// Change the state
+	mCurrentState = newState;
+
+	// Transition to new state
+	switch (mCurrentState)
+	{
+	case GameState::menu:
+		// Not needed
+		break;
+	case GameState::paused:
+		// Not needed
+		break;
+	case GameState::running:
+		// Not needed
+		break;
+	}
+}
