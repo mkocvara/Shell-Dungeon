@@ -28,9 +28,6 @@
     <Filter Include="Source Files\Engine\Objects">
       <UniqueIdentifier>{234acfda-d9e8-4561-8d75-5effae4d6448}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Engine\Obects">
-      <UniqueIdentifier>{50d395c7-9d52-4cc4-ac8c-02b0500fed98}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Engine\Services">
       <UniqueIdentifier>{11477782-6484-48cd-aa3d-1b7c2720d1ca}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     </Filter>
     <Filter Include="Source Files\Engine\IO">
       <UniqueIdentifier>{6ed156b5-a475-4863-bf94-7c307fac3567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Objects">
+      <UniqueIdentifier>{50d395c7-9d52-4cc4-ac8c-02b0500fed98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,10 +174,10 @@
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files\Engine\Obects</Filter>
+      <Filter>Header Files\Engine\Objects</Filter>
     </ClInclude>
     <ClInclude Include="MovingGameObject.h">
-      <Filter>Header Files\Engine\Obects</Filter>
+      <Filter>Header Files\Engine\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>Header Files\Game\Game Objects</Filter>
@@ -198,7 +198,7 @@
       <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
     <ClInclude Include="ICollidableObject.h">
-      <Filter>Header Files\Engine\Obects</Filter>
+      <Filter>Header Files\Engine\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Explosion.h">
       <Filter>Header Files\Game\Game Objects</Filter>
