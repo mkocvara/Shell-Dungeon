@@ -18,7 +18,7 @@ ErrorLogger::ErrorLogger()
 	mFile.open(msFilename);
 
 	LPSYSTEMTIME time = new SYSTEMTIME();
-	GetSystemTime(time);
+	GetLocalTime(time);
 
 	std::wstring timeLog = L"Game Ran on " +
 		std::wstring((time->wDay <= 9) ? L"0" : L"") + // for some reason the construction here is necessary, but not elsewhere.
