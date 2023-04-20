@@ -3,10 +3,10 @@
 
 class MovingGameObject : public GameObject
 {
+	typedef GameObject Super;
+
 public:
 	virtual ~MovingGameObject();
-
-	typedef GameObject Super;
 
 	virtual ErrorType Update(double deltaTime) override;
 

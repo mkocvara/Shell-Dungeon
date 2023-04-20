@@ -1,4 +1,5 @@
 #pragma once
+#include "Service.h"
 #include <memory>
 #include <list>
 #include <map>
@@ -7,8 +8,10 @@
 class GameObject;
 class ICollidableObject;
 
-class ObjectManager
+class ObjectManager : public Service
 {
+	typedef Service Super;
+
 public:
 	ObjectManager();
 	~ObjectManager();
@@ -16,10 +19,10 @@ public:
 	ErrorType UpdateAll(double deltaTime);
 	void AddObject(std::shared_ptr<GameObject>& rpNewObject);
 	void AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObject, std::shared_ptr<ICollidableObject>& rpAsCollidableObject);
-	void Clear();
+	void Clear(); // removes all objects from the game
 	int GetNumberOfObjects() const;
 
-	// Mind: this returns a copy of the list with new shared ptrs, sharing ownership!
+	// Mind that this returns a copy of the list with new shared ptrs, sharing ownership!
 	std::list<std::shared_ptr<GameObject>> GetAllObjects() const;
 
 private:

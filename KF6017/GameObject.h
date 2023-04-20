@@ -3,7 +3,6 @@
 #include "errortype.h"
 #include <memory>
 #include "objecttypes.h"
-//#include "Event.h"
 
 struct Event;
 class ServiceManager;
@@ -22,7 +21,6 @@ public:
 
 	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1);
 	virtual ErrorType Update(double deltaTime);
-	virtual void SetRenderSprite(const wchar_t* imagePath);
 	Vector2D GetForwardVector() const;
 	virtual void SetActive(bool newActive);
 	virtual void Remove();
@@ -30,6 +28,8 @@ public:
 	bool IsRemoved() const;
 	virtual ObjectType GetObjectType() const;
 	virtual void HandleEvent(const Event& rEvent);
+	void SetPosition(const Vector2D position);
+	void SetPosition(const float x, const float y);
 
 protected:
 	GameObject(std::weak_ptr<ServiceManager> pServiceManager); // make it essentially abstract
@@ -40,6 +40,7 @@ protected:
 	std::weak_ptr<ServiceManager> mpServiceManager;
 
 	int mRenderSprite = -1;
+	virtual void SetRenderSprite(const wchar_t* imagePath);
 	virtual ErrorType Render();
 
 	ObjectType mObjectType;

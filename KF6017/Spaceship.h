@@ -7,11 +7,11 @@ class AngledRectangle2D;
 
 class Spaceship : public MovingGameObject, public ICollidableObject
 {
+	typedef MovingGameObject Super;
+
 public:
 	Spaceship(std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~Spaceship(); 
-
-	typedef MovingGameObject Super;
 
 	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1) override;
 	virtual ErrorType Update(double deltaTime) override;

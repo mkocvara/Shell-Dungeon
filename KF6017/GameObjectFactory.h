@@ -1,4 +1,5 @@
 #pragma once
+#include "Service.h"
 #include <memory>
 #include "objecttypes.h"
 #include "vector2D.h"
@@ -6,8 +7,10 @@
 class GameObject;
 class ServiceManager;
 
-class GameObjectFactory
+class GameObjectFactory : public Service
 {
+	typedef Service Super;
+
 public:
 	GameObjectFactory();
 	virtual ~GameObjectFactory();

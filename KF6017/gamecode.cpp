@@ -13,6 +13,7 @@
 #include "AsteroidsServiceManager.h"
 #include "ObjectManager.h"
 #include "GameObjectFactory.h"
+#include "GameManager.h"
 
 Game::Game()
 {
@@ -28,13 +29,14 @@ Game Game::instance;    // Singleton instance
 // This is called soon after the program runs
 ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 {
-	mpServiceManager = std::make_shared<AsteroidsServiceManager>();
+	//mpServiceManager = std::make_shared<AsteroidsServiceManager>();
+	mpServiceManager = AsteroidsServiceManager::Create();
 	return mpServiceManager->StartServices(bFullScreen, hwnd, hinstance);
 }
 
 // This is repeated, called every frame.
-// It will run either Update( ), MainMenu() or PauseMenu() depending on the
-// game state
+// Flips and clears the back buffer
+// It will run either Update(), MainMenu() or PauseMenu() depending on the game state
 ErrorType Game::Main()
 {
 	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
@@ -46,6 +48,8 @@ ErrorType Game::Main()
 	pDrawEngine->ClearBackBuffer();
 
 	ErrorType err=SUCCESS;
+
+	m_gameTimer.mark();
 
 	switch(m_currentState)
 	{
@@ -106,19 +110,10 @@ void Game::ChangeState(GameState newState)
 	}
 }
 
-// Terminates the game engines - Draw Engine, Sound Engine, Input Engine
 // This is called just before the program exits
 void Game::Shutdown()
 {
 	// Any clean up code here 
-
-
-	/*/ DO NOT TERMINATE - unnecessary with smart pointers
-	// (engines must be terminated last)
-	MyDrawEngine::Terminate();
-	MySoundEngine::Terminate();
-	MyInputs::Terminate();
-	/*/
 }
 
 
@@ -139,8 +134,8 @@ ErrorType Game::PauseMenu()
 
 	pDrawEngine->WriteText(450,220, L"Paused", MyDrawEngine::WHITE);
 
-	const int NUMOPTIONS = 2;
-	wchar_t options[NUMOPTIONS][11] = {L"Resume", L"Main menu"};
+	const int NUMOPTIONS = 3;
+	wchar_t options[NUMOPTIONS][14] = {L"Resume", L"Restart Level", L"Main menu" };
 
    // Display menu options
 	for(int i=0;i<NUMOPTIONS;i++)
@@ -177,14 +172,20 @@ ErrorType Game::PauseMenu()
    // If player chooses an option ....
 	if(pInputs->NewKeyPressed(DIK_RETURN))
 	{
-		if(m_menuOption ==0)      // Resume
+		if(m_menuOption ==0)		// Resume
 		{
-			ChangeState(RUNNING);  // Go back to running the game
+			ChangeState(RUNNING);	// Go back to running the game
 		}
-		if(m_menuOption ==1)      // Quit
+		if(m_menuOption ==1)		// Restart Level
 		{
-			EndOfGame();           // Clear up the game
-			ChangeState(MENU);     // Go back to the menu
+			std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
+			pGameManager->RestartLevel();	// Restart 
+			ChangeState(RUNNING);			// Go back to running the game
+		}
+		if(m_menuOption ==2)		// Quit
+		{
+			EndOfGame();			// Clear up the game
+			ChangeState(MENU);		// Go back to the menu
 		}
 	}
 
@@ -263,20 +264,8 @@ ErrorType Game::MainMenu()
 // Use this to initialise the core game
 ErrorType Game::StartOfGame()
 {
-	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
-	if (!pObjectManager)
-		return FAILURE;
-
-	std::shared_ptr<GameObjectFactory> pObjectFactory = mpServiceManager->GetObjectFactory().lock();
-	if (!pObjectFactory)
-		return FAILURE;
-
-	pObjectFactory->Create(ObjectType::spaceship, mpServiceManager);
-
-	for (int i = 0; i < 6; i++)
-	{
-		pObjectFactory->Create(ObjectType::spacerock, mpServiceManager);
-	}
+	std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
+	pGameManager->StartLevel(1);
 
 	m_gameTimer.begin();
 
@@ -286,26 +275,17 @@ ErrorType Game::StartOfGame()
 
 // Called each frame when in the RUNNING state.
 // Checks for user pressing escape (which puts the game in the PAUSED state)
-// Flips and clears the back buffer
 // Gameplay programmer will develop this to create an actual game
 ErrorType Game::Update()
 {
-	m_gameTimer.mark();
-
 	if(FAILED(HandleInput()))
 		return FAILURE;
 
 	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
+	std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
 
 	pObjectManager->UpdateAll(m_gameTimer.mFrameTime);
-
-#if _DEBUG
-	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
-	if (!pDrawEngine)
-		return FAILURE;
-
-	pDrawEngine->WriteInt(50, 50, pObjectManager->GetNumberOfObjects(), MyDrawEngine::GREEN);
-#endif
+	pGameManager->Update(m_gameTimer.mFrameTime);
 
 	return SUCCESS;
 }

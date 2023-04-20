@@ -3,6 +3,7 @@
 #include "RandUtil.h"
 #include "ServiceManager.h"
 #include "mydrawengine.h"
+#include "EventManager.h"
 
 // PUBLIC
 
@@ -67,6 +68,11 @@ void SpaceRock::HandleCollision(std::shared_ptr<GameObject> pOtherObject)
 {
 	if (pOtherObject->GetObjectType() == ObjectType::bullet)
 	{
+		std::shared_ptr<EventManager> pEventManager = mpServiceManager.lock()->GetEventManager().lock();
+
+		Event e(EventType::asteroidDestroyed, mPosition, this);
+		pEventManager->DispatchEvent(e);
+
 		Remove();
 	}
 }

@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsteroidsGameManager.cpp" />
     <ClCompile Include="AsteroidsObjectFactory.cpp" />
     <ClCompile Include="AsteroidsServiceManager.cpp" />
     <ClCompile Include="AsteroidsSFXManager.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="gamecode.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="gametimer.cpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="mysoundengine.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="RandUtil.cpp" />
+    <ClCompile Include="Service.cpp" />
     <ClCompile Include="ServiceManager.cpp" />
     <ClCompile Include="SFXManager.cpp" />
     <ClCompile Include="Shapes.cpp" />
@@ -180,6 +183,7 @@
     <ClCompile Include="wincode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsteroidsGameManager.h" />
     <ClInclude Include="AsteroidsObjectFactory.h" />
     <ClInclude Include="AsteroidsServiceManager.h" />
     <ClInclude Include="AsteroidsSFXManager.h" />
@@ -188,6 +192,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="ICollidableObject.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
@@ -202,6 +207,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="objecttypes.h" />
     <ClInclude Include="RandUtil.h" />
+    <ClInclude Include="Service.h" />
     <ClInclude Include="ServiceManager.h" />
     <ClInclude Include="SFXManager.h" />
     <ClInclude Include="Shapes.h" />

@@ -8,7 +8,7 @@ class GameObject;
 enum class EventType 
 {
 	levelStart,
-	objectDestroyed,
+	asteroidDestroyed,
 	bulletFired
 };
 

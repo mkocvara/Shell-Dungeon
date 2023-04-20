@@ -55,6 +55,12 @@
     <Filter Include="Source Files\Game\Game Objects">
       <UniqueIdentifier>{3651ec91-8ee7-48d2-89ae-d04c0ed46d14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Engine\IO">
+      <UniqueIdentifier>{4977c08b-c631-4429-b315-2963438f05e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\IO">
+      <UniqueIdentifier>{6ed156b5-a475-4863-bf94-7c307fac3567}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Spaceship.cpp">
@@ -96,15 +102,6 @@
     <ClCompile Include="ObjectManager.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
-    <ClCompile Include="mysoundengine.cpp">
-      <Filter>Source Files\Engine\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="myinputs.cpp">
-      <Filter>Source Files\Engine\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="mydrawengine.cpp">
-      <Filter>Source Files\Engine\Services</Filter>
-    </ClCompile>
     <ClCompile Include="ServiceManager.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
@@ -131,6 +128,24 @@
     </ClCompile>
     <ClCompile Include="EventManager.cpp">
       <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="AsteroidsGameManager.cpp">
+      <Filter>Source Files\Game\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Service.cpp">
+      <Filter>Source Files\Engine\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="mydrawengine.cpp">
+      <Filter>Source Files\Engine\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="myinputs.cpp">
+      <Filter>Source Files\Engine\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="mysoundengine.cpp">
+      <Filter>Source Files\Engine\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,15 +185,6 @@
     <ClInclude Include="ErrorLogger.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="mydrawengine.h">
-      <Filter>Header Files\Engine\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="mysoundengine.h">
-      <Filter>Header Files\Engine\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="myinputs.h">
-      <Filter>Header Files\Engine\Services</Filter>
-    </ClInclude>
     <ClInclude Include="objecttypes.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
@@ -217,6 +223,24 @@
     </ClInclude>
     <ClInclude Include="EventManager.h">
       <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="AsteroidsGameManager.h">
+      <Filter>Header Files\Game\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="mydrawengine.h">
+      <Filter>Header Files\Engine\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="myinputs.h">
+      <Filter>Header Files\Engine\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="mysoundengine.h">
+      <Filter>Header Files\Engine\IO</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

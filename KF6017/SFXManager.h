@@ -1,15 +1,18 @@
 #pragma once
+#include "Service.h"
 #include "windows.h"
 #include <memory>
 #include <vector>
 
 class MySoundEngine;
 
-typedef unsigned int SoundIndex;
-
-class SFXManager
+class SFXManager : public Service
 {
+	typedef Service Super;
+
 public:
+	typedef unsigned int SoundIndex;
+
 	SFXManager(HWND hwnd);
 	virtual ~SFXManager();
 

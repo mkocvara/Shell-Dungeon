@@ -7,11 +7,11 @@ class AngledRectangle2D;
 
 class Bullet : public MovingGameObject, public ICollidableObject
 {
+	typedef MovingGameObject Super;
+
 public:
 	Bullet(std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~Bullet();
-
-	typedef MovingGameObject Super;
 
 	virtual void Initialise(Vector2D position, float angle, float scale) override;
 	virtual ErrorType Update(double deltaTime) override;

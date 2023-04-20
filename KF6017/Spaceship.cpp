@@ -103,10 +103,10 @@ void Spaceship::HandleInputs(double deltaTime)
 
 void Spaceship::Shoot()
 {
-	std::shared_ptr<ServiceManager> serviceManagerLocked = mpServiceManager.lock();
+	std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
 
 	// Create bullet
-	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManagerLocked->GetObjectFactory().lock();
+	std::shared_ptr<GameObjectFactory> pObjectFactory = pServiceManagerLocked->GetObjectFactory().lock();
 	if (!pObjectFactory)
 	{
 		ErrorLogger::Writeln(L"Spaceship failed to retreive object factory.");
@@ -116,7 +116,7 @@ void Spaceship::Shoot()
 	pObjectFactory->Create(ObjectType::bullet, mpServiceManager, mPosition, mRotationAngle, 1.5f);
 
 	// Dispatch event
-	std::shared_ptr<EventManager> pEventManager = serviceManagerLocked->GetEventManager().lock();
+	std::shared_ptr<EventManager> pEventManager = pServiceManagerLocked->GetEventManager().lock();
 	if (!pObjectFactory)
 	{
 		ErrorLogger::Writeln(L"Spaceship failed to retreive event manager.");
@@ -126,7 +126,7 @@ void Spaceship::Shoot()
 	pEventManager->DispatchEvent(shootEvent);
 
 	// Emmit sound
-	std::shared_ptr<SFXManager> pSFXManager = serviceManagerLocked->GetSFXManager().lock();
+	std::shared_ptr<SFXManager> pSFXManager = pServiceManagerLocked->GetSFXManager().lock();
 	if (!pSFXManager)
 	{
 		ErrorLogger::Writeln(L"Spaceship failed to retreive SFX manager.");

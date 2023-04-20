@@ -1,10 +1,10 @@
 #pragma once
 #include "SFXManager.h"
 
-typedef SFXManager Super;
-
 class AsteroidsSFXManager final : public SFXManager
 {
+	typedef SFXManager Super;
+
 public:
 	AsteroidsSFXManager(HWND hwnd);
 	virtual ~AsteroidsSFXManager();

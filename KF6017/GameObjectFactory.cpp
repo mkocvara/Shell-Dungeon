@@ -1,5 +1,8 @@
 #include "GameObjectFactory.h"
 
+
+// PUBLIC
+
 GameObjectFactory::GameObjectFactory()
 {
 }
@@ -7,6 +10,9 @@ GameObjectFactory::GameObjectFactory()
 GameObjectFactory::~GameObjectFactory()
 {
 }
+
+
+// PROTECTED
 
 Vector2D GameObjectFactory::GetDefaultPositionValue()
 {

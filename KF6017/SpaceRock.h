@@ -8,11 +8,11 @@ class Circle2D;
 
 class SpaceRock : public MovingGameObject, public ICollidableObject
 {
+	typedef MovingGameObject Super;
+
 public:
 	SpaceRock(std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~SpaceRock();
-
-	typedef MovingGameObject Super;
 
 	virtual void Initialise(Vector2D position = Vector2D(0, 0), float angle = 0, float scale = 1) override;
 	virtual ErrorType Update(double deltaTime) override;
