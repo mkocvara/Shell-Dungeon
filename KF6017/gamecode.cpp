@@ -14,6 +14,9 @@
 #include "ObjectManager.h"
 #include "GameObjectFactory.h"
 #include "GameManager.h"
+#include "Menu.h"
+
+#include "ErrorLogger.h"
 
 Game::Game()
 {
@@ -25,13 +28,44 @@ Game::~Game()
 
 Game Game::instance;    // Singleton instance
 
-// Starts the game engines - Draw Engine, Sound Engine, Input Engine - singletons
+// Starts the game engines and services, intialises menus
 // This is called soon after the program runs
 ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 {
-	//mpServiceManager = std::make_shared<AsteroidsServiceManager>();
+	// Start services
 	mpServiceManager = AsteroidsServiceManager::Create();
-	return mpServiceManager->StartServices(bFullScreen, hwnd, hinstance);
+	ErrorType err = mpServiceManager->StartServices(bFullScreen, hwnd, hinstance);
+
+	// Setup menus
+	mMainMenu = std::make_unique<Menu>(mpServiceManager, L"Main Menu");
+	mMainMenu->AddItem(L"Start Game", [this]() 
+		{ 
+			StartOfGame(); 
+			ChangeState(GameState::running);
+		});
+	mMainMenu->AddItem(L"Exit", [this]() 
+		{
+			ChangeState(GameState::gameOver);
+		});
+	
+	mPauseMenu = std::make_unique<Menu>(mpServiceManager, L"Paused");
+	mPauseMenu->AddItem(L"Resume", [this]() 
+		{ 
+			ChangeState(GameState::running);
+		});
+	mPauseMenu->AddItem(L"Restart Level", [this]() 
+		{
+			std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
+			pGameManager->RestartLevel();	
+			ChangeState(GameState::running);
+		});
+	mPauseMenu->AddItem(L"Main Menu", [this]() 
+		{ 
+			EndOfGame(); 
+			ChangeState(GameState::menu);
+		});
+
+	return err;
 }
 
 // This is repeated, called every frame.
@@ -49,25 +83,25 @@ ErrorType Game::Main()
 
 	ErrorType err=SUCCESS;
 
-	m_gameTimer.mark();
+	mGameTimer.mark();
 
-	switch(m_currentState)
+	switch(mCurrentState)
 	{
-	case MENU:
+	case GameState::menu:
 
-		err= MainMenu();     // Menu at start of game
+		err = mMainMenu->Update();  // Menu at start of game
 		break;
-	case PAUSED:
-		err = PauseMenu();   // Player has paused the game
+	case GameState::paused:
+		err = mPauseMenu->Update(); // Player has paused the game
 		break;
-	case RUNNING:           // Playing the actual game
-		err= Update();
+	case GameState::running:					// Playing the actual game
+		err = Update();
 		break;
-   case GAMEOVER:
-		err = FAILURE;       // Error return causes the window loop to exit
+   case GameState::gameOver:
+		err = FAILURE;				// Error return causes the window loop to exit
 	default:
 		// Not a valid state
-		err = FAILURE;       // Error return causes the window loop to exit
+		err = FAILURE;				// Error return causes the window loop to exit
 	}
 
 	return err;
@@ -78,33 +112,32 @@ void Game::ChangeState(GameState newState)
 {
 	// Very crude state system
 	// Close old state
-	switch(m_currentState)
+	switch(mCurrentState)
 	{
-	case MENU:
+	case GameState::menu:
       // Not needed
 		break;
-	case PAUSED:
+	case GameState::paused:
       // Not needed
 		break;
-	case RUNNING:
+	case GameState::running:
       // Not needed
 		break;
 	}
 
 	// Change the state
-	m_currentState = newState;
-	m_menuOption = 0;
+	mCurrentState = newState;
 
 	// Transition to new state
-	switch(m_currentState)
+	switch(mCurrentState)
 	{
-	case MENU:
+	case GameState::menu:
       // Not needed
 		break;
-	case PAUSED:
+	case GameState::paused:
       // Not needed
 		break;
-	case RUNNING:
+	case GameState::running:
       // Not needed
 		break;
 	}
@@ -115,146 +148,6 @@ void Game::Shutdown()
 {
 	// Any clean up code here 
 }
-
-
-// **********************************************************************************************
-// Placeholder menus  ***************************************************************************
-// **********************************************************************************************
-
-// Called each frame when in the pause state. Manages the pause menu
-// which is currently a basic placeholder
-ErrorType Game::PauseMenu()
-{
-	// Code for a basic pause menu
-	std::shared_ptr<MyInputs> pInputs = mpServiceManager->GetInputs().lock();
-	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
-
-	if (!pDrawEngine || !pInputs)
-		return FAILURE;
-
-	pDrawEngine->WriteText(450,220, L"Paused", MyDrawEngine::WHITE);
-
-	const int NUMOPTIONS = 3;
-	wchar_t options[NUMOPTIONS][14] = {L"Resume", L"Restart Level", L"Main menu" };
-
-   // Display menu options
-	for(int i=0;i<NUMOPTIONS;i++)
-	{
-		int colour = MyDrawEngine::GREY;       // If not selected, should be grey
-		if(i == m_menuOption)
-		{
-			colour = MyDrawEngine::WHITE;       // Current selection is white
-		}
-		pDrawEngine->WriteText(450,300+50*i, options[i], colour);
-	}
-
-   // Get user input
-	pInputs->SampleKeyboard();
-
-   // Move choice up and down
-	if(pInputs->NewKeyPressed(DIK_UP))
-	{
-		m_menuOption--;
-	}
-	if(pInputs->NewKeyPressed(DIK_DOWN))
-	{
-		m_menuOption++;
-	}
-	if(m_menuOption<0)
-	{
-		m_menuOption=0;
-	}
-	else if(m_menuOption>=NUMOPTIONS)
-	{
-		m_menuOption=NUMOPTIONS-1;
-	}
-
-   // If player chooses an option ....
-	if(pInputs->NewKeyPressed(DIK_RETURN))
-	{
-		if(m_menuOption ==0)		// Resume
-		{
-			ChangeState(RUNNING);	// Go back to running the game
-		}
-		if(m_menuOption ==1)		// Restart Level
-		{
-			std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
-			pGameManager->RestartLevel();	// Restart 
-			ChangeState(RUNNING);			// Go back to running the game
-		}
-		if(m_menuOption ==2)		// Quit
-		{
-			EndOfGame();			// Clear up the game
-			ChangeState(MENU);		// Go back to the menu
-		}
-	}
-
-	return SUCCESS;
-}
-
-// Called each frame when in the menu state. Manages the menu
-// which is currently a basic placeholder
-ErrorType Game::MainMenu()
-{
-	std::shared_ptr<MyInputs> pInputs = mpServiceManager->GetInputs().lock();
-	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
-
-	if (!pDrawEngine || !pInputs)
-		return FAILURE;
-
-	pDrawEngine->WriteText(450,220, L"Main menu", MyDrawEngine::WHITE);
-
-	const int NUMOPTIONS = 2;
-	wchar_t options[NUMOPTIONS][15] = {L"Start game", L"Exit"};
-
-   // Display the options
-	for(int i=0;i<NUMOPTIONS;i++)
-	{
-		int colour = MyDrawEngine::GREY;
-		if(i == m_menuOption)
-		{
-			colour = MyDrawEngine::WHITE;
-		}
-		pDrawEngine->WriteText(450,300+50*i, options[i], colour);
-	}
-
-   // Get keyboard input
-	pInputs->SampleKeyboard();
-	if(pInputs->NewKeyPressed(DIK_UP))
-	{
-		m_menuOption--;
-	}
-	if(pInputs->NewKeyPressed(DIK_DOWN))
-	{
-		m_menuOption++;
-	}
-	if(m_menuOption<0)
-	{
-		m_menuOption=0;
-	}
-	else if(m_menuOption>=NUMOPTIONS)
-	{
-		m_menuOption=NUMOPTIONS-1;
-	}
-
-   // User selects an option
-	if(pInputs->NewKeyPressed(DIK_RETURN))
-	{
-		if(m_menuOption ==0)          // Play
-		{  
-			StartOfGame();             // Initialise the game
-			ChangeState(RUNNING);      // Run it
-		}
-
-		if(m_menuOption ==1)          //Quit
-		{
-			ChangeState(GAMEOVER);
-		}
-	}
-
-	return SUCCESS;
-}
-
 
 // **********************************************************************************************
 // The game !!! *********************************************************************************
@@ -267,7 +160,7 @@ ErrorType Game::StartOfGame()
 	std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
 	pGameManager->StartLevel(1);
 
-	m_gameTimer.begin();
+	mGameTimer.begin();
 
 	return SUCCESS;
 }
@@ -284,8 +177,8 @@ ErrorType Game::Update()
 	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
 	std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
 
-	pObjectManager->UpdateAll(m_gameTimer.mFrameTime);
-	pGameManager->Update(m_gameTimer.mFrameTime);
+	pObjectManager->UpdateAll(mGameTimer.mFrameTime);
+	pGameManager->Update(mGameTimer.mFrameTime);
 
 	return SUCCESS;
 }
@@ -295,7 +188,7 @@ ErrorType Game::HandleInput()
 	// Check for entry to pause menu
 	if (KEYPRESSED(VK_ESCAPE))
 	{
-		ChangeState(PAUSED);
+		ChangeState(GameState::paused);
 	}
 
 	return SUCCESS;

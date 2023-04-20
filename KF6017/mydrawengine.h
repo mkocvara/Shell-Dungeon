@@ -141,21 +141,22 @@ public:
 	~MyDrawEngine();
 
 	// Some standard colours.
-	static const unsigned int BLACK = 0;
-	static const unsigned int RED = D3DCOLOR_ARGB(255,255,0,0);
-	static const unsigned int GREEN = D3DCOLOR_ARGB(255,0,255,0);
-	static const unsigned int BLUE = D3DCOLOR_ARGB(255,0,0,255);
-	static const unsigned int DARKRED = D3DCOLOR_ARGB(255,128,0,0);
-	static const unsigned int DARKGREEN = D3DCOLOR_ARGB(255,0,128,0);
-	static const unsigned int DARKBLUE = D3DCOLOR_ARGB(255,0,0,128);
-	static const unsigned int LIGHTRED = D3DCOLOR_ARGB(255,255,128,128);
-	static const unsigned int LIGHTGREEN = D3DCOLOR_ARGB(255,128,255,128);
-	static const unsigned int LIGHTBLUE = D3DCOLOR_ARGB(255,128,128,255);
-	static const unsigned int WHITE = D3DCOLOR_ARGB(255,255,255,255);
-	static const unsigned int YELLOW = D3DCOLOR_ARGB(255,255,255,0);
-	static const unsigned int CYAN = D3DCOLOR_ARGB(255,0,255,255);
-	static const unsigned int PURPLE = D3DCOLOR_ARGB(255,255,0,255);
-	static const unsigned int GREY = D3DCOLOR_ARGB(255,128,128,128);
+	typedef unsigned int Colour;
+	static const Colour BLACK = 0;
+	static const Colour RED = D3DCOLOR_ARGB(255,255,0,0);
+	static const Colour GREEN = D3DCOLOR_ARGB(255,0,255,0);
+	static const Colour BLUE = D3DCOLOR_ARGB(255,0,0,255);
+	static const Colour DARKRED = D3DCOLOR_ARGB(255,128,0,0);
+	static const Colour DARKGREEN = D3DCOLOR_ARGB(255,0,128,0);
+	static const Colour DARKBLUE = D3DCOLOR_ARGB(255,0,0,128);
+	static const Colour LIGHTRED = D3DCOLOR_ARGB(255,255,128,128);
+	static const Colour LIGHTGREEN = D3DCOLOR_ARGB(255,128,255,128);
+	static const Colour LIGHTBLUE = D3DCOLOR_ARGB(255,128,128,255);
+	static const Colour WHITE = D3DCOLOR_ARGB(255,255,255,255);
+	static const Colour YELLOW = D3DCOLOR_ARGB(255,255,255,0);
+	static const Colour CYAN = D3DCOLOR_ARGB(255,0,255,255);
+	static const Colour PURPLE = D3DCOLOR_ARGB(255,255,0,255);
+	static const Colour GREY = D3DCOLOR_ARGB(255,128,128,128);
 
 	// Public methods ***************************************
 

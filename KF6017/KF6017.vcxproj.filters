@@ -147,6 +147,9 @@
     <ClCompile Include="mysoundengine.cpp">
       <Filter>Source Files\Engine\IO</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Spaceship.h">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="mysoundengine.h">
       <Filter>Header Files\Engine\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
