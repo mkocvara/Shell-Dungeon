@@ -83,6 +83,10 @@ ObjectType GameObject::GetObjectType() const
 	return mObjectType;
 }
 
+void GameObject::HandleEvent(const Event& rEvent)
+{
+}
+
 
 // PROTECTED
 ErrorType GameObject::Render() 

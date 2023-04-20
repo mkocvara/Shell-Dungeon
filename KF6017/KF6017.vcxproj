@@ -184,6 +184,7 @@
     <ClInclude Include="AsteroidsSFXManager.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="ICollidableObject.h" />
     <ClInclude Include="ErrorLogger.h" />

@@ -1,6 +1,3 @@
-// GameCode.cpp		
-
-
 #include "gamecode.h"
 #include "mydrawengine.h"
 #include "mysoundengine.h"
@@ -19,12 +16,10 @@
 
 Game::Game()
 {
-	// No-op
 }
 
 Game::~Game()
 {
-   // No-op
 }
 
 Game Game::instance;    // Singleton instance

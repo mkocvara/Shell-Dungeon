@@ -3,6 +3,7 @@
 #include <list>
 #include <map>
 #include "errortype.h"
+#include "Event.h"
 
 class GameObject;
 class ICollidableObject;
@@ -18,6 +19,7 @@ public:
 	void AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObject, std::shared_ptr<ICollidableObject>& rpAsCollidableObject);
 	void Clear();
 	int GetNumberOfObjects() const;
+	void DispatchEvent(const Event& rEvent) const;
 
 private:
 	void CheckCollisions();

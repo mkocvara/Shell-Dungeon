@@ -1,10 +1,3 @@
-// gamecode.h
-// Shell engine version 2020
-// Chris Rook
-// Last modified 25/09/2018
-//   Update to prevent game loop from flipping twice
-
-
 #pragma once
 #include "errortype.h"
 #include "windows.h"

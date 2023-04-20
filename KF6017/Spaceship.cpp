@@ -7,6 +7,7 @@
 #include "GameObjectFactory.h"
 #include "mydrawengine.h"
 #include "AsteroidsSFXManager.h"
+#include "ObjectManager.h"
 
 
 // PUBLIC
@@ -102,7 +103,10 @@ void Spaceship::HandleInputs(double deltaTime)
 
 void Spaceship::Shoot()
 {
-	std::shared_ptr<GameObjectFactory> pObjectFactory = mpServiceManager.lock()->GetObjectFactory().lock();
+	std::shared_ptr<ServiceManager> serviceManagerLocked = mpServiceManager.lock();
+
+	// Create bullet
+	std::shared_ptr<GameObjectFactory> pObjectFactory = serviceManagerLocked->GetObjectFactory().lock();
 	if (!pObjectFactory)
 	{
 		ErrorLogger::Writeln(L"Spaceship failed to retreive object factory.");
@@ -111,7 +115,18 @@ void Spaceship::Shoot()
 
 	pObjectFactory->Create(ObjectType::bullet, mpServiceManager, mPosition, mRotationAngle, 1.5f);
 
-	std::shared_ptr<SFXManager> pSFXManager = mpServiceManager.lock()->GetSFXManager().lock();
+	// Dispatch event
+	std::shared_ptr<ObjectManager> pObjectManager = serviceManagerLocked->GetObjectManager().lock();
+	if (!pObjectFactory)
+	{
+		ErrorLogger::Writeln(L"Spaceship failed to retreive object manager.");
+		return;
+	}
+	Event shootEvent(EventType::bulletFired, mPosition, this);
+	pObjectManager->DispatchEvent(shootEvent);
+
+	// Emmit sound
+	std::shared_ptr<SFXManager> pSFXManager = serviceManagerLocked->GetSFXManager().lock();
 	if (!pSFXManager)
 	{
 		ErrorLogger::Writeln(L"Spaceship failed to retreive SFX manager.");
@@ -121,10 +136,10 @@ void Spaceship::Shoot()
 	bool castSuccess = false;
 	if (typeid(*pSFXManager) == typeid(AsteroidsSFXManager))
 	{
-		std::shared_ptr<AsteroidsSFXManager> pSFXManager = std::static_pointer_cast<AsteroidsSFXManager>(pSFXManager);
-		if (pSFXManager)
+		std::shared_ptr<AsteroidsSFXManager> pAsteroidsSFXManager = std::static_pointer_cast<AsteroidsSFXManager>(pSFXManager);
+		if (pAsteroidsSFXManager)
 		{
-			pSFXManager->PlayShot();
+			pAsteroidsSFXManager->PlayShot();
 			castSuccess = true;
 		}
 	}

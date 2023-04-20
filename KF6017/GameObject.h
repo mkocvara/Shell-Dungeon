@@ -3,7 +3,9 @@
 #include "errortype.h"
 #include <memory>
 #include "objecttypes.h"
+//#include "Event.h"
 
+struct Event;
 class ServiceManager;
 
 enum class GameObjectState
@@ -27,6 +29,7 @@ public:
 	bool IsActive() const;
 	bool IsRemoved() const;
 	virtual ObjectType GetObjectType() const;
+	virtual void HandleEvent(const Event& rEvent);
 
 protected:
 	GameObject(std::weak_ptr<ServiceManager> pServiceManager); // make it essentially abstract

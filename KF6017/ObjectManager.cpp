@@ -56,6 +56,17 @@ int ObjectManager::GetNumberOfObjects() const
 	return mGameObjectsList.size();
 }
 
+void ObjectManager::DispatchEvent(const Event& rEvent) const
+{
+	for (const std::shared_ptr<GameObject>& rpGameObject : mGameObjectsList)
+	{
+		if (!rpGameObject)
+			continue;
+
+		rpGameObject->HandleEvent(rEvent);
+	}
+}
+
 void ObjectManager::CheckCollisions()
 {
 	std::list<std::shared_ptr<GameObject>>::iterator it1;

@@ -209,5 +209,8 @@
     <ClInclude Include="AsteroidsSFXManager.h">
       <Filter>Header Files\Game\Services</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
