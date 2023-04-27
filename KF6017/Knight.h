@@ -19,8 +19,6 @@ public:
 	virtual void HandleCollision(std::shared_ptr<GameObject> pOtherObject) override;
 
 protected:
-	const float mAcceleration = 5.f;
-	// mFriction = -0.95; see constructor
 	std::shared_ptr<Rectangle2D> mpBoundingShape;
 
 	virtual void HandleInputs(double deltaTime);

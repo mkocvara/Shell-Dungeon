@@ -10,7 +10,7 @@
 // PUBLIC
 
 Knight::Knight(std::weak_ptr<ServiceManager> pServiceManager)
-	: Super(pServiceManager, -0.95f)
+	: Super(pServiceManager)
 {
 }
 
@@ -29,6 +29,10 @@ void Knight::Initialise(Vector2D position, float angle, float scale)
 	mpBoundingShape->PlaceAt(position, (float)spriteHeight, (float)spriteWidth);
 
 	scale *= mBaseSpriteScale;
+
+	SetMovementSpeed(8.f);
+	SetTimeToFullSpeed(0.1f);
+	SetTimeToStop(0.1f);
 
 	Super::Initialise(position, angle, scale);
 	return;
@@ -73,22 +77,19 @@ void Knight::HandleInputs(double deltaTime)
 	pInputs->SampleKeyboard();
 	pInputs->SampleMouse();
 
-	// MOVEMENT
-	// Rotation
-	/*short rotDir = 0;
-	if (pInputs->KeyPressed(DIK_LEFT) || pInputs->KeyPressed(DIK_A))
-		rotDir = -1;
-	else if (pInputs->KeyPressed(DIK_RIGHT) || pInputs->KeyPressed(DIK_D))
-		rotDir = +1;*/
-
 	// Movement
-	//if (pInputs->KeyPressed(DIK_UP) || pInputs->KeyPressed(DIK_W))
-	//{
-	//	// accelerate
-	//	Vector2D a;
-	//	a.setBearing(mRotationAngle, mAcceleration);
-	//	mVelocity += a;
-	//}
+	Vector2D walkDirection;
+
+	if (pInputs->KeyPressed(DIK_UP) || pInputs->KeyPressed(DIK_W))
+		walkDirection += Vector2D(0, 1);
+	if (pInputs->KeyPressed(DIK_DOWN) || pInputs->KeyPressed(DIK_S))
+		walkDirection += Vector2D(0, -1);
+	if (pInputs->KeyPressed(DIK_LEFT) || pInputs->KeyPressed(DIK_A))
+		walkDirection += Vector2D(-1, 0);
+	if (pInputs->KeyPressed(DIK_RIGHT) || pInputs->KeyPressed(DIK_D))
+		walkDirection += Vector2D(1, 0);
+
+	mMoveDirection = walkDirection;
 
 	// Attacking
 	if (pInputs->IfMouseNewLeftDown())
