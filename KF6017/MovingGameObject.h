@@ -10,16 +10,25 @@ public:
 
 	virtual ErrorType Update(double deltaTime) override;
 
+	void SetMovementSpeed(float speed);
+	void SetTimeToFullSpeed(float time);
+	void SetTimeToStop(float time);
+
 protected:
 	MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager, float mFriction = 0.f);
 
-	// In units per second.
-	Vector2D mVelocity;
+	// direction vector - always gets normalised before being used
+	Vector2D mMoveDirection;
 
 	virtual void Move(double deltaTime);
 
 private:
-	// Fraction of velocity per second which gets applied in the opposite direction. Must be negative.
-	float mFriction = 0.f;
+	// In units per second
+	Vector2D mCurrentVelocity;
+	float mMaxMovementSpeed = 10.f;
+	
+	// In seconds
+	float mTimeToFullSpeed = 0.1f;
+	float mTimeToStop = 0.2f;
 };
 

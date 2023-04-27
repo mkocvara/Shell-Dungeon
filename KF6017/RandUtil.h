@@ -6,7 +6,7 @@ class RandUtil
 {
 public:
 	static int randRangeInt(int min, int max);
-	static float randRangeDouble(double min, double max);
+	static double randRangeDouble(double min, double max);
 
 #if !RELEASE
 	static void Debug();

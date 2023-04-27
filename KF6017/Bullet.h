@@ -20,13 +20,11 @@ public:
 	virtual void HandleCollision(std::shared_ptr<GameObject> pOtherObject) override;
 
 protected:
-	virtual void Move(double deltaTime) override;
 	bool IsOffScreen();
 
 	std::shared_ptr<AngledRectangle2D> mpBoundingShape;
 
 private:
 	const wchar_t* mRenderSpritePath = L"Assets/bullet.bmp";
-	const float mSpeed = 10.f;
 };
 

@@ -31,6 +31,10 @@ void Spaceship::Initialise(Vector2D position, float angle, float scale)
 	mpBoundingShape = std::make_shared<AngledRectangle2D>(position, (float)spriteHeight, (float)spriteWidth);
 	mpBoundingShape->SetAngle(mRotationAngle);
 
+	SetMovementSpeed(12.f);
+	SetTimeToFullSpeed(1.f);
+	SetTimeToStop(3.f);
+
 	Super::Initialise(position, angle, scale);
 	return;
 }
@@ -87,12 +91,9 @@ void Spaceship::HandleInputs(double deltaTime)
 
 	// Movement
 	if (pInputs->KeyPressed(DIK_UP) || pInputs->KeyPressed(DIK_W))
-	{
-		// accelerate
-		Vector2D a;
-		a.setBearing(mRotationAngle, mAcceleration);
-		mVelocity += a;
-	}
+		mMoveDirection = GetForwardVector();
+	else
+		mMoveDirection = Vector2D(0, 0);
 
 	// FIRING
 	if (pInputs->IfMouseNewLeftDown())

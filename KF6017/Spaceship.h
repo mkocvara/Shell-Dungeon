@@ -21,8 +21,6 @@ public:
 
 protected:	
 	const float mRotationSpeed = 2.f; 
-	const float mAcceleration = 5.f;
-	// mFriction = -0.5; see constructor
 
 	virtual void HandleInputs(double deltaTime);
 

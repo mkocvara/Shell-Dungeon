@@ -18,7 +18,6 @@ Bullet::~Bullet()
 
 void Bullet::Initialise(Vector2D position, float angle, float scale)
 {
-	mVelocity.setBearing(angle, mSpeed);
 	SetRenderSprite(mRenderSpritePath);
 
 	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
@@ -28,7 +27,11 @@ void Bullet::Initialise(Vector2D position, float angle, float scale)
 	mpBoundingShape->SetAngle(mRotationAngle);
 
 	Super::Initialise(position, angle, scale);
-	return;
+
+	SetMovementSpeed(20.f);
+	SetTimeToFullSpeed(0.f);
+	SetTimeToStop(0.f);
+	mMoveDirection = GetForwardVector();
 }
 
 ErrorType Bullet::Update(double deltaTime)
@@ -60,11 +63,6 @@ void Bullet::HandleCollision(std::shared_ptr<GameObject> pOtherObject)
 
 
 // PROTECTED
-
-void Bullet::Move(double deltaTime)
-{
-	mPosition += mVelocity;
-}
 
 bool Bullet::IsOffScreen()
 {

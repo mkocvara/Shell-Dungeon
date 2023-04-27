@@ -21,7 +21,6 @@ public:
 	virtual void HandleCollision(std::shared_ptr<GameObject> pOtherObject) override;
 
 protected:
-	//virtual void Move(double deltaTime) override;
 	std::shared_ptr<Circle2D> mpBoundingShape;
 
 private:
