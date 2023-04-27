@@ -809,6 +809,11 @@ void Rectangle2D::PlaceAt(float top, float left, float bottom, float right)
 	PlaceAt(Vector2D(left,top), Vector2D(right, bottom));
 }
 
+void Rectangle2D::PlaceAt(Vector2D centre, float height, float width)
+{
+	PlaceAt(centre.YValue + (height / 2), centre.XValue - (width / 2), centre.YValue - (height / 2), centre.XValue + (width / 2));
+}
+
 Vector2D Rectangle2D::GetCentre() const
 {
 	return (mCorner1+mCorner2)/2;
