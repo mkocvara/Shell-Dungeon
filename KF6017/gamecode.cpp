@@ -1,22 +1,13 @@
 #include "gamecode.h"
-#include "mydrawengine.h"
-#include "mysoundengine.h"
-#include "myinputs.h"
 #include <time.h>
 #include "gametimer.h"
-#include "errorlogger.h"
-#include <math.h>
-#include "shapes.h"
-#include "Spaceship.h"
-#include "RandUtil.h"
-#include "SpaceRock.h"
-#include "AsteroidsServiceManager.h"
-#include "ObjectManager.h"
-#include "GameObjectFactory.h"
-#include "GameManager.h"
 #include "Menu.h"
-
 #include "ErrorLogger.h"
+
+#include "AsteroidsServiceManager.h"
+#include "mydrawengine.h"
+#include "ObjectManager.h"
+#include "GameManager.h"
 
 Game::Game()
 {
