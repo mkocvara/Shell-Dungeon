@@ -192,6 +192,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="EventType.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="ICollidableObject.h" />
@@ -207,7 +208,7 @@
     <ClInclude Include="myinputs.h" />
     <ClInclude Include="mysoundengine.h" />
     <ClInclude Include="ObjectManager.h" />
-    <ClInclude Include="objecttypes.h" />
+    <ClInclude Include="ObjectType.h" />
     <ClInclude Include="RandUtil.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="ServiceManager.h" />

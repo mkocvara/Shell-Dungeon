@@ -2,7 +2,7 @@
 #include "vector2D.h"
 #include "errortype.h"
 #include <memory>
-#include "objecttypes.h"
+#include "ObjectType.h"
 
 struct Event;
 class ServiceManager;
