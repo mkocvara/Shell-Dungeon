@@ -1,7 +1,7 @@
 #pragma once
 #include "Service.h"
 #include <memory>
-#include "objecttypes.h"
+#include "ObjectType.h"
 #include "vector2D.h"
 
 class GameObject;

@@ -1,16 +1,10 @@
 #pragma once
+
+#include "EventType.h"
 #include "vector2D.h"
 #include <memory>
 
 class GameObject;
-
-// Events used in the messaging/event system
-enum class EventType 
-{
-	levelStart,
-	asteroidDestroyed,
-	bulletFired
-};
 
 struct Event 
 {

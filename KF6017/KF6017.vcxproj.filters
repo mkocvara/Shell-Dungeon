@@ -188,9 +188,6 @@
     <ClInclude Include="ErrorLogger.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="objecttypes.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="GameObjectFactory.h">
       <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
@@ -247,6 +244,12 @@
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectType.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="EventType.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
