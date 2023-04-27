@@ -406,8 +406,17 @@ public:
 	// calculates bounds from height and width
 	void PlaceAt(Vector2D centre, float height, float width);
 
+	// Moves the rectangle to the passed centre point
+	void SetCentre(Vector2D centre);
+
 	// Returns the centre of the rectangle
 	Vector2D GetCentre() const;
+
+	// Returns the height of the rectangle
+	float GetHeight() const;
+
+	// Returns the height of the rectangle
+	float GetWidth() const;
 
 	// Returns the location of the top left corner
 	Vector2D GetTopLeft() const;
