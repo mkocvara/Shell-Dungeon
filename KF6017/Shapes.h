@@ -402,6 +402,10 @@ public:
 	// but not the bottom or right
 	void PlaceAt(float top, float left, float bottom, float right);
 
+	// Places the rectangle at the specified centre location.
+	// calculates bounds from height and width
+	void PlaceAt(Vector2D centre, float height, float width);
+
 	// Returns the centre of the rectangle
 	Vector2D GetCentre() const;
 
