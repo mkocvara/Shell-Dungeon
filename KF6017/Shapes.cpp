@@ -814,9 +814,27 @@ void Rectangle2D::PlaceAt(Vector2D centre, float height, float width)
 	PlaceAt(centre.YValue + (height / 2), centre.XValue - (width / 2), centre.YValue - (height / 2), centre.XValue + (width / 2));
 }
 
+void Rectangle2D::SetCentre(Vector2D centre)
+{
+	const float height = GetHeight();
+	const float width = GetWidth();
+
+	PlaceAt(centre, height, width);
+}
+
 Vector2D Rectangle2D::GetCentre() const
 {
 	return (mCorner1+mCorner2)/2;
+}
+
+float Rectangle2D::GetHeight() const
+{
+	return mCorner2.YValue - mCorner1.YValue;
+}
+
+float Rectangle2D::GetWidth() const
+{
+	return mCorner2.XValue - mCorner1.XValue;
 }
 
 void Rectangle2D::PlaceAt(Vector2D bottomLeft, Vector2D topRight)
