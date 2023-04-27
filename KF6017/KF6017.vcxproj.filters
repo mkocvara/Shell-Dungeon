@@ -63,12 +63,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Spaceship.cpp">
-      <Filter>Source Files\Game\Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="SpaceRock.cpp">
-      <Filter>Source Files\Game\Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="RandUtil.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
@@ -93,9 +87,6 @@
     <ClCompile Include="MovingGameObject.cpp">
       <Filter>Source Files\Engine\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files\Game\Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="ErrorLogger.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
@@ -108,13 +99,10 @@
     <ClCompile Include="GameObjectFactory.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
-    <ClCompile Include="Explosion.cpp">
-      <Filter>Source Files\Game\Game Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="AsteroidsServiceManager.cpp">
+    <ClCompile Include="DungeonServiceManager.cpp">
       <Filter>Source Files\Game\Services</Filter>
     </ClCompile>
-    <ClCompile Include="AsteroidsObjectFactory.cpp">
+    <ClCompile Include="DungeonObjectFactory.cpp">
       <Filter>Source Files\Game\Services</Filter>
     </ClCompile>
     <ClCompile Include="SFXManager.cpp">
@@ -123,7 +111,7 @@
     <ClCompile Include="gamecode.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="AsteroidsSFXManager.cpp">
+    <ClCompile Include="DungeonSFXManager.cpp">
       <Filter>Source Files\Game\Services</Filter>
     </ClCompile>
     <ClCompile Include="EventManager.cpp">
@@ -132,7 +120,7 @@
     <ClCompile Include="GameManager.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
-    <ClCompile Include="AsteroidsGameManager.cpp">
+    <ClCompile Include="DungeonGameManager.cpp">
       <Filter>Source Files\Game\Services</Filter>
     </ClCompile>
     <ClCompile Include="Service.cpp">
@@ -150,14 +138,11 @@
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Knight.cpp">
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Spaceship.h">
-      <Filter>Header Files\Game\Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="SpaceRock.h">
-      <Filter>Header Files\Game\Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="RandUtil.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
@@ -182,9 +167,6 @@
     <ClInclude Include="MovingGameObject.h">
       <Filter>Header Files\Engine\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header Files\Game\Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="ErrorLogger.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
@@ -200,22 +182,19 @@
     <ClInclude Include="ICollidableObject.h">
       <Filter>Header Files\Engine\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Explosion.h">
-      <Filter>Header Files\Game\Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="SFXManager.h">
       <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
-    <ClInclude Include="AsteroidsServiceManager.h">
+    <ClInclude Include="DungeonServiceManager.h">
       <Filter>Header Files\Game\Services</Filter>
     </ClInclude>
-    <ClInclude Include="AsteroidsObjectFactory.h">
+    <ClInclude Include="DungeonObjectFactory.h">
       <Filter>Header Files\Game\Services</Filter>
     </ClInclude>
     <ClInclude Include="gamecode.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="AsteroidsSFXManager.h">
+    <ClInclude Include="DungeonSFXManager.h">
       <Filter>Header Files\Game\Services</Filter>
     </ClInclude>
     <ClInclude Include="Event.h">
@@ -227,7 +206,7 @@
     <ClInclude Include="GameManager.h">
       <Filter>Header Files\Engine\Services</Filter>
     </ClInclude>
-    <ClInclude Include="AsteroidsGameManager.h">
+    <ClInclude Include="DungeonGameManager.h">
       <Filter>Header Files\Game\Services</Filter>
     </ClInclude>
     <ClInclude Include="Service.h">
@@ -250,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="EventType.h">
       <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Knight.h">
+      <Filter>Header Files\Game\Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

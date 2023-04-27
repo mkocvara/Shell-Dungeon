@@ -6,8 +6,5 @@
 enum class ObjectType
 {
 	unknown, 
-	spaceship, 
-	spacerock,
-	bullet,
-	explosion
+	knight
 };

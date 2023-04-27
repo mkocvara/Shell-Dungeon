@@ -6,14 +6,14 @@ enum class GameState {
 	dead
 };
 
-class AsteroidsGameManager final : public GameManager 
+class DungeonGameManager final : public GameManager 
 {
 	typedef GameManager Super;
 	typedef int LevelId;
 
 public:
-	AsteroidsGameManager(std::shared_ptr<ServiceManager> pServiceManager);
-	virtual ~AsteroidsGameManager();
+	DungeonGameManager(std::shared_ptr<ServiceManager> pServiceManager);
+	virtual ~DungeonGameManager();
 
 	virtual void Update(double deltaTime) override;
 
@@ -27,7 +27,6 @@ protected:
 	virtual void Render() override;
 
 private:
-	int mAsteroidsLeft = 0;
 	float mTimer = 0.f;
 	GameState mGameState = GameState::dead;
 };

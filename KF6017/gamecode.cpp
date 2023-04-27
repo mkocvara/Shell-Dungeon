@@ -1,22 +1,13 @@
 #include "gamecode.h"
-#include "mydrawengine.h"
-#include "mysoundengine.h"
-#include "myinputs.h"
 #include <time.h>
 #include "gametimer.h"
-#include "errorlogger.h"
-#include <math.h>
-#include "shapes.h"
-#include "Spaceship.h"
-#include "RandUtil.h"
-#include "SpaceRock.h"
-#include "AsteroidsServiceManager.h"
-#include "ObjectManager.h"
-#include "GameObjectFactory.h"
-#include "GameManager.h"
 #include "Menu.h"
-
 #include "ErrorLogger.h"
+
+#include "DungeonServiceManager.h"
+#include "mydrawengine.h"
+#include "ObjectManager.h"
+#include "GameManager.h"
 
 Game::Game()
 {
@@ -36,7 +27,7 @@ Game Game::instance;
 ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 {
 	// Start services
-	mpServiceManager = AsteroidsServiceManager::Create();
+	mpServiceManager = DungeonServiceManager::Create();
 	ErrorType err = mpServiceManager->StartServices(bFullScreen, hwnd, hinstance);
 
 	// Setup menus

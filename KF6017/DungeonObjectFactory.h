@@ -1,11 +1,11 @@
 #pragma once
 #include "GameObjectFactory.h"
 
-class AsteroidsObjectFactory final : public GameObjectFactory
+class DungeonObjectFactory final : public GameObjectFactory
 {
 public:
-	AsteroidsObjectFactory();
-	virtual ~AsteroidsObjectFactory();
+	DungeonObjectFactory();
+	virtual ~DungeonObjectFactory();
 
 	typedef GameObjectFactory Super;
 

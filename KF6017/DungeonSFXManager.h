@@ -1,13 +1,13 @@
 #pragma once
 #include "SFXManager.h"
 
-class AsteroidsSFXManager final : public SFXManager
+class DungeonSFXManager final : public SFXManager
 {
 	typedef SFXManager Super;
 
 public:
-	AsteroidsSFXManager(HWND hwnd);
-	virtual ~AsteroidsSFXManager();
+	DungeonSFXManager(HWND hwnd);
+	virtual ~DungeonSFXManager();
 
 	void PlayShot();
 

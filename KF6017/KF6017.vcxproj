@@ -153,20 +153,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AsteroidsGameManager.cpp" />
-    <ClCompile Include="AsteroidsObjectFactory.cpp" />
-    <ClCompile Include="AsteroidsServiceManager.cpp" />
-    <ClCompile Include="AsteroidsSFXManager.cpp" />
-    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="DungeonGameManager.cpp" />
+    <ClCompile Include="DungeonObjectFactory.cpp" />
+    <ClCompile Include="DungeonServiceManager.cpp" />
+    <ClCompile Include="DungeonSFXManager.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="EventManager.cpp" />
-    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="gamecode.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="gametimer.cpp" />
+    <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MovingGameObject.cpp" />
     <ClCompile Include="mydrawengine.cpp" />
@@ -178,22 +177,18 @@
     <ClCompile Include="ServiceManager.cpp" />
     <ClCompile Include="SFXManager.cpp" />
     <ClCompile Include="Shapes.cpp" />
-    <ClCompile Include="SpaceRock.cpp" />
-    <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="vector2D.cpp" />
     <ClCompile Include="wincode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AsteroidsGameManager.h" />
-    <ClInclude Include="AsteroidsObjectFactory.h" />
-    <ClInclude Include="AsteroidsServiceManager.h" />
-    <ClInclude Include="AsteroidsSFXManager.h" />
-    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="DungeonGameManager.h" />
+    <ClInclude Include="DungeonObjectFactory.h" />
+    <ClInclude Include="DungeonServiceManager.h" />
+    <ClInclude Include="DungeonSFXManager.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="EventType.h" />
-    <ClInclude Include="Explosion.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="ICollidableObject.h" />
     <ClInclude Include="ErrorLogger.h" />
@@ -202,6 +197,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="gametimer.h" />
+    <ClInclude Include="Knight.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MovingGameObject.h" />
     <ClInclude Include="mydrawengine.h" />
@@ -214,8 +210,6 @@
     <ClInclude Include="ServiceManager.h" />
     <ClInclude Include="SFXManager.h" />
     <ClInclude Include="Shapes.h" />
-    <ClInclude Include="SpaceRock.h" />
-    <ClInclude Include="Spaceship.h" />
     <ClInclude Include="vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
