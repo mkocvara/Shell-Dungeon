@@ -15,7 +15,7 @@ public:
 	void SetTimeToStop(float time);
 
 protected:
-	MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager, float mFriction = 0.f);
+	MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager);
 
 	// direction vector - always gets normalised before being used
 	Vector2D mMoveDirection;
