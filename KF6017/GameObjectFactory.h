@@ -14,7 +14,7 @@ class GameObjectFactory : public Service
 public:
 	GameObjectFactory();
 	virtual ~GameObjectFactory();
-	virtual std::weak_ptr<GameObject> Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, Vector2D initPosition = GetDefaultPositionValue(), float initAngle = GetDefaultAngleValue(), float initScale = GetDefaultScaleValue()) = 0;
+	virtual std::weak_ptr<GameObject> Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, bool initialise = true, Vector2D initPosition = GetDefaultPositionValue(), float initAngle = GetDefaultAngleValue(), float initScale = GetDefaultScaleValue()) = 0;
 	
 protected:
 	static Vector2D GetDefaultPositionValue();

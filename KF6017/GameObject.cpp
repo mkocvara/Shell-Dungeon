@@ -69,6 +69,11 @@ void GameObject::HandleEvent(const Event& rEvent)
 {
 }
 
+Vector2D GameObject::GetPosition() const
+{
+	return mPosition;
+}
+
 void GameObject::SetPosition(const Vector2D position)
 {
 	mPosition = position;

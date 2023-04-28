@@ -19,7 +19,7 @@ AsteroidsObjectFactory::~AsteroidsObjectFactory()
 {
 }
 
-std::weak_ptr<GameObject> AsteroidsObjectFactory::Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, Vector2D initPosition, float initAngle, float initScale)
+std::weak_ptr<GameObject> AsteroidsObjectFactory::Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, bool initialise, Vector2D initPosition, float initAngle, float initScale)
 {
 	std::shared_ptr<ObjectManager> pObjectManager = pServiceManager.lock()->GetObjectManager().lock();
 	if (!pObjectManager)
@@ -61,7 +61,8 @@ std::weak_ptr<GameObject> AsteroidsObjectFactory::Create(ObjectType type, std::w
 		return std::weak_ptr<GameObject>();
 	}
 
-	InitialiseGameObject(pAsGameObject, initPosition, initAngle, initScale);
+	if (initialise)
+		InitialiseGameObject(pAsGameObject, initPosition, initAngle, initScale);
 
 	if(pAsCollidableObject)
 		pObjectManager->AddCollidableObject(pAsGameObject, pAsCollidableObject);

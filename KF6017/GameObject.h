@@ -7,14 +7,9 @@
 struct Event;
 class ServiceManager;
 
-enum class GameObjectState
-{
-	active,
-	inactive,
-	removed
-};
+typedef int PictureIndex;
 
-class GameObject
+class GameObject : public std::enable_shared_from_this<GameObject>
 {
 public:
 	virtual ~GameObject();
@@ -28,6 +23,7 @@ public:
 	bool IsRemoved() const;
 	virtual ObjectType GetObjectType() const;
 	virtual void HandleEvent(const Event& rEvent);
+	Vector2D GetPosition() const;
 	void SetPosition(const Vector2D position);
 	void SetPosition(const float x, const float y);
 
@@ -39,13 +35,20 @@ protected:
 
 	std::weak_ptr<ServiceManager> mpServiceManager;
 
-	int mRenderSprite = -1;
+	PictureIndex mRenderSprite = -1;
 	virtual void SetRenderSprite(const wchar_t* imagePath);
 	virtual ErrorType Render();
 
 	ObjectType mObjectType;
 
 private: 
+	enum class GameObjectState
+	{
+		active,
+		inactive,
+		removed
+	};
+
 	GameObjectState mState;
 };
 

@@ -2,7 +2,7 @@
 #include "ErrorLogger.h"
 #include <cmath>
 
-MovingGameObject::MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager, float friction) 
+MovingGameObject::MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager) 
 	: Super(pServiceManager)
 {
 }
