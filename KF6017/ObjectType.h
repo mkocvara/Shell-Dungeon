@@ -6,5 +6,7 @@
 enum class ObjectType
 {
 	unknown, 
-	knight
+	knight,
+	orc,
+	attack
 };

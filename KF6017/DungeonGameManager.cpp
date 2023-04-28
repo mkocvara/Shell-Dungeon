@@ -7,6 +7,8 @@
 #include "ObjectManager.h"
 #include "Event.h"
 
+#include "Creature.h"
+#include "Sword.h"
 
 // PUBLIC
 
@@ -42,7 +44,17 @@ void DungeonGameManager::StartLevel(LevelId level)
 
 	if (level == 1)
 	{
-		pObjectFactory->Create(ObjectType::knight, mpServiceManager);
+		std::shared_ptr<GameObject> pKnight = pObjectFactory->Create(ObjectType::knight, mpServiceManager).lock();
+		std::shared_ptr<Creature> pKnightAsCreature = std::static_pointer_cast<Creature>(pKnight);
+		pKnightAsCreature->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // May wish to implement a WeaponFactory when/if many more weapons are added.
+
+		std::shared_ptr<GameObject> pOrc;
+		pOrc = pObjectFactory->Create(ObjectType::orc, mpServiceManager).lock();
+		pOrc->SetPosition(200.f, 200.f);
+		pOrc = pObjectFactory->Create(ObjectType::orc, mpServiceManager).lock();
+		pOrc->SetPosition(500.f, 700.f);
+		pOrc = pObjectFactory->Create(ObjectType::orc, mpServiceManager).lock();
+		pOrc->SetPosition(900.f, 800.f);
 	}
 	else if (level == 2)
 	{

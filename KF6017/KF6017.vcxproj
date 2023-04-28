@@ -153,11 +153,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Attack.cpp" />
+    <ClCompile Include="Creature.cpp" />
     <ClCompile Include="DungeonGameManager.cpp" />
     <ClCompile Include="DungeonObjectFactory.cpp" />
     <ClCompile Include="DungeonServiceManager.cpp" />
     <ClCompile Include="DungeonSFXManager.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ErrorLogger.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="gamecode.cpp" />
@@ -172,20 +175,26 @@
     <ClCompile Include="myinputs.cpp" />
     <ClCompile Include="mysoundengine.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="Orc.cpp" />
     <ClCompile Include="RandUtil.cpp" />
     <ClCompile Include="Service.cpp" />
     <ClCompile Include="ServiceManager.cpp" />
     <ClCompile Include="SFXManager.cpp" />
     <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="Sword.cpp" />
     <ClCompile Include="vector2D.cpp" />
+    <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="wincode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attack.h" />
+    <ClInclude Include="Creature.h" />
     <ClInclude Include="DungeonGameManager.h" />
     <ClInclude Include="DungeonObjectFactory.h" />
     <ClInclude Include="DungeonServiceManager.h" />
     <ClInclude Include="DungeonSFXManager.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="EventType.h" />
@@ -205,12 +214,15 @@
     <ClInclude Include="mysoundengine.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ObjectType.h" />
+    <ClInclude Include="Orc.h" />
     <ClInclude Include="RandUtil.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="ServiceManager.h" />
     <ClInclude Include="SFXManager.h" />
     <ClInclude Include="Shapes.h" />
+    <ClInclude Include="Sword.h" />
     <ClInclude Include="vector2D.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

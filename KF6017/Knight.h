@@ -1,32 +1,30 @@
 #pragma once
-#include "MovingGameObject.h"
-#include "ICollidableObject.h"
+#include "Creature.h"
 
 class Rectangle2D;
 
-class Knight : public MovingGameObject, public ICollidableObject
+class Knight final : public Creature
 {
-	typedef MovingGameObject Super;
+	typedef Creature Super;
 
 public:
-	Knight(std::weak_ptr<ServiceManager> pServiceManager);
+	Knight(const std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~Knight();
 
 	virtual void Initialise(Vector2D position, float angle, float scale) override;
 	virtual ErrorType Update(double deltaTime) override;
 
 	virtual std::weak_ptr<IShape2D> GetShape() const override;
-	virtual void HandleCollision(std::shared_ptr<GameObject> pOtherObject) override;
+	virtual void HandleCollision(const std::shared_ptr<GameObject> pOtherObject) override;
 
 protected:
-	std::shared_ptr<Rectangle2D> mpBoundingShape;
-
-	virtual void HandleInputs(double deltaTime);
-	void Attack();
-	void Die();
+	virtual void Attack() override;
 
 private:
 	const wchar_t* mRenderSpritePath = L"Assets/Knight/walk_down1.png";
-	const float mBaseSpriteScale = 2.f;
-};
+	const float mBaseSpriteScale = 1.5f;
 
+	std::shared_ptr<Rectangle2D> mpBoundingShape;
+
+	void HandleInputs(double deltaTime);
+};

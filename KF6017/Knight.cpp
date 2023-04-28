@@ -7,11 +7,15 @@
 #include "mydrawengine.h"
 #include "myinputs.h"
 
+#include "Weapon.h"
+
+
 // PUBLIC
 
-Knight::Knight(std::weak_ptr<ServiceManager> pServiceManager)
+Knight::Knight(const std::weak_ptr<ServiceManager> pServiceManager)
 	: Super(pServiceManager)
 {
+	mObjectType = ObjectType::knight;
 }
 
 Knight::~Knight()
@@ -20,22 +24,22 @@ Knight::~Knight()
 
 void Knight::Initialise(Vector2D position, float angle, float scale)
 {
-	SetRenderSprite(mRenderSpritePath);
+	scale *= mBaseSpriteScale;
 
-	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
+	SetRenderSprite(mRenderSpritePath);
+	SetShowHealthBar(true);
+
+	const std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
 	int spriteHeight, spriteWidth;
 	pDrawEngine->GetDimensions(mRenderSprite, spriteHeight, spriteWidth);
 	mpBoundingShape = std::make_shared<Rectangle2D>();
-	mpBoundingShape->PlaceAt(position, (float)spriteHeight, (float)spriteWidth);
-
-	scale *= mBaseSpriteScale;
+	mpBoundingShape->PlaceAt(position, (float)spriteHeight * scale, (float)spriteWidth * scale);
 
 	SetMovementSpeed(8.f);
 	SetTimeToFullSpeed(0.1f);
 	SetTimeToStop(0.1f);
 
 	Super::Initialise(position, angle, scale);
-	return;
 }
 
 ErrorType Knight::Update(double deltaTime)
@@ -60,16 +64,26 @@ std::weak_ptr<IShape2D> Knight::GetShape() const
 	return mpBoundingShape;
 }
 
-void Knight::HandleCollision(std::shared_ptr<GameObject> pOtherObject)
+void Knight::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 {
-	/*if (pOtherObject->GetObjectType() == ObjectType::spacerock)
+	if (pOtherObject->GetObjectType() == ObjectType::orc)
 	{
-		Die();
-	}*/
+		// TODO
+		//Damage(1);
+	}
 }
 
 
 // PROTECTED
+
+void Knight::Attack()
+{ 
+	std::shared_ptr<Weapon> pWeapon = GetEquippedWeapon();
+	pWeapon->Attack(shared_from_this(), mRotationAngle);
+}
+
+
+// PRIVATE
 
 void Knight::HandleInputs(double deltaTime)
 {
@@ -96,14 +110,4 @@ void Knight::HandleInputs(double deltaTime)
 	{
 		Attack();
 	}
-}
-
-void Knight::Attack()
-{
-	
-}
-
-void Knight::Die()
-{
-	Remove();
 }

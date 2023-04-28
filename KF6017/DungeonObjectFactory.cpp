@@ -5,6 +5,8 @@
 #include "DungeonObjectFactory.h"
 
 #include "Knight.h"
+#include "Orc.h"
+#include "Attack.h"
 
 
 // PUBLIC
@@ -35,12 +37,18 @@ std::weak_ptr<GameObject> DungeonObjectFactory::Create(ObjectType type, std::wea
 		pAsGameObject = std::static_pointer_cast<GameObject>(pObj);
 		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(pObj);
 	} 
-	/*else if (type == ObjectType::spacerock)
+	else if (type == ObjectType::orc)
 	{
-		std::shared_ptr<SpaceRock> obj = std::make_shared<SpaceRock>(pServiceManager);
+		std::shared_ptr<Orc> obj = std::make_shared<Orc>(pServiceManager);
 		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
 		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
-	}*/
+	}
+	else if (type == ObjectType::attack)
+	{
+		std::shared_ptr<Attack> obj = std::make_shared<Attack>(pServiceManager);
+		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
+		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
+	}
 
 	if (!pAsGameObject)
 	{

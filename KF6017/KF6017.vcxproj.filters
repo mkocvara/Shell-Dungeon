@@ -61,6 +61,12 @@
     <Filter Include="Header Files\Engine\Objects">
       <UniqueIdentifier>{50d395c7-9d52-4cc4-ac8c-02b0500fed98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game\Items">
+      <UniqueIdentifier>{656e0e6f-2c71-4386-af7b-d401e9dfce65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Items">
+      <UniqueIdentifier>{9d4601f6-7177-49c5-85fb-8cdd28a77eba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RandUtil.cpp">
@@ -139,6 +145,24 @@
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Knight.cpp">
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Creature.cpp">
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Orc.cpp">
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Source Files\Game\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Sword.cpp">
+      <Filter>Source Files\Game\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Attack.cpp">
       <Filter>Source Files\Game\Game Objects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -231,6 +255,24 @@
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="Knight.h">
+      <Filter>Header Files\Game\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Game\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>Header Files\Game\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Orc.h">
+      <Filter>Header Files\Game\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Header Files\Game\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Sword.h">
+      <Filter>Header Files\Game\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Attack.h">
       <Filter>Header Files\Game\Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
