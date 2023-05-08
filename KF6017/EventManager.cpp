@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 EventManager::EventManager(std::shared_ptr<ServiceManager> pServiceManager)
-	: mpServiceManager(pServiceManager)
+	: Super(), mpServiceManager(pServiceManager)
 {
 }
 

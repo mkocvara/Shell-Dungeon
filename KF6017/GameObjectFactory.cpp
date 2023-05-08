@@ -4,6 +4,7 @@
 // PUBLIC
 
 GameObjectFactory::GameObjectFactory()
+	: Super()
 {
 }
 

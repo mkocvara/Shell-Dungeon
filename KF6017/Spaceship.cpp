@@ -12,7 +12,7 @@
 
 // PUBLIC
 
-Spaceship::Spaceship(std::weak_ptr<ServiceManager> pServiceManager) : Super(pServiceManager, -0.5)
+Spaceship::Spaceship(std::weak_ptr<ServiceManager> pServiceManager) : Super(pServiceManager)
 {
 	mObjectType = ObjectType::spaceship;
 }
@@ -77,7 +77,7 @@ void Spaceship::HandleInputs(double deltaTime)
 {
 	std::shared_ptr<MyInputs> pInputs = mpServiceManager.lock()->GetInputs().lock();
 	pInputs->SampleKeyboard();
-	pInputs->SampleMouse();
+	// Mouse is sampled every frame by MousePointer service
 
 	// MOVEMENT
 	// Rotation
@@ -114,7 +114,7 @@ void Spaceship::Shoot()
 		return;
 	}
 
-	pObjectFactory->Create(ObjectType::bullet, mpServiceManager, mPosition, mRotationAngle, 1.5f);
+	pObjectFactory->Create(ObjectType::bullet, mpServiceManager, true, mPosition, mRotationAngle, 1.5f);
 
 	// Dispatch event
 	std::shared_ptr<EventManager> pEventManager = pServiceManagerLocked->GetEventManager().lock();
@@ -160,5 +160,5 @@ void Spaceship::Die()
 	if (!pObjectFactory)
 		return;
 
-	pObjectFactory->Create(ObjectType::explosion, mpServiceManager, mPosition, 0.f, 2.f);
+	pObjectFactory->Create(ObjectType::explosion, mpServiceManager, true, mPosition, 0.f, 2.f);
 }
