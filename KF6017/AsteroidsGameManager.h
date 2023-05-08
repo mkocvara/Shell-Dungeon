@@ -1,5 +1,6 @@
 #pragma once
 #include "GameManager.h"
+#include "vector2D.h"
 
 enum class GameState {
 	alive,
@@ -30,5 +31,6 @@ private:
 	int mAsteroidsLeft = 0;
 	float mTimer = 0.f;
 	GameState mGameState = GameState::dead;
+	Vector2D mLastClickLocation;
 };
 

@@ -6,11 +6,13 @@
 #include "GameObject.h"
 #include "ObjectManager.h"
 #include "Event.h"
+#include "GameObjectFactory.h"
 
 
 // PUBLIC
 
-AsteroidsGameManager::AsteroidsGameManager(std::shared_ptr<ServiceManager> pServiceManager) : Super(pServiceManager)
+AsteroidsGameManager::AsteroidsGameManager(std::shared_ptr<ServiceManager> pServiceManager) 
+	: Super(pServiceManager)
 {
 }
 
@@ -101,6 +103,20 @@ void AsteroidsGameManager::HandleEvent(const Event& rEvent)
 	{
 		mAsteroidsLeft--;
 	}
+	else if (rEvent.type == EventType::mouseClick)
+	{
+		mLastClickLocation = rEvent.location;
+
+		// DEBUG move camera
+		/*std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
+		std::shared_ptr<MyDrawEngine> pDrawEngine = pServiceManagerLocked->GetDrawEngine().lock();
+		pDrawEngine->mpCamera->PlaceAt(mLastClickLocation);*/
+
+		// DEBUG create explosion
+		/*std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
+		std::shared_ptr<GameObjectFactory> pObjectFactory = pServiceManagerLocked->GetObjectFactory().lock();
+		pObjectFactory->Create(ObjectType::explosion, mpServiceManager, true, mLastClickLocation);*/
+	}
 }
 
 
@@ -108,9 +124,9 @@ void AsteroidsGameManager::HandleEvent(const Event& rEvent)
 
 void AsteroidsGameManager::Render()
 {
-	std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
+	const std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
 
-	std::shared_ptr<MyDrawEngine> pDrawEngine = pServiceManagerLocked->GetDrawEngine().lock();
+	const std::shared_ptr<MyDrawEngine> pDrawEngine = pServiceManagerLocked->GetDrawEngine().lock();
 	if (!pDrawEngine)
 	{
 		ErrorLogger::Writeln(L"AsteroidsGameManager failed to retreive draw engine.");
@@ -118,15 +134,18 @@ void AsteroidsGameManager::Render()
 	}
 
 	ErrorType err = SUCCESS;
-	std::wstring levelText = L"Level " + std::to_wstring(mCurrentLevel);
-	std::wstring asteroidsText = L"Asteroids left: " + std::to_wstring(mAsteroidsLeft);
-	std::wstring timerText = L"Time: " + std::to_wstring((int)mTimer); // truncates the time and removes decimals
+	const std::wstring levelText = L"Level " + std::to_wstring(mCurrentLevel);
+	const std::wstring asteroidsText = L"Asteroids left: " + std::to_wstring(mAsteroidsLeft);
+	const std::wstring timerText = L"Time: " + std::to_wstring((int)mTimer); // truncates the time and removes decimals
+	const std::wstring clickText = L"Last clicked location: [" + std::to_wstring((int)mLastClickLocation.XValue) + L"; " + std::to_wstring((int)mLastClickLocation.YValue) + L"]";
 
 	if(FAILED(pDrawEngine->WriteText(150, 150, levelText.c_str(), MyDrawEngine::GREEN)))
 		err = FAILURE;
 	if (FAILED(pDrawEngine->WriteText(150, 200, asteroidsText.c_str(), MyDrawEngine::WHITE)))
 		err = FAILURE;
 	if (FAILED(pDrawEngine->WriteText(150, 250, timerText.c_str(), MyDrawEngine::YELLOW)))
+		err = FAILURE;
+	if (FAILED(pDrawEngine->WriteText(150, 300, clickText.c_str(), MyDrawEngine::BLUE)))
 		err = FAILURE;
 	
 	if (FAILED(err))

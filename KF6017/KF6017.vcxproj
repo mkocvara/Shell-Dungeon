@@ -168,6 +168,7 @@
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="gametimer.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MousePointer.cpp" />
     <ClCompile Include="MovingGameObject.cpp" />
     <ClCompile Include="mydrawengine.cpp" />
     <ClCompile Include="myinputs.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="gametimer.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="MousePointer.h" />
     <ClInclude Include="MovingGameObject.h" />
     <ClInclude Include="mydrawengine.h" />
     <ClInclude Include="myinputs.h" />

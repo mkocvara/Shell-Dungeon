@@ -76,8 +76,6 @@ void Spaceship::HandleCollision(std::shared_ptr<GameObject> pOtherObject)
 void Spaceship::HandleInputs(double deltaTime)
 {
 	std::shared_ptr<MyInputs> pInputs = mpServiceManager.lock()->GetInputs().lock();
-	pInputs->SampleKeyboard();
-	// Mouse is sampled every frame by MousePointer service
 
 	// MOVEMENT
 	// Rotation

@@ -4,6 +4,8 @@
 #include "AsteroidsSFXManager.h"
 #include "AsteroidsGameManager.h"
 
+#include "MousePointer.h"
+
 AsteroidsServiceManager::AsteroidsServiceManager() : Super()
 {
 }
@@ -49,6 +51,8 @@ ErrorType AsteroidsServiceManager::StartServices(bool fullScreen, HWND hwnd, HIN
 		return FAILURE;
 	}
 	mAllServices.push_back(mpGameManager);
+
+	mpMousePointer->SetPointerEnabled(false);
 
 	return SUCCESS;
 }
