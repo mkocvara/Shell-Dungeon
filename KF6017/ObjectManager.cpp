@@ -9,6 +9,7 @@
 // PUBLIC
 
 ObjectManager::ObjectManager()
+	: Super()
 {
 }
 

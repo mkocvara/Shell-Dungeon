@@ -26,8 +26,9 @@ public:
 	ErrorType Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance);
 
 	// This is repeated, called every frame.
+	// Samples keyboard.
 	// Flips and clears the back buffer.
-	// Decides whether to tun game or menus depending on the game state
+	// Decides whether to run game or menus depending on the game state.
 	ErrorType Main();
 
 	// Called at the start of the game - when changing state from MENU to RUNNING

@@ -12,6 +12,7 @@ class ObjectManager;
 class GameObjectFactory;
 class EventManager;
 class GameManager;
+class MousePointer;
 
 class ServiceManager : public std::enable_shared_from_this<ServiceManager>
 {
@@ -26,6 +27,7 @@ public:
 
 	std::weak_ptr<ObjectManager> GetObjectManager();
 	std::weak_ptr<EventManager> GetEventManager();
+	std::weak_ptr<MousePointer> GetMousePointer();
 
 	// GameObjectFactory, SFXManager, GameManager are abstract; 
 	// they must be instantiated by a subclass!
@@ -44,10 +46,11 @@ protected:
 	std::shared_ptr<MyDrawEngine> mpDrawEngine;
 	std::shared_ptr<MyInputs> mpInputs;
 
-	std::shared_ptr<SFXManager> mpSfxManager;
 	std::shared_ptr<ObjectManager> mpObjectManager;
-	std::shared_ptr<GameObjectFactory> mpObjectFactory;
 	std::shared_ptr<EventManager> mpEventManager;
+	std::shared_ptr<MousePointer> mpMousePointer;
+	std::shared_ptr<SFXManager> mpSfxManager;
+	std::shared_ptr<GameObjectFactory> mpObjectFactory;
 	std::shared_ptr<GameManager> mpGameManager;
 };
 

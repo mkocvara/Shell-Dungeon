@@ -4,6 +4,7 @@
 #include "ErrorLogger.h"
 
 SFXManager::SFXManager(HWND hwnd)
+	: Super()
 {
 	mpSoundEngine = std::make_unique<MySoundEngine>(hwnd);
 	//LoadAllSounds();

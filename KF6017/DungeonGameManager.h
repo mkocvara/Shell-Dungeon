@@ -1,5 +1,6 @@
 #pragma once
 #include "GameManager.h"
+#include "vector2D.h"
 
 enum class GameState {
 	alive,
@@ -29,5 +30,6 @@ protected:
 private:
 	float mTimer = 0.f;
 	GameState mGameState = GameState::dead;
+	Vector2D mLastClickLocation;
 };
 

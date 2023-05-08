@@ -18,4 +18,11 @@ struct Event
 		this->location = location;
 		this->pSourceObject = pSourceObject;
 	}
+
+	Event(EventType type, Vector2D location)
+	{
+		this->type = type;
+		this->location = location;
+		this->pSourceObject = nullptr;
+	}
 };

@@ -63,7 +63,6 @@ ErrorType Menu::HandleInput()
 		return FAILURE;
 
 	// Get keyboard input
-	pInputs->SampleKeyboard();
 	if (pInputs->NewKeyPressed(DIK_UP))
 	{
 		mCurrentItem--;

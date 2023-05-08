@@ -6,5 +6,6 @@ enum class EventType
 {
 	levelStart,
 	asteroidDestroyed,
-	bulletFired
+	bulletFired,
+	mouseClick
 };

@@ -6,8 +6,10 @@
 
 #include "DungeonServiceManager.h"
 #include "mydrawengine.h"
+#include "myinputs.h"
 #include "ObjectManager.h"
 #include "GameManager.h"
+#include "MousePointer.h"
 
 Game::Game()
 {
@@ -63,10 +65,14 @@ ErrorType Game::Setup(bool bFullScreen, HWND hwnd, HINSTANCE hinstance)
 }
 
 // This is repeated, called every frame.
+// Samples keyboard.
 // Flips and clears the back buffer.
-// Decides whether to tun game or menus depending on the game state
+// Decides whether to run game or menus depending on the game state.
 ErrorType Game::Main()
 {
+	std::shared_ptr<MyInputs> pInputs = mpServiceManager->GetInputs().lock();
+	pInputs->SampleKeyboard();
+
 	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager->GetDrawEngine().lock();
 	if (!pDrawEngine)
 		return FAILURE;
@@ -88,7 +94,7 @@ ErrorType Game::Main()
 	case GameState::paused:
 		err = mPauseMenu->Update(); // Player has paused the game
 		break;
-	case GameState::running:					// Playing the actual game
+	case GameState::running:		// Playing the actual game
 		err = GameUpdate();
 		break;
    case GameState::gameOver:
@@ -121,7 +127,9 @@ ErrorType Game::GameUpdate()
 
 	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager->GetObjectManager().lock();
 	std::shared_ptr<GameManager> pGameManager = mpServiceManager->GetGameManager().lock();
+	std::shared_ptr<MousePointer> pMousePointer = mpServiceManager->GetMousePointer().lock();
 
+	pMousePointer->Update(mGameTimer.mFrameTime);
 	pObjectManager->UpdateAll(mGameTimer.mFrameTime);
 	pGameManager->Update(mGameTimer.mFrameTime);
 

@@ -8,6 +8,7 @@
 #include "MyInputs.h"
 #include "EventManager.h"
 #include "GameManager.h"
+#include "MousePointer.h"
 
 
 ServiceManager::ServiceManager()
@@ -39,14 +40,15 @@ ErrorType ServiceManager::StartServices(bool fullScreen, HWND hwnd, HINSTANCE hi
 		return FAILURE;
 	}
 
+	// Services
 	mpObjectManager = std::make_shared<ObjectManager>();
 	if (!mpObjectManager)
 	{
 		ErrorLogger::Writeln(L"Failed to create ObjectManager");
 		return FAILURE;
 	}
+	mAllServices.push_back(mpObjectManager);
 
-	// Services
 	mpEventManager = std::make_shared<EventManager>(std::move(GetSharedPtrFromThis()));
 	if (!mpEventManager)
 	{
@@ -54,6 +56,14 @@ ErrorType ServiceManager::StartServices(bool fullScreen, HWND hwnd, HINSTANCE hi
 		return FAILURE;
 	}
 	mAllServices.push_back(mpEventManager);
+
+	mpMousePointer = std::make_shared<MousePointer>(std::move(GetSharedPtrFromThis()));
+	if (!mpEventManager)
+	{
+		ErrorLogger::Writeln(L"Failed to create EventManager");
+		return FAILURE;
+	}
+	mAllServices.push_back(mpMousePointer);
 
 	// Child must create an instance of a GameObjectFactory subclass.
 	// Child must create an instance of a SFXManager subclass.
@@ -95,6 +105,11 @@ std::weak_ptr<MyInputs> ServiceManager::GetInputs()
 std::weak_ptr<EventManager> ServiceManager::GetEventManager()
 {
 	return mpEventManager;
+}
+
+std::weak_ptr<MousePointer> ServiceManager::GetMousePointer()
+{
+	return mpMousePointer;
 }
 
 std::weak_ptr<GameManager> ServiceManager::GetGameManager()

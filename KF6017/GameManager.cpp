@@ -4,7 +4,7 @@
 // PUBLIC
 
 GameManager::GameManager(std::shared_ptr<ServiceManager> pServiceManager)
-	: mpServiceManager(pServiceManager)
+	: Super(), mpServiceManager(pServiceManager)
 {
 }
 
