@@ -12,6 +12,8 @@ class Creature : public MovingGameObject, public ICollidableObject
 public:
 	virtual ~Creature();
 
+	virtual ErrorType Update(double deltaTime) override;
+
 	int GetCurrentHealth() const;
 	virtual void Damage(int damageAmount);
 	virtual void Heal(int healAmount);
@@ -20,13 +22,14 @@ public:
 
 	void EquipWeapon(const std::shared_ptr<Weapon> pWeapon);
 	std::shared_ptr<Weapon> GetEquippedWeapon() const;
+	bool IsAttackOnCooldown() const;
 
 protected:
 	Creature(const std::weak_ptr<ServiceManager> pServiceManager);
 
 	virtual ErrorType Render() override;
 
-	virtual void Attack() = 0;
+	virtual void Attack();
 	virtual void Die();
 
 	void SetShowHealthBar(bool shouldShowHealthBar);
@@ -37,5 +40,6 @@ private:
 	Rectangle2D mHealthBar;
 	bool mShowHealthBar = true;
 	std::shared_ptr<Weapon> mpEquippedWeapon;
+	float mAttackCooldown = 0.f;
 };
 

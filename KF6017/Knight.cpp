@@ -6,6 +6,7 @@
 #include "GameObjectFactory.h"
 #include "mydrawengine.h"
 #include "myinputs.h"
+#include "MousePointer.h"
 
 #include "Weapon.h"
 
@@ -78,8 +79,16 @@ void Knight::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 
 void Knight::Attack()
 { 
-	std::shared_ptr<Weapon> pWeapon = GetEquippedWeapon();
-	pWeapon->Attack(shared_from_this(), mRotationAngle);
+	if (IsAttackOnCooldown())
+		return;
+
+	const std::shared_ptr<MousePointer> pMousePointer = mpServiceManager.lock()->GetMousePointer().lock();
+	Vector2D attackDirection = pMousePointer->GetPosition() - mPosition;
+
+	const std::shared_ptr<Weapon> pWeapon = GetEquippedWeapon();
+	pWeapon->Attack(shared_from_this(), attackDirection.angle());
+
+	Super::Attack();
 }
 
 
@@ -88,8 +97,6 @@ void Knight::Attack()
 void Knight::HandleInputs(double deltaTime)
 {
 	std::shared_ptr<MyInputs> pInputs = mpServiceManager.lock()->GetInputs().lock();
-	pInputs->SampleKeyboard();
-	pInputs->SampleMouse();
 
 	// Movement
 	Vector2D walkDirection;

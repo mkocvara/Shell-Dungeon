@@ -7,6 +7,8 @@
 #include "ServiceManager.h"
 #include "mydrawengine.h"
 
+#include "Weapon.h"
+
 
 Creature::Creature(const std::weak_ptr<ServiceManager> pServiceManager)
 	: Super(pServiceManager)
@@ -18,6 +20,14 @@ Creature::Creature(const std::weak_ptr<ServiceManager> pServiceManager)
 
 Creature::~Creature()
 {
+}
+
+ErrorType Creature::Update(double deltaTime)
+{
+	if (IsAttackOnCooldown())
+		mAttackCooldown -= deltaTime;
+
+	return Super::Update(deltaTime);
 }
 
 int Creature::GetCurrentHealth() const
@@ -58,6 +68,11 @@ std::shared_ptr<Weapon> Creature::GetEquippedWeapon() const
 	return mpEquippedWeapon;
 }
 
+bool Creature::IsAttackOnCooldown() const
+{
+	return mAttackCooldown > 0.f;
+}
+
 
 // PROTECTED
 
@@ -69,7 +84,7 @@ ErrorType Creature::Render()
 	// Render health bar
 	if (mShowHealthBar)
 	{
-		// in Render in case different sized sprites are used for any single Creature subclass
+		// This is in Render in case different sized sprites are used for any single Creature subclass
 		const std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
 		int spriteHeight, spriteWidth;
 		pDrawEngine->GetDimensions(mRenderSprite, spriteHeight, spriteWidth);
@@ -83,6 +98,12 @@ ErrorType Creature::Render()
 	}
 
 	return SUCCESS;
+}
+
+void Creature::Attack()
+{
+	if (!IsAttackOnCooldown())
+		mAttackCooldown = mpEquippedWeapon->GetBaseAttackDelay();
 }
 
 void Creature::Die()

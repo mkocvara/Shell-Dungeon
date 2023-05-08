@@ -51,4 +51,5 @@ std::weak_ptr<IShape2D> Orc::GetShape() const
 void Orc::Attack()
 {
 	// TODO
+	Super::Attack();
 }

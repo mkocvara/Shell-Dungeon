@@ -14,8 +14,8 @@ public:
 
 private:
 	const int mBaseAttackDamage = 5;
-	const double mBaseAttackDelay = 2.0;
-	const float mBaseAttackReach = 40.f;
+	const double mBaseAttackDelay = 1.0;
+	const float mBaseAttackReach = 100.f;
 	
 	const wchar_t* mAttackSpritePath = L"Assets/Attack_Effects/Small/small_0022.png";
 	const float mAttackSpriteScale = 0.8f;

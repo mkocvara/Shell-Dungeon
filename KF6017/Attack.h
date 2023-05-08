@@ -31,7 +31,7 @@ private:
 	std::shared_ptr<Weapon> mpSourceWeapon;
 	std::shared_ptr<GameObject> mpAttacker;
 
-	const double mDuration = 0.1f;
+	const double mDuration = 0.08f;
 	double mTimer = 0.f;
 
 	std::shared_ptr<AngledRectangle2D> mpBoundingShape;
