@@ -17,9 +17,10 @@ public:
 	int GetBaseAttackDamage() const;
 	double GetBaseAttackDelay() const;
 	float GetBaseAttackReach() const;
+	float GetBaseAttackSpriteScale() const;
 
 protected:
-	Weapon(const std::weak_ptr<ServiceManager> pServiceManager, PictureIndex attackSprite = -1, int baseAttackDamage = 1, double baseAttackDelay = 1.0, float baseAttackReach = 5.f);
+	Weapon(const std::weak_ptr<ServiceManager> pServiceManager, int baseAttackDamage, double baseAttackDelay, float baseAttackReach, float attackSpriteScale = 1.f, PictureIndex attackSprite = -1);
 
 	std::weak_ptr<ServiceManager> mpServiceManager;
 
@@ -27,10 +28,12 @@ protected:
 	void SetBaseAttackDamage(int damage);
 	void SetBaseAttackDelay(double delay);
 	void SetBaseAttackReach(float reach);
+	void SetBaseAttackSpriteScale(float scale);
 
 private:
 	int mBaseAttackDamage;
 	double mBaseAttackDelay;
 	PictureIndex mAttackSprite;
 	float mBaseAttackReach;
+	float mBaseAttackSpriteScale;
 };

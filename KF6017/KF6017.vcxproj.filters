@@ -168,6 +168,12 @@
     <ClCompile Include="MousePointer.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
+    <ClCompile Include="Club.cpp">
+      <Filter>Source Files\Game\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeWeapon.cpp">
+      <Filter>Source Files\Game\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RandUtil.h">
@@ -280,6 +286,12 @@
     </ClInclude>
     <ClInclude Include="MousePointer.h">
       <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Club.h">
+      <Filter>Header Files\Game\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeWeapon.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

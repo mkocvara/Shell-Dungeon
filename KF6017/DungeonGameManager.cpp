@@ -7,7 +7,7 @@
 #include "ObjectManager.h"
 #include "Event.h"
 
-#include "Creature.h"
+#include "Knight.h"
 #include "Sword.h"
 
 // PUBLIC
@@ -42,11 +42,13 @@ void DungeonGameManager::StartLevel(LevelId level)
 	mTimer = 0.f;
 	mCurrentLevel = level;
 
+	const std::shared_ptr<GameObject> pKnight = pObjectFactory->Create(ObjectType::knight, mpServiceManager).lock();
+	const std::shared_ptr<Knight> pKnightAsKnight = std::static_pointer_cast<Knight>(pKnight);
+	mpPlayerKnight = pKnightAsKnight;
+
 	if (level == 1)
 	{
-		std::shared_ptr<GameObject> pKnight = pObjectFactory->Create(ObjectType::knight, mpServiceManager).lock();
-		std::shared_ptr<Creature> pKnightAsCreature = std::static_pointer_cast<Creature>(pKnight);
-		pKnightAsCreature->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // May wish to implement a WeaponFactory when/if many more weapons are added.
+		pKnightAsKnight->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // May wish to implement a WeaponFactory when/if many more weapons are added.
 
 		std::shared_ptr<GameObject> pOrc;
 		pOrc = pObjectFactory->Create(ObjectType::orc, mpServiceManager).lock();
@@ -91,6 +93,16 @@ void DungeonGameManager::HandleEvent(const Event& rEvent)
 	{
 		mAsteroidsLeft--;
 	}*/
+}
+
+Vector2D DungeonGameManager::GetPlayerLocation() const
+{
+	return mpPlayerKnight.lock()->GetPosition();
+}
+
+std::weak_ptr<Rectangle2D> DungeonGameManager::GetPlayerBounds() const
+{
+	return mpPlayerKnight.lock()->GetBounds();
 }
 
 

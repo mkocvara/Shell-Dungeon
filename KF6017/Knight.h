@@ -16,6 +16,8 @@ public:
 
 	virtual std::weak_ptr<IShape2D> GetShape() const override;
 	virtual void HandleCollision(const std::shared_ptr<GameObject> pOtherObject) override;
+	
+	std::weak_ptr<Rectangle2D> GetBounds() const;
 
 protected:
 	virtual void Attack() override;

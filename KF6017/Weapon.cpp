@@ -2,13 +2,14 @@
 #include "ErrorLogger.h"
 
 
-Weapon::Weapon(const std::weak_ptr<ServiceManager> pServiceManager, PictureIndex attackSprite, int baseAttackDamage, double baseAttackDelay, float baseAttackReach)
+Weapon::Weapon(const std::weak_ptr<ServiceManager> pServiceManager, int baseAttackDamage, double baseAttackDelay, float baseAttackReach, float attackSpriteScale, PictureIndex attackSprite)
 {
 	mpServiceManager = pServiceManager;
 	mBaseAttackDamage = baseAttackDamage;
 	mBaseAttackDelay = baseAttackDelay;
 	mBaseAttackReach = baseAttackReach;
 	mAttackSprite = attackSprite;
+	mBaseAttackSpriteScale = attackSpriteScale;
 }
 
 
@@ -38,6 +39,11 @@ float Weapon::GetBaseAttackReach() const
 	return mBaseAttackReach;
 }
 
+float Weapon::GetBaseAttackSpriteScale() const
+{
+	return mBaseAttackSpriteScale;
+}
+
 
 // PROTECTED
 
@@ -59,4 +65,9 @@ void Weapon::SetBaseAttackDelay(double delay)
 void Weapon::SetBaseAttackReach(float reach)
 {
 	mBaseAttackReach = reach;
+}
+
+void Weapon::SetBaseAttackSpriteScale(float scale)
+{
+	mBaseAttackSpriteScale = scale;
 }

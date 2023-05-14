@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Attack.cpp" />
+    <ClCompile Include="Club.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="DungeonGameManager.cpp" />
     <ClCompile Include="DungeonObjectFactory.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="gametimer.cpp" />
     <ClCompile Include="Knight.cpp" />
+    <ClCompile Include="MeleeWeapon.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MousePointer.cpp" />
     <ClCompile Include="MovingGameObject.cpp" />
@@ -189,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attack.h" />
+    <ClInclude Include="Club.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="DungeonGameManager.h" />
     <ClInclude Include="DungeonObjectFactory.h" />
@@ -208,6 +211,7 @@
     <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="gametimer.h" />
     <ClInclude Include="Knight.h" />
+    <ClInclude Include="MeleeWeapon.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MousePointer.h" />
     <ClInclude Include="MovingGameObject.h" />

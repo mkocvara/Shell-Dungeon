@@ -2,6 +2,9 @@
 #include "GameManager.h"
 #include "vector2D.h"
 
+class Knight;
+class Rectangle2D;
+
 enum class GameState {
 	alive,
 	dead
@@ -24,6 +27,9 @@ public:
 
 	virtual void HandleEvent(const Event& rEvent) override;
 
+	Vector2D GetPlayerLocation() const;
+	std::weak_ptr<Rectangle2D> GetPlayerBounds() const;
+
 protected:
 	virtual void Render() override;
 
@@ -31,5 +37,7 @@ private:
 	float mTimer = 0.f;
 	GameState mGameState = GameState::dead;
 	Vector2D mLastClickLocation;
+
+	std::weak_ptr<Knight> mpPlayerKnight;
 };
 

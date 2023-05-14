@@ -74,6 +74,11 @@ void Knight::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 	}
 }
 
+std::weak_ptr<Rectangle2D> Knight::GetBounds() const
+{
+	return mpBoundingShape;
+}
+
 
 // PROTECTED
 

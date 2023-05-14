@@ -2,13 +2,13 @@
 #include "MeleeWeapon.h"
 #include <memory>
 
-class Sword : public MeleeWeapon
+class Club : public MeleeWeapon
 {
 	typedef MeleeWeapon Super;
 
 public:
-	Sword(const std::weak_ptr<ServiceManager> pServiceManager);
-	virtual ~Sword();
+	Club(const std::weak_ptr<ServiceManager> pServiceManager);
+	virtual ~Club();
 
 private:
 	static const int mBaseAttackDamage;

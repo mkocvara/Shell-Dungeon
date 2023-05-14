@@ -1,4 +1,4 @@
-#include "Sword.h"
+#include "Club.h"
 #include "ErrorLogger.h"
 
 #include "ServiceManager.h"
@@ -7,24 +7,23 @@
 
 #include "Attack.h"
 
-const int Sword::mBaseAttackDamage = 5;
-const double Sword::mBaseAttackDelay = 1.0;
-const float Sword::mBaseAttackReach = 200.f;
-const wchar_t* Sword::mAttackSpritePath = L"Assets/Attack_Effects/Small/small_0022.png";
-const float Sword::mAttackSpriteScale = 0.9f;
 
+const int Club::mBaseAttackDamage = 3;
+const double Club::mBaseAttackDelay = 1.8f;
+const float Club::mBaseAttackReach = 90.f;
+const wchar_t* Club::mAttackSpritePath = L"Assets/Attack_Effects/Small/small_0031.png";
+const float Club::mAttackSpriteScale = 0.8f;
 
 // PUBLIC
 
-Sword::Sword(const std::weak_ptr<ServiceManager> pServiceManager)
+Club::Club(const std::weak_ptr<ServiceManager> pServiceManager)
 	: Super(pServiceManager, mBaseAttackDamage, mBaseAttackDelay, mBaseAttackReach, mAttackSpriteScale)
 {
 	const std::shared_ptr<MyDrawEngine> pDrawEngine = pServiceManager.lock()->GetDrawEngine().lock();
-
 	const PictureIndex attackSprite = pDrawEngine->LoadPicture(mAttackSpritePath);
 	SetAttackSprite(attackSprite);
 }
 
-Sword::~Sword()
+Club::~Club()
 {
 }
