@@ -8,7 +8,7 @@
 #include "Attack.h"
 
 const int Sword::mBaseAttackDamage = 5;
-const double Sword::mBaseAttackDelay = 1.0;
+const double Sword::mBaseAttackDelay = 0.5f;
 const float Sword::mBaseAttackReach = 200.f;
 const wchar_t* Sword::mAttackSpritePath = L"Assets/Attack_Effects/Small/small_0022.png";
 const float Sword::mAttackSpriteScale = 0.9f;
