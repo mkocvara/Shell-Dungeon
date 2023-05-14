@@ -37,8 +37,8 @@ void Knight::Initialise(Vector2D position, float angle, float scale)
 	mpBoundingShape->PlaceAt(position, (float)spriteHeight * scale, (float)spriteWidth * scale);
 
 	SetMovementSpeed(8.f);
-	SetTimeToFullSpeed(0.1f);
-	SetTimeToStop(0.1f);
+	SetTimeToFullSpeed(0.03f);
+	SetTimeToStop(0.03f);
 
 	Super::Initialise(position, angle, scale);
 }
