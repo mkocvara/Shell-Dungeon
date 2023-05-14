@@ -84,7 +84,11 @@ bool Attack::HasEntityBeenHit(const std::weak_ptr<GameObject> pObject) const
 	for (const std::weak_ptr<GameObject> pHitEntity : mEntitiesHit)
 	{
 		// compares control blocks of weak_ptrs, if they are the same
-		found = !(pHitEntity.owner_before(pObject) || pObject.owner_before(pHitEntity));
+		if (!(pHitEntity.owner_before(pObject) || pObject.owner_before(pHitEntity)))
+		{
+			found = true;
+			break;
+		}
 	}
 
 	return found;
