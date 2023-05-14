@@ -9,6 +9,7 @@
 #include "MousePointer.h"
 
 #include "Weapon.h"
+#include "Attack.h"
 
 
 // PUBLIC
@@ -28,6 +29,9 @@ void Knight::Initialise(Vector2D position, float angle, float scale)
 	scale *= mBaseSpriteScale;
 
 	SetRenderSprite(mRenderSpritePath);
+
+	SetMaxHealth(mBaseMaxHealth);
+	Heal(mBaseMaxHealth);
 	SetShowHealthBar(true);
 
 	const std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
@@ -67,10 +71,17 @@ std::weak_ptr<IShape2D> Knight::GetShape() const
 
 void Knight::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 {
-	if (pOtherObject->GetObjectType() == ObjectType::orc)
+	if (pOtherObject->GetObjectType() == ObjectType::attack)
 	{
-		// TODO
-		//Damage(1);
+		const std::shared_ptr<class Attack> pAttack = std::static_pointer_cast<class Attack>(pOtherObject);
+		const std::shared_ptr<GameObject> pAttacker = pAttack->GetAttacker();
+		const std::shared_ptr<GameObject> pThis = shared_from_this();
+
+		if (pAttacker->GetObjectType() == ObjectType::orc && !pAttack->HasEntityBeenHit(pThis))
+		{
+			Damage(pAttack->GetDamage());
+			pAttack->AddHitEntity(pThis);
+		}
 	}
 }
 
@@ -94,6 +105,11 @@ void Knight::Attack()
 	pWeapon->Attack(shared_from_this(), attackDirection.angle());
 
 	Super::Attack();
+}
+
+void Knight::Die()
+{
+	SetActive(false);
 }
 
 

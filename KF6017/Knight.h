@@ -21,10 +21,12 @@ public:
 
 protected:
 	virtual void Attack() override;
+	virtual void Die() override;
 
 private:
 	const wchar_t* mRenderSpritePath = L"Assets/Knight/walk_down1.png";
 	const float mBaseSpriteScale = 1.5f;
+	const int mBaseMaxHealth = 15;
 
 	std::shared_ptr<Rectangle2D> mpBoundingShape;
 
