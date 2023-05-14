@@ -43,6 +43,8 @@ void MovingGameObject::SetTimeToStop(float time)
 
 void MovingGameObject::Move(double deltaTime)
 {
+	mMoveDirection = mMoveDirection.unitVector();
+
 	const bool isAccelerating = mMoveDirection.magnitude() != 0;
 	const Vector2D desiredVelocity = isAccelerating ? mMoveDirection * mMaxMovementSpeed : Vector2D(0, 0);
 	const float timeToReachDesiredVelocity = (desiredVelocity.magnitude() == 0) ? mTimeToStop : mTimeToFullSpeed;
