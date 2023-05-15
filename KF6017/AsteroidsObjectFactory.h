@@ -4,7 +4,7 @@
 class AsteroidsObjectFactory final : public GameObjectFactory
 {
 public:
-	AsteroidsObjectFactory();
+	AsteroidsObjectFactory(std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~AsteroidsObjectFactory();
 
 	typedef GameObjectFactory Super;
@@ -15,7 +15,7 @@ public:
 	/// <param name="type">Type of object to create</param>
 	/// <param name="serviceManager">Service manager instance for the game</param>
 	/// <returns>A weak_ptr to the created object.</returns>
-	virtual std::weak_ptr<GameObject> Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, bool initialise, Vector2D initPosition, float initAngle, float initScale) override;
+	virtual std::weak_ptr<GameObject> Create(ObjectType type, bool initialise, Vector2D initPosition, float initAngle, float initScale) override;
 
 private:
 	void InitialiseGameObject(std::shared_ptr<GameObject>& rpObj, Vector2D initPosition, float initAngle, float initScale);

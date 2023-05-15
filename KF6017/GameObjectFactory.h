@@ -12,11 +12,13 @@ class GameObjectFactory : public Service
 	typedef Service Super;
 
 public:
-	GameObjectFactory();
+	GameObjectFactory(std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~GameObjectFactory();
-	virtual std::weak_ptr<GameObject> Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, bool initialise = true, Vector2D initPosition = GetDefaultPositionValue(), float initAngle = GetDefaultAngleValue(), float initScale = GetDefaultScaleValue()) = 0;
+	virtual std::weak_ptr<GameObject> Create(ObjectType type, bool initialise = true, Vector2D initPosition = GetDefaultPositionValue(), float initAngle = GetDefaultAngleValue(), float initScale = GetDefaultScaleValue()) = 0;
 	
 protected:
+	std::weak_ptr<ServiceManager> mpServiceManager;
+
 	static Vector2D GetDefaultPositionValue();
 	static float GetDefaultAngleValue();
 	static float GetDefaultScaleValue();

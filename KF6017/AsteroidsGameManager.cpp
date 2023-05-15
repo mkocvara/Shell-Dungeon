@@ -54,28 +54,28 @@ void AsteroidsGameManager::StartLevel(LevelId level)
 
 	if (level == 1)
 	{
-		pObjectFactory->Create(ObjectType::spaceship, mpServiceManager);
+		pObjectFactory->Create(ObjectType::spaceship);
 
 		mAsteroidsLeft = 6;
 		for (int i = 0; i < mAsteroidsLeft; i++)
 		{
-			pObjectFactory->Create(ObjectType::spacerock, mpServiceManager);
+			pObjectFactory->Create(ObjectType::spacerock);
 		}
 	}
 	else if (level == 2)
 	{
-		std::shared_ptr<GameObject> spaceship = pObjectFactory->Create(ObjectType::spaceship, mpServiceManager).lock();
+		std::shared_ptr<GameObject> spaceship = pObjectFactory->Create(ObjectType::spaceship).lock();
 		spaceship->SetPosition(300.0f, 500.0f);
 
 		mAsteroidsLeft = 22;
 		for (int i = 0; i < mAsteroidsLeft; i++)
 		{
-			pObjectFactory->Create(ObjectType::spacerock, mpServiceManager);
+			pObjectFactory->Create(ObjectType::spacerock);
 		}
 	}
 	else
 	{
-		pObjectFactory->Create(ObjectType::spaceship, mpServiceManager);
+		pObjectFactory->Create(ObjectType::spaceship);
 	}
 }
 

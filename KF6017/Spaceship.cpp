@@ -112,7 +112,7 @@ void Spaceship::Shoot()
 		return;
 	}
 
-	pObjectFactory->Create(ObjectType::bullet, mpServiceManager, true, mPosition, mRotationAngle, 1.5f);
+	pObjectFactory->Create(ObjectType::bullet, true, mPosition, mRotationAngle, 1.5f);
 
 	// Dispatch event
 	std::shared_ptr<EventManager> pEventManager = pServiceManagerLocked->GetEventManager().lock();
@@ -158,5 +158,5 @@ void Spaceship::Die()
 	if (!pObjectFactory)
 		return;
 
-	pObjectFactory->Create(ObjectType::explosion, mpServiceManager, true, mPosition, 0.f, 2.f);
+	pObjectFactory->Create(ObjectType::explosion, true, mPosition, 0.f, 2.f);
 }

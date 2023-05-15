@@ -36,7 +36,7 @@ ErrorType AsteroidsServiceManager::StartServices(bool fullScreen, HWND hwnd, HIN
 	}
 	mAllServices.push_back(mpSfxManager);
 
-	mpObjectFactory = std::make_shared<AsteroidsObjectFactory>();
+	mpObjectFactory = std::make_shared<AsteroidsObjectFactory>(GetSharedPtrFromThis());
 	if (!mpObjectFactory)
 	{
 		ErrorLogger::Writeln(L"Failed to create AsteroidsObjectFactory");
