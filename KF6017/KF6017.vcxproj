@@ -184,6 +184,8 @@
     <ClCompile Include="ServiceManager.cpp" />
     <ClCompile Include="SFXManager.cpp" />
     <ClCompile Include="Shapes.cpp" />
+    
+    <ClCompile Include="StringUtil.cpp" />
     <ClCompile Include="Sword.cpp" />
     <ClCompile Include="vector2D.cpp" />
     <ClCompile Include="Weapon.cpp" />
@@ -226,6 +228,7 @@
     <ClInclude Include="ServiceManager.h" />
     <ClInclude Include="SFXManager.h" />
     <ClInclude Include="Shapes.h" />
+    <ClInclude Include="StringUtil.h" />
     <ClInclude Include="Sword.h" />
     <ClInclude Include="vector2D.h" />
     <ClInclude Include="Weapon.h" />
