@@ -153,6 +153,9 @@
     <ClCompile Include="MousePointer.cpp">
       <Filter>Source Files\Engine\Services</Filter>
     </ClCompile>
+    <ClCompile Include="StringUtil.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Spaceship.h">
@@ -256,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="MousePointer.h">
       <Filter>Header Files\Engine\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtil.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
