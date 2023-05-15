@@ -38,6 +38,12 @@ void MovingGameObject::SetTimeToStop(float time)
 	mTimeToStop = time;
 }
 
+void MovingGameObject::RevertMove()
+{
+	// TODO: Expand this so that it only reverts move component in the direction of collided object.
+	mPosition -= mCurrentVelocity;
+}
+
 
 // PROTECTED
 

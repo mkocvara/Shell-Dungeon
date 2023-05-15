@@ -24,6 +24,8 @@ public:
 	std::shared_ptr<Weapon> GetEquippedWeapon() const;
 	bool IsAttackOnCooldown() const;
 
+	virtual void HandleCollision(const std::shared_ptr<GameObject> pOtherObject) override;
+
 protected:
 	Creature(const std::weak_ptr<ServiceManager> pServiceManager);
 

@@ -177,6 +177,15 @@
     <ClCompile Include="StringUtil.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTile.cpp">
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="CollidableMapTile.cpp">
+      <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RandUtil.h">
@@ -293,11 +302,20 @@
     <ClInclude Include="Club.h">
       <Filter>Header Files\Game\Items</Filter>
     </ClInclude>
-    <ClInclude Include="MeleeWeapon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="StringUtil.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeWeapon.h">
+      <Filter>Header Files\Game\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTile.h">
+      <Filter>Header Files\Game\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="CollidableMapTile.h">
+      <Filter>Header Files\Game\Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

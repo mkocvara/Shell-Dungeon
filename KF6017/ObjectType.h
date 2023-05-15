@@ -8,5 +8,7 @@ enum class ObjectType
 	unknown, 
 	knight,
 	orc,
-	attack
+	attack,
+	mapTile,
+	mapTileCollidable
 };

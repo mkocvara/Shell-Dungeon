@@ -14,6 +14,8 @@ public:
 	void SetTimeToFullSpeed(float time);
 	void SetTimeToStop(float time);
 
+	virtual void RevertMove();
+
 protected:
 	MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager);
 

@@ -30,5 +30,7 @@ void Enemy::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 			pAttack->AddHitEntity(pThis);
 		}
 	}
+
+	Super::HandleCollision(pOtherObject);
 }
 

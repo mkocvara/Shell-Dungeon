@@ -7,6 +7,7 @@
 #include "Knight.h"
 #include "Orc.h"
 #include "Attack.h"
+#include "CollidableMapTile.h"
 
 
 // PUBLIC
@@ -47,6 +48,17 @@ std::weak_ptr<GameObject> DungeonObjectFactory::Create(ObjectType type, bool ini
 	else if (type == ObjectType::attack)
 	{
 		std::shared_ptr<Attack> obj = std::make_shared<Attack>(mpServiceManager);
+		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
+		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
+	}
+	else if (type == ObjectType::mapTile)
+	{
+		std::shared_ptr<MapTile> obj = std::make_shared<MapTile>(mpServiceManager);
+		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
+	}
+	else if (type == ObjectType::mapTileCollidable)
+	{
+		std::shared_ptr<CollidableMapTile> obj = std::make_shared<CollidableMapTile>(mpServiceManager);
 		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
 		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
 	}
