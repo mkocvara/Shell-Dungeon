@@ -11,7 +11,8 @@
 
 // PUBLIC
 
-DungeonObjectFactory::DungeonObjectFactory() : Super()
+DungeonObjectFactory::DungeonObjectFactory(std::weak_ptr<ServiceManager> pServiceManager)
+	: Super(pServiceManager)
 {
 }
 
@@ -19,9 +20,9 @@ DungeonObjectFactory::~DungeonObjectFactory()
 {
 }
 
-std::weak_ptr<GameObject> DungeonObjectFactory::Create(ObjectType type, std::weak_ptr<ServiceManager> pServiceManager, bool initialise, Vector2D initPosition, float initAngle, float initScale)
+std::weak_ptr<GameObject> DungeonObjectFactory::Create(ObjectType type, bool initialise, Vector2D initPosition, float initAngle, float initScale)
 {
-	std::shared_ptr<ObjectManager> pObjectManager = pServiceManager.lock()->GetObjectManager().lock();
+	std::shared_ptr<ObjectManager> pObjectManager = mpServiceManager.lock()->GetObjectManager().lock();
 	if (!pObjectManager)
 	{
 		ErrorLogger::Writeln(L"DungeonObjectFactory::Create() - Failed to fetch object manager.");
@@ -33,19 +34,19 @@ std::weak_ptr<GameObject> DungeonObjectFactory::Create(ObjectType type, std::wea
 
 	if (type == ObjectType::knight)
 	{
-		std::shared_ptr<Knight> pObj = std::make_shared<Knight>(pServiceManager);
+		std::shared_ptr<Knight> pObj = std::make_shared<Knight>(mpServiceManager);
 		pAsGameObject = std::static_pointer_cast<GameObject>(pObj);
 		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(pObj);
 	} 
 	else if (type == ObjectType::orc)
 	{
-		std::shared_ptr<Orc> obj = std::make_shared<Orc>(pServiceManager);
+		std::shared_ptr<Orc> obj = std::make_shared<Orc>(mpServiceManager);
 		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
 		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
 	}
 	else if (type == ObjectType::attack)
 	{
-		std::shared_ptr<Attack> obj = std::make_shared<Attack>(pServiceManager);
+		std::shared_ptr<Attack> obj = std::make_shared<Attack>(mpServiceManager);
 		pAsGameObject = std::static_pointer_cast<GameObject>(obj);
 		pAsCollidableObject = std::static_pointer_cast<ICollidableObject>(obj);
 	}

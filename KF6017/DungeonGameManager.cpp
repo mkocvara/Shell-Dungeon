@@ -24,7 +24,7 @@ void DungeonGameManager::Update(double deltaTime)
 {
 	Super::Update(deltaTime);
 
-	mTimer += deltaTime;
+	mTimer += (float)deltaTime;
 }
 
 void DungeonGameManager::StartLevel(LevelId level)
@@ -42,7 +42,7 @@ void DungeonGameManager::StartLevel(LevelId level)
 	mTimer = 0.f;
 	mCurrentLevel = level;
 
-	const std::shared_ptr<GameObject> pKnight = pObjectFactory->Create(ObjectType::knight, mpServiceManager).lock();
+	const std::shared_ptr<GameObject> pKnight = pObjectFactory->Create(ObjectType::knight).lock();
 	const std::shared_ptr<Knight> pKnightAsKnight = std::static_pointer_cast<Knight>(pKnight);
 	mpPlayerKnight = pKnightAsKnight;
 
@@ -51,21 +51,21 @@ void DungeonGameManager::StartLevel(LevelId level)
 		pKnightAsKnight->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // May wish to implement a WeaponFactory when/if many more weapons are added.
 
 		std::shared_ptr<GameObject> pOrc;
-		pOrc = pObjectFactory->Create(ObjectType::orc, mpServiceManager).lock();
+		pOrc = pObjectFactory->Create(ObjectType::orc).lock();
 		pOrc->SetPosition(200.f, 200.f);
-		pOrc = pObjectFactory->Create(ObjectType::orc, mpServiceManager).lock();
+		pOrc = pObjectFactory->Create(ObjectType::orc).lock();
 		pOrc->SetPosition(500.f, 700.f);
-		pOrc = pObjectFactory->Create(ObjectType::orc, mpServiceManager).lock();
+		pOrc = pObjectFactory->Create(ObjectType::orc).lock();
 		pOrc->SetPosition(900.f, 800.f);
 	}
 	else if (level == 2)
 	{
-		std::shared_ptr<GameObject> knight = pObjectFactory->Create(ObjectType::knight, mpServiceManager).lock();
+		std::shared_ptr<GameObject> knight = pObjectFactory->Create(ObjectType::knight).lock();
 		knight->SetPosition(300.0f, 500.0f);
 	}
 	else
 	{
-		pObjectFactory->Create(ObjectType::knight, mpServiceManager);
+		pObjectFactory->Create(ObjectType::knight);
 	}
 }
 

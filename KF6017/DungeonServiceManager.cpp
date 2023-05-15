@@ -34,7 +34,7 @@ ErrorType DungeonServiceManager::StartServices(bool fullScreen, HWND hwnd, HINST
 	}
 	mAllServices.push_back(mpSfxManager);
 
-	mpObjectFactory = std::make_shared<DungeonObjectFactory>();
+	mpObjectFactory = std::make_shared<DungeonObjectFactory>(std::move(GetSharedPtrFromThis()));
 	if (!mpObjectFactory)
 	{
 		ErrorLogger::Writeln(L"Failed to create DungeonObjectFactory");

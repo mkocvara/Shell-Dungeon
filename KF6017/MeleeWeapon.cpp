@@ -28,7 +28,7 @@ void MeleeWeapon::Attack(const std::shared_ptr<GameObject> pAttacker, float atta
 	int height, width;
 	pDrawEngine->GetDimensions(GetAttackSprite(), height, width);
 
-	const std::shared_ptr<GameObject> pAttack = pObjectFactory->Create(ObjectType::attack, mpServiceManager, false).lock();
+	const std::shared_ptr<GameObject> pAttack = pObjectFactory->Create(ObjectType::attack, false).lock();
 	const std::shared_ptr<class Attack> pAsAttack = std::static_pointer_cast<class Attack>(pAttack);
 	Vector2D reachOffset;
 	reachOffset.setBearing(attackAngle, GetBaseAttackReach() - height/2); // position is in the centre of the image, so this means the far edge is as far as range demands

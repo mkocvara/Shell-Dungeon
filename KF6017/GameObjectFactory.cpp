@@ -3,8 +3,8 @@
 
 // PUBLIC
 
-GameObjectFactory::GameObjectFactory()
-	: Super()
+GameObjectFactory::GameObjectFactory(std::weak_ptr<ServiceManager> mpServiceManager)
+	: Super(), mpServiceManager(mpServiceManager)
 {
 }
 
