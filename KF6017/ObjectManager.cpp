@@ -77,15 +77,19 @@ void ObjectManager::CheckCollisions()
 			if (!pGO1 || !pGO2 || !pGO1->IsActive() || !pGO2->IsActive())
 				continue;
 
-			// Check that both objects are collidable.
-			if (!mObjectsCollidableMap[pGO1] || !mObjectsCollidableMap[pGO2])
-				continue;
-
 			std::shared_ptr<ICollidableObject> pCO1 = mObjectsCollidableMap[pGO1];
 			std::shared_ptr<ICollidableObject> pCO2 = mObjectsCollidableMap[pGO2];
-			
+
+			// Check that both objects are collidable.
+			if (!pCO1 || !pCO2)
+				continue;
+
 			std::shared_ptr<IShape2D> shape1 = pCO1->GetShape().lock();
 			std::shared_ptr<IShape2D> shape2 = pCO2->GetShape().lock();
+
+			// Check that both objects have shapes.
+			if (!shape1 || !shape2)
+				continue;
 
 			if (shape1->Intersects(*(shape2.get())))
 			{
