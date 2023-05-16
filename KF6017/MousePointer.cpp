@@ -19,7 +19,7 @@ MousePointer::~MousePointer()
 {
 }
 
-void MousePointer::Update(float deltaTime)
+void MousePointer::Update(double deltaTime)
 {
 	const std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
 	const std::shared_ptr<MyInputs> pInputs = pServiceManagerLocked->GetInputs().lock();
@@ -33,16 +33,16 @@ void MousePointer::Update(float deltaTime)
 
 	const Rectangle2D viewport = pDrawEngine->GetViewport();
 	
-	const int screenWidth = viewport.GetWidth();
-	const int screenHeight = viewport.GetHeight();
+	const int screenWidth = (int)viewport.GetWidth();
+	const int screenHeight = (int)viewport.GetHeight();
 
 	const int maxX = screenWidth / 2;
 	const int minX = -screenWidth / 2;
 	const int maxY = screenHeight / 2;
 	const int minY = -screenHeight / 2;
 
-	mScreenPosition.XValue = std::clamp((int)(mScreenPosition.XValue + pInputs->GetMouseDX() * mPointerSpeed), minX, maxX);
-	mScreenPosition.YValue = std::clamp((int)(mScreenPosition.YValue - pInputs->GetMouseDY() * mPointerSpeed), minY, maxY);
+	mScreenPosition.XValue = (float)std::clamp((int)(mScreenPosition.XValue + pInputs->GetMouseDX() * mPointerSpeed), minX, maxX);
+	mScreenPosition.YValue = (float)std::clamp((int)(mScreenPosition.YValue - pInputs->GetMouseDY() * mPointerSpeed), minY, maxY);
 
 	if (pInputs->IfMouseNewLeftDown())
 		Click();
