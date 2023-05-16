@@ -84,17 +84,17 @@ void ObjectManager::CheckCollisions()
 {
 	std::map<std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>>::iterator it1;
 	std::map<std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>>::iterator it2;
-	for (it1 = mObjectsCollidableMap.begin(); it1 != mObjectsCollidableMap.end(); it1++)
+	for (it1 = mObjectsCollidableMap.begin(); it1 != mObjectsCollidableMap.end(); ++it1)
 	{
-		for (it2 = std::next(it1); it2 != mObjectsCollidableMap.end(); it2++)
+		for (it2 = std::next(it1); it2 != mObjectsCollidableMap.end(); ++it2)
 		{
-			std::pair<const std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>> pair1 = *it1;
-			std::pair<const std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>> pair2 = *it2;
+			const std::pair<const std::shared_ptr<GameObject>&, const std::shared_ptr<ICollidableObject>&> pair1 = *it1;
+			const std::pair<const std::shared_ptr<GameObject>&, const std::shared_ptr<ICollidableObject>&> pair2 = *it2;
 
-			std::shared_ptr<GameObject> pGO1 = pair1.first;
-			std::shared_ptr<GameObject> pGO2 = pair2.first;
-			std::shared_ptr<ICollidableObject> pCO1 = pair1.second;
-			std::shared_ptr<ICollidableObject> pCO2 = pair2.second;
+			const std::shared_ptr<GameObject>& pGO1 = pair1.first;
+			const std::shared_ptr<GameObject>& pGO2 = pair2.first;
+			const std::shared_ptr<ICollidableObject>& pCO1 = pair1.second;
+			const std::shared_ptr<ICollidableObject>& pCO2 = pair2.second;
 
 			// Check that both objects exist, are collidable, and are active
 			if (!pGO1 || !pGO2 
