@@ -96,10 +96,11 @@ void ObjectManager::CheckCollisions()
 			std::shared_ptr<ICollidableObject> pCO1 = pair1.second;
 			std::shared_ptr<ICollidableObject> pCO2 = pair2.second;
 
-			// Check that both objects exist, are collidable, and are active
+			// Check that both objects exist, are collidable, and are active; also don't check map against itself
 			if (!pGO1 || !pGO2 
 				|| !pCO1 || !pCO2
 				|| !pGO1->IsActive() || !pGO2->IsActive() 
+				|| (pGO1->GetObjectType() == ObjectType::mapTileCollidable && pGO2->GetObjectType() == ObjectType::mapTileCollidable)
 				)
 				continue;
 
