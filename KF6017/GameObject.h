@@ -26,6 +26,8 @@ public:
 	Vector2D GetPosition() const;
 	void SetPosition(const Vector2D position);
 	void SetPosition(const float x, const float y);
+	virtual void SetRenderSprite(PictureIndex spriteIndex);
+	virtual PictureIndex SetRenderSprite(const wchar_t* imagePath);
 
 protected:
 	GameObject(std::weak_ptr<ServiceManager> pServiceManager); // make it essentially abstract
@@ -36,7 +38,6 @@ protected:
 	std::weak_ptr<ServiceManager> mpServiceManager;
 
 	PictureIndex mRenderSprite = -1;
-	virtual void SetRenderSprite(const wchar_t* imagePath);
 	virtual ErrorType Render();
 
 	ObjectType mObjectType;
