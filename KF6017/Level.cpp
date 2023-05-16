@@ -4,11 +4,16 @@
 #include <utility>
 #include "StringUtil.h"
 #include "ErrorLogger.h"
+#include <algorithm>
 
 #include "ServiceManager.h"
 #include "GameObjectFactory.h"
 #include "mydrawengine.h"
 #include "GameObject.h"
+
+#define NOMINMAX
+#undef max
+#undef min
 
 
 namespace {
@@ -31,12 +36,20 @@ namespace {
 	const std::wstring fileCombinedWallAdd = L"_combined";
 
 	const std::wstring tileFileExtension = L".png";
+
+	struct EntityInfo {
+		const char symbol;
+		const ObjectType objectType;
+	};
+
+	const EntityInfo knightEntity = { 'K', ObjectType::knight };
+	const EntityInfo orcEntity = { 'O', ObjectType::orc };
 };
 
 
 // PUBLIC
 
-Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumber)
+Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, const int levelNumber, const std::shared_ptr<GameObject> pKnight)
 	: mpServiceManager(pServiceManager)
 {
 	const std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
@@ -283,7 +296,36 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 		mMapTiles.push_back(tilesRow);
 	}
 
-	// TODO Load and process ENTITIES part of a level file
+
+	const float mapWidth = (float)mTileSize * numCols;
+	const float mapHeight = (float)mTileSize * numRows;
+	const std::wstring errorMessageEntities = (L"DungeonGameManager(); Error while loading entities for level " + std::to_wstring(levelNumber) + L", file not formatted correctly.");
+	for (int i = 0; i < numRows; i++)
+	{
+		std::getline(levelFile, line);
+		if (levelFile.fail() || levelFile.eof())
+		{
+			ErrorLogger::Writeln(errorMessageEntities.c_str());
+			return;
+		}
+
+		int lineSize = std::min((int)line.size(), numCols);
+		for (int j = 0; j < lineSize; j++)
+		{
+			if (line[j] == knightEntity.symbol)
+			{
+				Vector2D startPos = Vector2D((float)(mTileSize * j) - mapWidth / 2, (float)(-mTileSize * i) + mapHeight / 2);
+				pKnight->SetPosition(startPos);
+			}
+			else if (line[j] == orcEntity.symbol)
+			{
+				Vector2D startPos = Vector2D((float)(mTileSize * j) - mapWidth / 2, (float)(-mTileSize * i) + mapHeight / 2);
+				pObjectFactory->Create(orcEntity.objectType, true, startPos);
+			}
+		}
+	}
+
+	levelFile.close();
 }
 
 Level::~Level()

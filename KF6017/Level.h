@@ -12,7 +12,8 @@ class Level
 	typedef int PictureIndex;
 	
 public:
-	Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumber);
+	// Takes the Knight as a parameter in order to initialise its position based on the level layout; does not keep a reference.
+	Level(const std::weak_ptr<ServiceManager> pServiceManager, const int levelNumber, const std::shared_ptr<GameObject> pKnight);
 	~Level();
 
 protected:

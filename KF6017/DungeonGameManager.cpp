@@ -46,30 +46,10 @@ void DungeonGameManager::StartLevel(LevelId level)
 
 	const std::shared_ptr<GameObject> pKnight = pObjectFactory->Create(ObjectType::knight).lock();
 	const std::shared_ptr<Knight> pKnightAsKnight = std::static_pointer_cast<Knight>(pKnight);
+	pKnightAsKnight->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // May wish to implement a WeaponFactory when/if many more weapons are added.
 	mpPlayerKnight = pKnightAsKnight;
 
-	mActiveLevel = std::make_shared<Level>(mpServiceManager, level);
-
-
-	// TEMPORARY
-	if (level == 1)
-	{
-		pKnightAsKnight->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // May wish to implement a WeaponFactory when/if many more weapons are added.
-
-		std::shared_ptr<GameObject> pOrc;
-		pOrc = pObjectFactory->Create(ObjectType::orc).lock();
-		pOrc->SetPosition(200.f, 200.f);
-		pOrc = pObjectFactory->Create(ObjectType::orc).lock();
-		pOrc->SetPosition(500.f, 700.f);
-		pOrc = pObjectFactory->Create(ObjectType::orc).lock();
-		pOrc->SetPosition(900.f, 800.f);
-	}
-	else if (level == 2)
-	{
-		std::shared_ptr<GameObject> knight = pObjectFactory->Create(ObjectType::knight).lock();
-		knight->SetPosition(300.0f, 500.0f);
-	}
-	// ----------
+	mActiveLevel = std::make_shared<Level>(mpServiceManager, level, pKnightAsKnight);
 }
 
 void DungeonGameManager::RestartLevel()
