@@ -21,7 +21,7 @@ public:
 
 protected:
 	std::weak_ptr<ServiceManager> mpServiceManager;
-	LevelId mCurrentLevel = -1;
+	LevelId mActiveLevelId = -1;
 
 	virtual void Render() = 0;
 };
