@@ -112,6 +112,7 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 		{
 			std::shared_ptr<GameObject> pTile;
 			PictureIndex tileSprite;
+			std::wstring tilePath = tileWall.path;
 
 			if (row[j] == tileEmpty.symbol)
 			{
@@ -119,9 +120,7 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 				continue;
 			}
 			else if (row[j] == tileWall.symbol)
-			{				
-				std::wstring tilePath = tileWall.path;
-
+			{	
 				const AdjacencyFlags adjacentFloors = CheckSymbolAdjacent(i, j, tileFloor.symbol);
 				const AdjacencyFlags adjacentWalls = CheckSymbolAdjacent(i, j, tileWall.symbol);
 
@@ -238,13 +237,12 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 				tilePath += tileFileExtension;
 
 				pTile = pObjectFactory->Create(ObjectType::mapTileCollidable, false).lock();
-				tileSprite = pTile->SetRenderSprite(tilePath.c_str());
 			}
 			else if (row[j] == tileFloor.symbol)
 			{
 				pTile = pObjectFactory->Create(ObjectType::mapTile, false).lock();
 
-				std::wstring tilePath = tileFloor.path;
+				tilePath = tileFloor.path;
 
 				const AdjacencyFlags adjacentWalls = CheckSymbolAdjacent(i, j, tileWall.symbol);
 
@@ -259,7 +257,6 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 					tilePath += fileRightAdd;
 
 				tilePath += tileFileExtension;
-				tileSprite = pTile->SetRenderSprite(tilePath.c_str());
 			}
 			else
 			{
@@ -269,6 +266,8 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 			}
 
 			const std::shared_ptr<MyDrawEngine> pDrawEngine = pServiceManagerLocked->GetDrawEngine().lock();
+			tileSprite = pDrawEngine->LoadPicture(tilePath.c_str());
+
 			int tileHeight, tileWidth;
 			pDrawEngine->GetDimensions(tileSprite, tileHeight, tileWidth);
 			const float tileScale = 1.f / ((float)tileHeight / (float)mTileSize);
@@ -277,6 +276,7 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 			const float mapHeight = (float)mTileSize * numRows;
 
 			pTile->Initialise(Vector2D((float)(mTileSize * j) - mapWidth/2, (float)(-mTileSize * i) + mapHeight / 2), 0.f, tileScale);
+			pTile->SetRenderSprite(tileSprite);
 			tilesRow.push_back(pTile);
 		}
 
