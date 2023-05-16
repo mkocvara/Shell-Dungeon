@@ -27,7 +27,7 @@ void CollidableMapTile::HandleCollision(std::shared_ptr<GameObject> pOtherObject
 	// No need to do anything here
 }
 
-void CollidableMapTile::SetRenderSprite(const wchar_t* imagePath)
+PictureIndex CollidableMapTile::SetRenderSprite(const wchar_t* imagePath)
 {
 	Super::SetRenderSprite(imagePath);
 	const std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
@@ -36,4 +36,6 @@ void CollidableMapTile::SetRenderSprite(const wchar_t* imagePath)
 	mpBoundingShape = std::make_shared<Rectangle2D>();
 	mpBoundingShape->PlaceAt(mPosition, (float)spriteHeight * mRenderScale, (float)spriteWidth * mRenderScale);
 	// Note: Shape doesn't need to be placed on Update, as a map tile does not move.
+	
+	return mRenderSprite;
 }

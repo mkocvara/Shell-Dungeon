@@ -1,5 +1,7 @@
 #include "DungeonGameManager.h"
 #include "ErrorLogger.h"
+#include "Level.h"
+
 #include "ServiceManager.h"
 #include "mydrawengine.h"
 #include "GameObjectFactory.h"
@@ -40,12 +42,16 @@ void DungeonGameManager::StartLevel(LevelId level)
 
 	mGameState = GameState::alive;
 	mTimer = 0.f;
-	mCurrentLevel = level;
+	mActiveLevelId = level;
 
 	const std::shared_ptr<GameObject> pKnight = pObjectFactory->Create(ObjectType::knight).lock();
 	const std::shared_ptr<Knight> pKnightAsKnight = std::static_pointer_cast<Knight>(pKnight);
 	mpPlayerKnight = pKnightAsKnight;
 
+	mActiveLevel = std::make_shared<Level>(mpServiceManager, level);
+
+
+	// TEMPORARY
 	if (level == 1)
 	{
 		pKnightAsKnight->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // May wish to implement a WeaponFactory when/if many more weapons are added.
@@ -63,20 +69,13 @@ void DungeonGameManager::StartLevel(LevelId level)
 		std::shared_ptr<GameObject> knight = pObjectFactory->Create(ObjectType::knight).lock();
 		knight->SetPosition(300.0f, 500.0f);
 	}
-	else
-	{
-		pObjectFactory->Create(ObjectType::knight);
-	}
+	// ----------
 }
 
 void DungeonGameManager::RestartLevel()
 {
-	std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
-	std::shared_ptr<ObjectManager> pObjectManager = pServiceManagerLocked->GetObjectManager().lock();
-
-	pObjectManager->Clear();
-
-	StartLevel(mCurrentLevel);
+	EndLevel();
+	StartLevel(mActiveLevelId);
 }
 
 void DungeonGameManager::EndLevel()
@@ -84,15 +83,22 @@ void DungeonGameManager::EndLevel()
 	std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
 	std::shared_ptr<ObjectManager> pObjectManager = pServiceManagerLocked->GetObjectManager().lock();
 
+	mActiveLevel.reset();
 	pObjectManager->Clear();
 }
 
 void DungeonGameManager::HandleEvent(const Event& rEvent)
 {
-	/*if (rEvent.type == EventType::asteroidDestroyed)
+	// TEMPORARY
+	/*if (rEvent.type == EventType::mouseClick)
 	{
-		mAsteroidsLeft--;
+		std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
+		std::shared_ptr<GameObjectFactory> pObjectFactory = pServiceManagerLocked->GetObjectFactory().lock();
+
+		std::shared_ptr<GameObject> tile = pObjectFactory->Create(ObjectType::mapTileCollidable, true, rEvent.location).lock();
+		tile->SetRenderSprite(L"Assets/Environment/Floor/floor.png");
 	}*/
+	// ---------
 }
 
 Vector2D DungeonGameManager::GetPlayerLocation() const
@@ -120,7 +126,7 @@ void DungeonGameManager::Render()
 	}
 
 	ErrorType err = SUCCESS;
-	std::wstring levelText = L"Level " + std::to_wstring(mCurrentLevel);
+	std::wstring levelText = L"Level " + std::to_wstring(mActiveLevelId);
 	std::wstring timerText = L"Time: " + std::to_wstring((int)mTimer); // truncates the time and removes decimals
 
 	if(FAILED(pDrawEngine->WriteText(150, 150, levelText.c_str(), MyDrawEngine::GREEN)))

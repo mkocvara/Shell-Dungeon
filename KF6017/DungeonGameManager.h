@@ -4,6 +4,7 @@
 
 class Knight;
 class Rectangle2D;
+class Level;
 
 enum class GameState {
 	alive,
@@ -38,6 +39,7 @@ private:
 	GameState mGameState = GameState::dead;
 	Vector2D mLastClickLocation;
 
+	std::shared_ptr<Level> mActiveLevel;
 	std::weak_ptr<Knight> mpPlayerKnight;
 };
 

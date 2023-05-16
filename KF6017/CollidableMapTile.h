@@ -15,7 +15,7 @@ public:
 
 	virtual std::weak_ptr<IShape2D> GetShape() const override;
 	virtual void HandleCollision(std::shared_ptr<GameObject> pOtherObject) override;
-	virtual void SetRenderSprite(const wchar_t* imagePath) override;
+	virtual PictureIndex SetRenderSprite(const wchar_t* imagePath) override;
 
 private:
 	std::shared_ptr<Rectangle2D> mpBoundingShape;
