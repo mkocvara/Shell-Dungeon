@@ -14,7 +14,7 @@ public:
 	void SetTimeToFullSpeed(float time);
 	void SetTimeToStop(float time);
 
-	virtual void RevertMove();
+	Vector2D GetVelocity();
 
 protected:
 	MovingGameObject(std::weak_ptr<ServiceManager> pServiceManager);
@@ -23,6 +23,7 @@ protected:
 	Vector2D mMoveDirection;
 
 	virtual void Move(double deltaTime);
+	void SetVelocity(const Vector2D& newVelocity);
 
 private:
 	// In units per second
