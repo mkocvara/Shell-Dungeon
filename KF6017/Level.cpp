@@ -39,8 +39,6 @@ namespace {
 Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumber)
 	: mpServiceManager(pServiceManager)
 {
-	levelNumber = 5;
-
 	const std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
 
 	std::ifstream levelFile;
