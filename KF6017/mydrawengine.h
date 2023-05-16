@@ -40,15 +40,15 @@ typedef int FontIndex;
 
 
 // Class to handle 2D drawing on screen
-class MyDrawEngine 
+class MyDrawEngine
 {
 
 private:
 
-   // Defines the vertex format used in Direct3D
+	// Defines the vertex format used in Direct3D
 	struct MYVERTEX
 	{
-		FLOAT x,y,z,rhw;
+		FLOAT x, y, z, rhw;
 		DWORD colour;
 	};
 
@@ -60,9 +60,9 @@ private:
 		LPDIRECT3DTEXTURE9  mLpdTheTexture;	// The surface that MyPicture encapsulates
 		std::wstring mSourceFileName;      // The file name of the loaded image
 		Vector2D mCentre;                  // Cordinates of the "centre" of the image
-                                          // by default this is the centre of the square file
-                                          // but it can be adjusted so that objects "rotate" around
-                                          // some other centre
+										  // by default this is the centre of the square file
+										  // but it can be adjusted so that objects "rotate" around
+										  // some other centre
 		int mWidth;                        // Width of the image in pixels
 		int mHeight;                       // Height of the image in pixels
 
@@ -143,20 +143,20 @@ public:
 	// Some standard colours.
 	typedef unsigned int Colour;
 	static const Colour BLACK = 0;
-	static const Colour RED = D3DCOLOR_ARGB(255,255,0,0);
-	static const Colour GREEN = D3DCOLOR_ARGB(255,0,255,0);
-	static const Colour BLUE = D3DCOLOR_ARGB(255,0,0,255);
-	static const Colour DARKRED = D3DCOLOR_ARGB(255,128,0,0);
-	static const Colour DARKGREEN = D3DCOLOR_ARGB(255,0,128,0);
-	static const Colour DARKBLUE = D3DCOLOR_ARGB(255,0,0,128);
-	static const Colour LIGHTRED = D3DCOLOR_ARGB(255,255,128,128);
-	static const Colour LIGHTGREEN = D3DCOLOR_ARGB(255,128,255,128);
-	static const Colour LIGHTBLUE = D3DCOLOR_ARGB(255,128,128,255);
-	static const Colour WHITE = D3DCOLOR_ARGB(255,255,255,255);
-	static const Colour YELLOW = D3DCOLOR_ARGB(255,255,255,0);
-	static const Colour CYAN = D3DCOLOR_ARGB(255,0,255,255);
-	static const Colour PURPLE = D3DCOLOR_ARGB(255,255,0,255);
-	static const Colour GREY = D3DCOLOR_ARGB(255,128,128,128);
+	static const Colour RED = D3DCOLOR_ARGB(255, 255, 0, 0);
+	static const Colour GREEN = D3DCOLOR_ARGB(255, 0, 255, 0);
+	static const Colour BLUE = D3DCOLOR_ARGB(255, 0, 0, 255);
+	static const Colour DARKRED = D3DCOLOR_ARGB(255, 128, 0, 0);
+	static const Colour DARKGREEN = D3DCOLOR_ARGB(255, 0, 128, 0);
+	static const Colour DARKBLUE = D3DCOLOR_ARGB(255, 0, 0, 128);
+	static const Colour LIGHTRED = D3DCOLOR_ARGB(255, 255, 128, 128);
+	static const Colour LIGHTGREEN = D3DCOLOR_ARGB(255, 128, 255, 128);
+	static const Colour LIGHTBLUE = D3DCOLOR_ARGB(255, 128, 128, 255);
+	static const Colour WHITE = D3DCOLOR_ARGB(255, 255, 255, 255);
+	static const Colour YELLOW = D3DCOLOR_ARGB(255, 255, 255, 0);
+	static const Colour CYAN = D3DCOLOR_ARGB(255, 0, 255, 255);
+	static const Colour PURPLE = D3DCOLOR_ARGB(255, 255, 0, 255);
+	static const Colour GREY = D3DCOLOR_ARGB(255, 128, 128, 128);
 
 	// Public methods ***************************************
 
@@ -210,6 +210,10 @@ public:
 	//  Once this has been called, the supplied PictureIndex will no longer
 	//  be usable. If it is stored in a variable, set it to zero.
 	void ReleasePicture(PictureIndex pic);
+
+	// Postcondition:
+	//  A kraken has been released.
+	void ReleaseKraken();
 
 	// Postcondition:
 	//	If FontName is a registered font, A new font will be loaded, and the 
@@ -298,7 +302,7 @@ public:
 	//					transparency - the transparency of the image. 0.0 is opaque. 1.0 is
 	//						fully transparent. Behaviour for transparency values greater
 	//						than 1.0 or less than 0.0 is undefined.
-	ErrorType DrawAt(Vector2D position, PictureIndex pic, float scale=1.0, float angle=0, float transparency=0);
+	ErrorType DrawAt(Vector2D position, PictureIndex pic, float scale = 1.0, float angle = 0, float transparency = 0);
 
 	// Precondition:	A window for the application has been created
 	//					Direct3D has not already been initialised.
@@ -334,7 +338,7 @@ public:
 	//					angle - an angle to tilt the rectangle, in radians clockwise
 	//							rotation occurs around the centre of the rectangle.
 	// Returns			SUCCESS if fill successful. FAILURE otherwise
-	ErrorType FillRect( Rectangle2D destinationRect, unsigned int colour, float angle=0);
+	ErrorType FillRect(Rectangle2D destinationRect, unsigned int colour, float angle = 0);
 
 	// Postcondition	A rectangle in the back buffer will be filled with the specified
 	//					colour. (If partially on-screen). The rectangle will be partially
@@ -351,7 +355,7 @@ public:
 	//					angle - an angle to tilt the rectangle, in radians clockwise
 	//							rotation occurs around the centre of the rectangle.
 	// Returns			SUCCESS if fill successful. FAILURE otherwise
-	ErrorType BlendRect( Rectangle2D destinationRect, unsigned int colour, float transparency, float angle=0);
+	ErrorType BlendRect(Rectangle2D destinationRect, unsigned int colour, float transparency, float angle = 0);
 
 	// Postcondition	A point of the specified colour has been
 	//					plotted at the location specified on on the back buffer.
@@ -368,14 +372,17 @@ public:
 	// Postcondition	A line between start and end
 	//					has been plotted on the back buffer.
 	// Returns			SUCCESS
-	ErrorType DrawLine(Vector2D start, Vector2D end,  unsigned int colour);
-
+	ErrorType DrawLine(Vector2D start, Vector2D end, unsigned int colour);
 
 	// Postcondition	A circle centred on centre with the radius "radius" has been
-	//					filled on the screen with the specified colour
-	//					has been plotted on the back buffer.
+	//					filled on the back buffer with the specified colour
 	// Returns			SUCCESS
 	ErrorType FillCircle(Vector2D centre, float radius, unsigned int colour);
+
+	// Postcondition	A circle has been
+	//					filled on the back buffer with the specified colour
+	// Returns			SUCCESS
+	ErrorType FillCircle(Circle2D circle, unsigned int colour);
 
 	// Postcondition	The back buffer is cleared (all black)
 	// Returns			SUCCESS if successful FAILURE otherwise.
@@ -415,8 +422,8 @@ public:
 	// SUCCESS otherwise
 	// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
 	//    but will not scale
-	ErrorType WriteText(int x, int y, const wchar_t text[], int colour, FontIndex fontIndex =0);
-	ErrorType WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex =0);
+	ErrorType WriteText(int x, int y, const wchar_t text[], int colour, FontIndex fontIndex = 0);
+	ErrorType WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex = 0);
 
 
 	// These methods writes a  number to the screen at the specified coordinates.
@@ -437,10 +444,10 @@ public:
 	// SUCCESS otherwise
 	// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
 	//     but will not scale
-	ErrorType WriteInt(int x, int y, int num, int colour, FontIndex fontIndex=0 );
-	ErrorType WriteDouble(int x, int y, double num, int colour, FontIndex fontIndex=0 );
-	ErrorType WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex=0 );
-	ErrorType WriteDouble(Vector2D position, double num, int colour, FontIndex fontIndex=0 );
+	ErrorType WriteInt(int x, int y, int num, int colour, FontIndex fontIndex = 0);
+	ErrorType WriteDouble(int x, int y, double num, int colour, FontIndex fontIndex = 0);
+	ErrorType WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex = 0);
+	ErrorType WriteDouble(Vector2D position, double num, int colour, FontIndex fontIndex = 0);
 
 	// Returns a string describing the directDraw error for most HRESULTs sent to it
 	//static const char* ErrorString(HRESULT err);
@@ -478,6 +485,3 @@ public:
 };	// End of class definition
 
 // **************************************************************
-
-
-

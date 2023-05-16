@@ -725,7 +725,32 @@ void MyDrawEngine::ReleasePicture(PictureIndex pic)
 
 }		// ReleasePicture
 
-
+void MyDrawEngine::ReleaseKraken()
+{
+	static Vector2D b = Vector2D(1300, -300);
+	FillCircle(b, 90, DARKRED);
+	FillCircle(b + Vector2D(-50, 5), 70, DARKRED);
+	FillCircle(b + Vector2D(-80, 10), 55, DARKRED);
+	FillCircle(b + Vector2D(0, 40), 20, BLACK);
+	b += Vector2D(-5, 1);
+	static int c = 0;
+	c = c + 1;
+	srand(c / 4);
+	for (int i = 0; i < 3; i++)
+	{
+		float lip = (rand() % 200 - 100) / 10.0f;
+		float rip = (rand() % 250) / 100.0f;
+		if (lip > 0) rip = -rip;
+		Vector2D d = b + Vector2D(-100.0f, 0 - i * 15.0f);
+		for (int f = 0; f < 15; f++)
+		{
+			d.XValue -= 15;
+			d.YValue += lip;
+			lip = lip + rip;
+			FillCircle(d + Vector2D(0, 30), 20.0f - f / 2, DARKRED);
+		}
+	}
+}
 
 // **************************************************************
 // Writing text and numbers
@@ -1038,6 +1063,11 @@ ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int co
 // ******************************************************************
 
 // Fill a circle
+ErrorType MyDrawEngine::FillCircle(Circle2D circle, unsigned int colour)
+{
+	return FillCircle(circle.GetCentre(), circle.GetRadius(), colour);
+}
+
 ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int colour)
 {
 	if (mCameraActive)
