@@ -39,6 +39,8 @@ namespace {
 Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumber)
 	: mpServiceManager(pServiceManager)
 {
+	levelNumber = 5;
+
 	const std::shared_ptr<ServiceManager> pServiceManagerLocked = mpServiceManager.lock();
 
 	std::ifstream levelFile;
@@ -49,14 +51,20 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, int levelNumbe
 	const std::wstring errorMessage = (L"DungeonGameManager(); Failed to load level " + std::to_wstring(levelNumber) + L", file not formatted correctly.");
 
 
-	std::getline(levelFile, line);
-	if (levelFile.fail() || levelFile.eof())
+	while (std::getline(levelFile, line))
 	{
-		ErrorLogger::Writeln(errorMessage.c_str());
-		return;
+		if (levelFile.fail() || levelFile.eof())
+		{
+			ErrorLogger::Writeln(errorMessage.c_str());
+			return;
+		}
+
+		StringUtil::trim(line);
+
+		if (!(line[0] == '#' || line.empty())) // allow comments at the start of level files
+			break;
 	}
 
-	StringUtil::trim(line);
 	if (line != "MAP")
 	{
 		ErrorLogger::Writeln(errorMessage.c_str());
