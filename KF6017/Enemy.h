@@ -12,5 +12,7 @@ public:
 
 protected:
 	Enemy(const std::weak_ptr<ServiceManager> pServiceManager);
+
+	virtual void Die() override;
 };
 

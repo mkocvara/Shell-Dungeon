@@ -8,6 +8,7 @@
 #include "mydrawengine.h"
 #include "myinputs.h"
 #include "MousePointer.h"
+#include "EventManager.h"
 
 #include "Weapon.h"
 #include "Attack.h"
@@ -114,6 +115,10 @@ void Knight::Attack()
 void Knight::Die()
 {
 	SetActive(false);
+
+	std::shared_ptr<EventManager> pEventManager = mpServiceManager.lock()->GetEventManager().lock();
+	Event e(EventType::playerDied, mPosition, this);
+	pEventManager->DispatchEvent(e);
 }
 
 

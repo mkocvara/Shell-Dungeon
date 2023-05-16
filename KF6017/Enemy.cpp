@@ -1,14 +1,25 @@
 #include "Enemy.h"
-
 #include "ObjectType.h"
 #include "RenderLayers.h"
 #include "Attack.h"
+
+#include "ServiceManager.h"
+#include "EventManager.h"
 
 
 Enemy::Enemy(const std::weak_ptr<ServiceManager> pServiceManager)
 	: Super(pServiceManager)
 {
 	SetZIndex(RenderLayer::EnemyLayer);
+}
+
+void Enemy::Die()
+{
+	Super::Die();
+
+	std::shared_ptr<EventManager> pEventManager = mpServiceManager.lock()->GetEventManager().lock();
+	Event e(EventType::enemyKilled, mPosition, this);
+	pEventManager->DispatchEvent(e);
 }
 
 

@@ -16,6 +16,8 @@ public:
 	Level(const std::weak_ptr<ServiceManager> pServiceManager, const int levelNumber, const std::shared_ptr<GameObject> pKnight);
 	~Level();
 
+	int GetTotalEnemies() const;
+
 protected:
 	struct AdjacencyFlags {
 		bool top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight;
@@ -29,5 +31,7 @@ private:
 	std::weak_ptr<ServiceManager> mpServiceManager;
 
 	const int mTileSize = 128;
+
+	int mNumEnemies = 0;
 };
 

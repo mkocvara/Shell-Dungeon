@@ -7,8 +7,9 @@ class Rectangle2D;
 class Level;
 
 enum class GameState {
-	alive,
-	dead
+	playerAlive,
+	playerDead,
+	levelCleared
 };
 
 class DungeonGameManager final : public GameManager 
@@ -36,8 +37,10 @@ protected:
 
 private:
 	float mTimer = 0.f;
-	GameState mGameState = GameState::dead;
+	GameState mGameState = GameState::playerDead;
 	Vector2D mLastClickLocation;
+
+	int mEnemiesRemaining = 0;
 
 	std::shared_ptr<Level> mActiveLevel;
 	std::weak_ptr<Knight> mpPlayerKnight;

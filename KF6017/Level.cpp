@@ -303,7 +303,7 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, const int leve
 	for (int i = 0; i < numRows; i++)
 	{
 		std::getline(levelFile, line);
-		if (levelFile.fail() || levelFile.eof())
+		if (levelFile.fail())
 		{
 			ErrorLogger::Writeln(errorMessageEntities.c_str());
 			return;
@@ -321,6 +321,8 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, const int leve
 			{
 				Vector2D startPos = Vector2D((float)(mTileSize * j) - mapWidth / 2, (float)(-mTileSize * i) + mapHeight / 2);
 				pObjectFactory->Create(orcEntity.objectType, true, startPos);
+
+				mNumEnemies++;
 			}
 		}
 	}
@@ -339,6 +341,11 @@ Level::~Level()
 				pTileLocked->Remove();
 		}
 	}
+}
+
+int Level::GetTotalEnemies() const
+{
+	return mNumEnemies;
 }
 
 
