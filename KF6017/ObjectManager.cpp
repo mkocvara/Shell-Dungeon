@@ -41,7 +41,15 @@ ErrorType ObjectManager::UpdateAll(double deltaTime)
 	}
 
 	CheckCollisions();
-	RemoveDeletedObjects(); // TODO Perhaps run this only every so often instead?
+
+	// only run object removal every 5 seconds
+	static double removeDelay = 0.0;
+	removeDelay += deltaTime;
+	if (removeDelay > 5.0) 
+	{
+		RemoveDeletedObjects();
+		removeDelay -= 5.0;
+	}
 
 	return SUCCESS;
 }
