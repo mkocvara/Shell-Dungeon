@@ -1,12 +1,14 @@
 #include "Enemy.h"
 
 #include "ObjectType.h"
+#include "RenderLayers.h"
 #include "Attack.h"
 
 
 Enemy::Enemy(const std::weak_ptr<ServiceManager> pServiceManager)
 	: Super(pServiceManager)
 {
+	SetZIndex(RenderLayer::EnemyLayer);
 }
 
 

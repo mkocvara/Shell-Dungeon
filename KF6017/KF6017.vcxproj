@@ -229,6 +229,7 @@
     <ClInclude Include="ObjectType.h" />
     <ClInclude Include="Orc.h" />
     <ClInclude Include="RandUtil.h" />
+    <ClInclude Include="RenderLayers.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="ServiceManager.h" />
     <ClInclude Include="SFXManager.h" />

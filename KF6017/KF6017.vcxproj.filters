@@ -317,5 +317,8 @@
     <ClInclude Include="CollidableMapTile.h">
       <Filter>Header Files\Game\Game Objects</Filter>
     </ClInclude>
+    <ClInclude Include="RenderLayers.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

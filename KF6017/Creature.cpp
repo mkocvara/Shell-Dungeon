@@ -77,7 +77,7 @@ void Creature::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 {
 	if (pOtherObject->GetObjectType() == ObjectType::mapTileCollidable)
 	{
-		RevertMove(); // TODO: Test if this is reliable - in the current state, it will only work if it is called after Move(); 
+		//RevertMove(); // TODO: Test if this is reliable - in the current state, it will only work if it is called after Move(); 
 							//	Does not work well - MUST BE REWORKED LATER (finish levels first)
 	}
 }

@@ -1,6 +1,7 @@
 #include "Knight.h"
 #include "Shapes.h"
 #include "errorlogger.h"
+#include "RenderLayers.h"
 
 #include "ServiceManager.h"
 #include "GameObjectFactory.h"
@@ -18,6 +19,7 @@ Knight::Knight(const std::weak_ptr<ServiceManager> pServiceManager)
 	: Super(pServiceManager)
 {
 	mObjectType = ObjectType::knight;
+	SetZIndex(RenderLayer::PlayerLayer);
 }
 
 Knight::~Knight()
