@@ -1,6 +1,7 @@
 #include "Creature.h"
 #include "winerror.h"
 #include <algorithm>
+#include <cmath>
 
 #define NOMINMAX
 
@@ -77,8 +78,7 @@ void Creature::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 {
 	if (pOtherObject->GetObjectType() == ObjectType::mapTileCollidable)
 	{
-		//RevertMove(); // TODO: Test if this is reliable - in the current state, it will only work if it is called after Move(); 
-							//	Does not work well - MUST BE REWORKED LATER (finish levels first)
+		mCollidedObstacles.push_back(pOtherObject);
 	}
 }
 
@@ -118,6 +118,43 @@ void Creature::Attack()
 void Creature::Die()
 {
 	Remove();
+}
+
+void Creature::Move(double deltaTime)
+{
+	// Remove movement in the direction of each collided object.
+	for (const std::weak_ptr<GameObject>& collidedObject : mCollidedObstacles)
+	{
+		const std::shared_ptr<GameObject> collidedObjectLocked = collidedObject.lock();
+		const Vector2D colObjPosition = collidedObjectLocked->GetPosition();
+		const Vector2D colObjToThis = mPosition - colObjPosition;
+		
+		Vector2D collisionSideNormal;
+
+		if (colObjToThis.XValue > std::abs(colObjToThis.YValue))		// right of tile
+			collisionSideNormal.set(1, 0);
+		else if (std::abs(colObjToThis.XValue) < colObjToThis.YValue)	// above tile
+			collisionSideNormal.set(0, 1);
+		else if (colObjToThis.XValue < -std::abs(colObjToThis.YValue))	// left of tile
+			collisionSideNormal.set(-1, 0);
+		else if (-std::abs(colObjToThis.XValue) > colObjToThis.YValue)	// below tile
+			collisionSideNormal.set(0, -1);
+		else															// hitting precisely a corner
+			collisionSideNormal.set(0, 0);
+
+		// TODO the knight gets stuck on transitioning between tiles sometimes, but that's a lower priority issue
+		const Vector2D velocity = GetVelocity(); 
+		if (collisionSideNormal * velocity < 0)
+		{
+			const Vector2D moveMultiplier = collisionSideNormal.perpendicularVector();
+			const Vector2D newVelocity(std::abs(moveMultiplier.XValue) * velocity.XValue, std::abs(moveMultiplier.YValue) * velocity.YValue);
+			SetVelocity(newVelocity);
+		}
+	}
+
+	mCollidedObstacles.clear();
+
+	Super::Move(deltaTime);
 }
 
 void Creature::SetShowHealthBar(bool shouldShowHealthBar)

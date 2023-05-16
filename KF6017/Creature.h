@@ -2,6 +2,7 @@
 #include "MovingGameObject.h"
 #include "ICollidableObject.h"
 #include "Shapes.h"
+#include <list>
 
 class Weapon;
 
@@ -34,6 +35,8 @@ protected:
 	virtual void Attack();
 	virtual void Die();
 
+	virtual void Move(double deltaTime) override;
+
 	void SetShowHealthBar(bool shouldShowHealthBar);
 
 private:
@@ -43,5 +46,7 @@ private:
 	bool mShowHealthBar = true;
 	std::shared_ptr<Weapon> mpEquippedWeapon;
 	float mAttackCooldown = 0.f;
+
+	std::list<std::weak_ptr<GameObject>> mCollidedObstacles;
 };
 
