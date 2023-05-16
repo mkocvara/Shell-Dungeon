@@ -511,9 +511,6 @@ ErrorType MyDrawEngine::Flip()
 {
 	HRESULT err;		// To store error result
 
-	// Complete sprite drawing
-	mLPSprite->End();
-
 	// End the scene
 	mpLPD3DDevice->EndScene();
 	// Present
@@ -534,15 +531,6 @@ ErrorType MyDrawEngine::Flip()
 		ErrorLogger::Writeln(L"Could not start new scene after flip.");
 		ErrorLogger::Writeln(ERRORSTRING(err));
 		return FAILURE;
-	}
-
-	// Prepare sprite interface for drawing
-	err = mLPSprite->Begin(D3DXSPRITE_ALPHABLEND);		// Alpha Blending requested
-	if (FAILED(err))
-	{
-		ErrorLogger::Writeln(L"Failed to begin sprite render in DrawAt");
-		ErrorLogger::Writeln(ERRORSTRING(err));
-		return ErrorType::FAILURE;
 	}
 	return SUCCESS;
 }	// Flip
@@ -578,6 +566,7 @@ void MyDrawEngine::UseCamera(bool activate)
 {
 	mCameraActive = activate;
 }
+
 
 // **************************************************************
 // Loading and deleting images
@@ -737,33 +726,6 @@ void MyDrawEngine::ReleasePicture(PictureIndex pic)
 }		// ReleasePicture
 
 
-void MyDrawEngine::ReleaseKraken()
-{
-	static Vector2D b = Vector2D(1300, -300);
-	FillCircle(b, 90, DARKRED);
-	FillCircle(b + Vector2D(-50, 5), 70, DARKRED);
-	FillCircle(b + Vector2D(-80, 10), 55, DARKRED);
-	FillCircle(b + Vector2D(0, 40), 20, BLACK);
-	b += Vector2D(-5, 1);
-	static int c = 0;
-	c = c + 1;
-	srand(c / 4);
-	for (int i = 0; i < 3; i++)
-	{
-		float lip = (rand() % 200 - 100) / 10.0f;
-		float rip = (rand() % 250) / 100.0f;
-		if (lip > 0) rip = -rip;
-		Vector2D d = b + Vector2D(-100.0f, 0 - i * 15.0f);
-		for (int f = 0; f < 15; f++)
-		{
-			d.XValue -= 15;
-			d.YValue += lip;
-			lip = lip + rip;
-			FillCircle(d + Vector2D(0, 30), 20.0f - f / 2, DARKRED);
-		}
-	}
-}
-
 
 // **************************************************************
 // Writing text and numbers
@@ -909,12 +871,6 @@ ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, F
 // Draw a picture at the requested location
 ErrorType MyDrawEngine::DrawAt(Vector2D position, PictureIndex pic, float scale, float angle, float transparency)
 {
-	return DrawStretchedAt(position, pic, scale, scale, angle, transparency);
-}
-
-// Draw a picture at the requested location - version with scalex and scaley
-ErrorType MyDrawEngine::DrawStretchedAt(Vector2D position, PictureIndex pic, float scalex, float scaley, float angle, float transparency)
-{
 	// Find the picture
 	std::map<PictureIndex, MyPicture>::iterator picit = mIndexPictureMap.find(pic);
 
@@ -922,63 +878,74 @@ ErrorType MyDrawEngine::DrawStretchedAt(Vector2D position, PictureIndex pic, flo
 	if (mCameraActive)
 	{
 		position = mpCamera->Transform(position);
-		scalex = mpCamera->Transform(scalex);
-		scaley = mpCamera->Transform(scaley);
-		angle = -angle;
+		scale = mpCamera->Transform(scale);
+      angle = -angle;
 	}
 
 	// If not found
-	if (picit == mIndexPictureMap.end())
+	if(picit==mIndexPictureMap.end())
 	{
 		ErrorLogger::Writeln(L"Attempting to draw an invalid PictureIndex in DrawAt.");
 		WriteText(originalPosition, L"No Image", WHITE);
-		return ErrorType::FAILURE;
+		return FAILURE;	
 	}
-
+	
 	MyPicture& rPicture = picit->second;		// Reference to the picture for easy coding
 
 	// Check texture is loaded
-	if (!rPicture.mLpdTheTexture)
+	if(!rPicture.mLpdTheTexture)
 	{
 		ErrorLogger::Writeln(L"Cannot render MyPicture in DrawAt. MyPicture not initialised.");
-		return ErrorType::FAILURE;
+		return FAILURE;
 	}
 
-
+	// Start drawing
+	HRESULT err = mLPSprite->Begin(D3DXSPRITE_ALPHABLEND);		// Alpha Blending requested
+	if(FAILED(err))
+	{
+		ErrorLogger::Writeln(L"Failed to begin sprite render in DrawAt");
+		ErrorLogger::Writeln(ERRORSTRING(err));
+		return FAILURE;
+	}
 
 	// Specify the centre of the sprite - will be (height/2,width/2) unless user has asked for something 
 	// different.
-	D3DXVECTOR2 centre(rPicture.mCentre.XValue, rPicture.mCentre.YValue);
+	D3DXVECTOR2 centre (rPicture.mCentre.XValue, rPicture.mCentre.YValue);
 
 	// Create a transformation matrix for the requested scale, rotation and position.
 	D3DXMATRIX transform;
-	D3DXVECTOR2 scaling(scalex, scaley);
+	D3DXVECTOR2 scaling(scale, scale);
 	D3DXVECTOR2 pos;
 	pos.x = (position - rPicture.mCentre).XValue;
 	pos.y = (position - rPicture.mCentre).YValue;
 	D3DXMatrixTransformation2D(&transform, &centre, 0.0, &scaling, &centre, -angle, &pos);
-
+	
 	// Set the transformation matrix
 	mLPSprite->SetTransform(&transform);
 
 	// Modulate the colour to add transparency
-	unsigned int alpha = int(255 - 255 * transparency) % 256;
-	unsigned int colour = 0xFFFFFF + (alpha << 24);
+	unsigned int alpha = int(255-255*transparency)%256;
+	unsigned int colour = 0xFFFFFF+(alpha<<24);
 
 	// Draw the sprite
-	HRESULT err = mLPSprite->Draw(rPicture.mLpdTheTexture, NULL, NULL, NULL, colour);
+	err = mLPSprite->Draw(rPicture.mLpdTheTexture, NULL, NULL, NULL, colour);
 
-	if (FAILED(err))
+	if(FAILED(err))
 	{
 		ErrorLogger::Writeln(L"Failed to draw sprite in DrawAt");
 		ErrorLogger::Writeln(ERRORSTRING(err));
-
+	
 		mLPSprite->End();
-		return ErrorType::FAILURE;
+		return FAILURE;
 	}
 
-	return ErrorType::SUCCESS;
-}	// DrawAtStretched
+	// Complete the sprite
+	mLPSprite->End();
+
+	return SUCCESS;
+}	// DrawAt
+
+
 
 // **************************************************************
 
@@ -1071,11 +1038,6 @@ ErrorType MyDrawEngine::DrawLine( Vector2D start,  Vector2D end, unsigned int co
 // ******************************************************************
 
 // Fill a circle
-ErrorType MyDrawEngine::FillCircle(Circle2D circle, unsigned int colour)
-{
-	return FillCircle(circle.GetCentre(), circle.GetRadius(), colour);
-}
-
 ErrorType MyDrawEngine::FillCircle( Vector2D centre, float radius, unsigned int colour)
 {
 	if (mCameraActive)
