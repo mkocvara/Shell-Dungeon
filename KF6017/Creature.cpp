@@ -131,7 +131,11 @@ void Creature::Move(double deltaTime)
 		
 		Vector2D collisionSideNormal;
 
-		if (colObjToThis.XValue > std::abs(colObjToThis.YValue))		// right of tile
+		const float marginOfError = 15.f;
+
+		if (std::abs(std::abs(colObjToThis.XValue) - std::abs(colObjToThis.YValue)) < marginOfError) // adjusts for small error caused by sinking slightly into walls on first contact
+			collisionSideNormal.set(1, 1);
+		else if (colObjToThis.XValue > std::abs(colObjToThis.YValue))		// right of tile
 			collisionSideNormal.set(1, 0);
 		else if (std::abs(colObjToThis.XValue) < colObjToThis.YValue)	// above tile
 			collisionSideNormal.set(0, 1);
@@ -140,7 +144,6 @@ void Creature::Move(double deltaTime)
 		else if (-std::abs(colObjToThis.XValue) >= colObjToThis.YValue)	// below tile
 			collisionSideNormal.set(0, -1);
 
-		// TODO the knight gets stuck on transitioning between tiles sometimes, but that's a lower priority issue
 		const Vector2D velocity = GetVelocity(); 
 		if (collisionSideNormal * velocity < 0)
 		{
