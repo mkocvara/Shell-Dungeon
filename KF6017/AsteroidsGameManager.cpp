@@ -28,10 +28,10 @@ void AsteroidsGameManager::Update(double deltaTime)
 	{
 		EndLevel();
 
-		if (mCurrentLevel == 2)
+		if (mActiveLevelId == 2)
 			StartLevel(1);
 		else
-			StartLevel(mCurrentLevel+1);
+			StartLevel(mActiveLevelId+1);
 	}
 
 	mTimer += deltaTime;
@@ -50,7 +50,7 @@ void AsteroidsGameManager::StartLevel(LevelId level)
 
 	mGameState = GameState::alive;
 	mTimer = 0.f;
-	mCurrentLevel = level;
+	mActiveLevelId = level;
 
 	if (level == 1)
 	{
@@ -86,7 +86,7 @@ void AsteroidsGameManager::RestartLevel()
 
 	pObjectManager->Clear();
 
-	StartLevel(mCurrentLevel);
+	StartLevel(mActiveLevelId);
 }
 
 void AsteroidsGameManager::EndLevel()
@@ -134,7 +134,7 @@ void AsteroidsGameManager::Render()
 	}
 
 	ErrorType err = SUCCESS;
-	const std::wstring levelText = L"Level " + std::to_wstring(mCurrentLevel);
+	const std::wstring levelText = L"Level " + std::to_wstring(mActiveLevelId);
 	const std::wstring asteroidsText = L"Asteroids left: " + std::to_wstring(mAsteroidsLeft);
 	const std::wstring timerText = L"Time: " + std::to_wstring((int)mTimer); // truncates the time and removes decimals
 	const std::wstring clickText = L"Last clicked location: [" + std::to_wstring((int)mLastClickLocation.XValue) + L"; " + std::to_wstring((int)mLastClickLocation.YValue) + L"]";

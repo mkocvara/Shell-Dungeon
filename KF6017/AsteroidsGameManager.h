@@ -29,7 +29,7 @@ protected:
 
 private:
 	int mAsteroidsLeft = 0;
-	float mTimer = 0.f;
+	double mTimer = 0.0;
 	GameState mGameState = GameState::dead;
 	Vector2D mLastClickLocation;
 };
