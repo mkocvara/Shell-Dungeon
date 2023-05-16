@@ -46,9 +46,14 @@ void MousePointer::Update(double deltaTime)
 
 	if (pInputs->IfMouseNewLeftDown())
 		Click();
+}
 
+void MousePointer::Render()
+{
 	if (mPointerVisible)
 	{
+		const std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
+		const Rectangle2D viewport = pDrawEngine->GetViewport();
 		mWorldPosition = viewport.GetCentre() + mScreenPosition;
 		pDrawEngine->DrawAt(mWorldPosition, GetPointerSprite(), mScale, mRotationAngle);
 	}

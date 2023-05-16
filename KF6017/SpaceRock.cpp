@@ -11,6 +11,7 @@
 SpaceRock::SpaceRock(std::weak_ptr<ServiceManager> pServiceManager) : Super(pServiceManager)
 {
 	mObjectType = ObjectType::spacerock;
+	SetZIndex(2);
 }
 
 SpaceRock::~SpaceRock()

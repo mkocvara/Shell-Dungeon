@@ -103,6 +103,16 @@ PictureIndex GameObject::SetRenderSprite(const wchar_t* imagePath)
 	return mRenderSprite;
 }
 
+int GameObject::GetZIndex() const
+{
+	return mZIndex;
+}
+
+void GameObject::SetZIndex(int newZIndex)
+{
+	mZIndex = newZIndex;
+}
+
 
 // PROTECTED
 

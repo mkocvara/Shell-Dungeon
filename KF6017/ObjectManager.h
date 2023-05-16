@@ -26,9 +26,12 @@ public:
 	std::list<std::shared_ptr<GameObject>> GetAllObjects() const;
 
 private:
-	void CheckCollisions();
-	void RemoveDeletedObjects();
 	std::list<std::shared_ptr<GameObject>> mGameObjectsList;
 	std::map<std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>> mObjectsCollidableMap;
+
+	bool mObjectsListIsSorted = false;
+
+	void CheckCollisions();
+	void RemoveDeletedObjects();
 };
 

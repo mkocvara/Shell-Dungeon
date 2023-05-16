@@ -15,6 +15,7 @@
 Spaceship::Spaceship(std::weak_ptr<ServiceManager> pServiceManager) : Super(pServiceManager)
 {
 	mObjectType = ObjectType::spaceship;
+	SetZIndex(1);
 }
 
 Spaceship::~Spaceship()

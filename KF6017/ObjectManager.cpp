@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ICollidableObject.h"
 #include <winerror.h>
+#include <algorithm>
 
 #include "ServiceManager.h"
 #include "MyDrawEngine.h"
@@ -21,6 +22,7 @@ ObjectManager::~ObjectManager()
 void ObjectManager::AddObject(std::shared_ptr<GameObject>& rpNewObject)
 {
 	mGameObjectsList.push_back(rpNewObject);
+	mObjectsListIsSorted = false;
 }
 
 void ObjectManager::AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObject, std::shared_ptr<ICollidableObject>& rpAsCollidableObject)
@@ -31,6 +33,14 @@ void ObjectManager::AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObj
 
 ErrorType ObjectManager::UpdateAll(double deltaTime)
 {
+	if (!mObjectsListIsSorted)
+	{
+		// sorts by zIndex in ascending order
+		mGameObjectsList.sort([](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b) {return a->GetZIndex() < b->GetZIndex(); });
+
+		mObjectsListIsSorted = true;
+	}
+
 	for (const std::shared_ptr<GameObject>& rpGameObject : mGameObjectsList)
 	{
 		if (!rpGameObject)

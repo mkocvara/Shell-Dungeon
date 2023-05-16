@@ -28,12 +28,16 @@ public:
 	void SetPosition(const float x, const float y);
 	virtual void SetRenderSprite(PictureIndex spriteIndex);
 	virtual PictureIndex SetRenderSprite(const wchar_t* imagePath);
+	int GetZIndex() const;
+	void SetZIndex(int newZIndex);
 
 protected:
 	GameObject(std::weak_ptr<ServiceManager> pServiceManager); // make it essentially abstract
 	Vector2D mPosition;
 	float mRotationAngle;	
 	float mRenderScale;
+
+	int mZIndex = 0;
 
 	std::weak_ptr<ServiceManager> mpServiceManager;
 

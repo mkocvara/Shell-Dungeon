@@ -15,6 +15,7 @@ public:
 	~MousePointer();
 
 	void Update(double deltaTime);
+	void Render();
 	void Click();
 
 	void SetPointerEnabled(bool newEnabled);
