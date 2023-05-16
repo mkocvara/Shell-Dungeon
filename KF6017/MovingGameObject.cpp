@@ -19,30 +19,6 @@ ErrorType MovingGameObject::Update(double deltaTime)
 	if (!IsActive())
 		return SUCCESS;
 
-	Move(deltaTime);
-	return Super::Update(deltaTime);
-}
-
-void MovingGameObject::SetMovementSpeed(float speed)
-{
-	mMaxMovementSpeed = speed;
-}
-
-void MovingGameObject::SetTimeToFullSpeed(float time)
-{
-	mTimeToFullSpeed = time;
-}
-
-void MovingGameObject::SetTimeToStop(float time)
-{
-	mTimeToStop = time;
-}
-
-
-// PROTECTED
-
-void MovingGameObject::Move(double deltaTime)
-{
 	mMoveDirection = mMoveDirection.unitVector();
 
 	const bool isAccelerating = mMoveDirection.magnitude() != 0;
@@ -64,5 +40,39 @@ void MovingGameObject::Move(double deltaTime)
 			mCurrentVelocity = mCurrentVelocity + diffVelocity / diffVelocityMagnitude * maxDistanceDelta;
 	}
 
+	Move(deltaTime);
+	return Super::Update(deltaTime);
+}
+
+void MovingGameObject::SetMovementSpeed(float speed)
+{
+	mMaxMovementSpeed = speed;
+}
+
+void MovingGameObject::SetTimeToFullSpeed(float time)
+{
+	mTimeToFullSpeed = time;
+}
+
+void MovingGameObject::SetTimeToStop(float time)
+{
+	mTimeToStop = time;
+}
+
+Vector2D MovingGameObject::GetVelocity()
+{
+	return mCurrentVelocity;
+}
+
+
+// PROTECTED
+
+void MovingGameObject::Move(double deltaTime)
+{
 	mPosition += mCurrentVelocity;
+}
+
+void MovingGameObject::SetVelocity(const Vector2D& newVelocity)
+{
+	mCurrentVelocity = newVelocity;
 }
