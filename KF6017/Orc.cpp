@@ -48,6 +48,9 @@ void Orc::Initialise(Vector2D position, float angle, float scale)
 
 ErrorType Orc::Update(double deltaTime)
 {
+	if (!IsActive())
+		return SUCCESS;
+
 	mpBoundingShape->SetCentre(mPosition);
 
 	const std::shared_ptr<GameManager> pGameManager = mpServiceManager.lock()->GetGameManager().lock();
