@@ -14,7 +14,8 @@ public:
 	MousePointer(std::shared_ptr<ServiceManager> pServiceManager);
 	~MousePointer();
 
-	void Update(float deltaTime);
+	void Update(double deltaTime);
+	void Render();
 	void Click();
 
 	void SetPointerEnabled(bool newEnabled);

@@ -85,27 +85,36 @@ void GameObject::SetPosition(const float x, const float y)
 	mPosition.YValue = y;
 }
 
+void GameObject::SetRenderSprite(PictureIndex spriteIndex)
+{
+	mRenderSprite = spriteIndex;
+}
 
-// PROTECTED
-
-void GameObject::SetRenderSprite(const wchar_t* imagePath)
+PictureIndex GameObject::SetRenderSprite(const wchar_t* imagePath)
 {
 	if (!imagePath)
 	{
 		ErrorLogger::Writeln(L"GameObject::SetRenderSprite(); Provided image path is null.");
-		return;
+		return -1;
 	}
 
 	std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
-
-	if (!pDrawEngine)
-	{
-		ErrorLogger::Writeln(L"GameObject::SetRenderSprite(); Draw engine is null.");
-		return;
-	}
-
 	mRenderSprite = pDrawEngine->LoadPicture(imagePath);
+	return mRenderSprite;
 }
+
+int GameObject::GetZIndex() const
+{
+	return mZIndex;
+}
+
+void GameObject::SetZIndex(int newZIndex)
+{
+	mZIndex = newZIndex;
+}
+
+
+// PROTECTED
 
 ErrorType GameObject::Render() 
 {

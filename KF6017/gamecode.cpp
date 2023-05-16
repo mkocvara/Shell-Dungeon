@@ -133,6 +133,9 @@ ErrorType Game::GameUpdate()
 	pObjectManager->UpdateAll(mGameTimer.mFrameTime);
 	pGameManager->Update(mGameTimer.mFrameTime);
 
+	// render last so that it is on top
+	pMousePointer->Render();
+
 	return SUCCESS;
 }
 

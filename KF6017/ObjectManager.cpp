@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ICollidableObject.h"
 #include <winerror.h>
+#include <algorithm>
 
 #include "ServiceManager.h"
 #include "MyDrawEngine.h"
@@ -21,6 +22,7 @@ ObjectManager::~ObjectManager()
 void ObjectManager::AddObject(std::shared_ptr<GameObject>& rpNewObject)
 {
 	mGameObjectsList.push_back(rpNewObject);
+	mObjectsListIsSorted = false;
 }
 
 void ObjectManager::AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObject, std::shared_ptr<ICollidableObject>& rpAsCollidableObject)
@@ -31,6 +33,14 @@ void ObjectManager::AddCollidableObject(std::shared_ptr<GameObject>& rpAsGameObj
 
 ErrorType ObjectManager::UpdateAll(double deltaTime)
 {
+	if (!mObjectsListIsSorted)
+	{
+		// sorts by zIndex in ascending order
+		mGameObjectsList.sort([](const std::shared_ptr<GameObject>& a, const std::shared_ptr<GameObject>& b) {return a->GetZIndex() < b->GetZIndex(); });
+
+		mObjectsListIsSorted = true;
+	}
+
 	for (const std::shared_ptr<GameObject>& rpGameObject : mGameObjectsList)
 	{
 		if (!rpGameObject)
@@ -41,7 +51,15 @@ ErrorType ObjectManager::UpdateAll(double deltaTime)
 	}
 
 	CheckCollisions();
-	RemoveDeletedObjects(); // TODO Perhaps run this only every so often instead?
+
+	// only run object removal every 5 seconds
+	static double removeDelay = 0.0;
+	removeDelay += deltaTime;
+	if (removeDelay > 5.0) 
+	{
+		RemoveDeletedObjects();
+		removeDelay -= 5.0;
+	}
 
 	return SUCCESS;
 }
@@ -77,15 +95,19 @@ void ObjectManager::CheckCollisions()
 			if (!pGO1 || !pGO2 || !pGO1->IsActive() || !pGO2->IsActive())
 				continue;
 
-			// Check that both objects are collidable.
-			if (!mObjectsCollidableMap[pGO1] || !mObjectsCollidableMap[pGO2])
-				continue;
-
 			std::shared_ptr<ICollidableObject> pCO1 = mObjectsCollidableMap[pGO1];
 			std::shared_ptr<ICollidableObject> pCO2 = mObjectsCollidableMap[pGO2];
-			
+
+			// Check that both objects are collidable.
+			if (!pCO1 || !pCO2)
+				continue;
+
 			std::shared_ptr<IShape2D> shape1 = pCO1->GetShape().lock();
 			std::shared_ptr<IShape2D> shape2 = pCO2->GetShape().lock();
+
+			// Check that both objects have shapes.
+			if (!shape1 || !shape2)
+				continue;
 
 			if (shape1->Intersects(*(shape2.get())))
 			{
