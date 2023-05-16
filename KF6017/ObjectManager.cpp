@@ -82,24 +82,25 @@ int ObjectManager::GetNumberOfObjects() const
 
 void ObjectManager::CheckCollisions()
 {
-	std::list<std::shared_ptr<GameObject>>::iterator it1;
-	std::list<std::shared_ptr<GameObject>>::iterator it2;
-	for (it1 = mGameObjectsList.begin(); it1 != mGameObjectsList.end(); it1++)
+	std::map<std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>>::iterator it1;
+	std::map<std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>>::iterator it2;
+	for (it1 = mObjectsCollidableMap.begin(); it1 != mObjectsCollidableMap.end(); it1++)
 	{
-		for (it2 = std::next(it1); it2 != mGameObjectsList.end(); it2++)
+		for (it2 = std::next(it1); it2 != mObjectsCollidableMap.end(); it2++)
 		{
-			std::shared_ptr<GameObject> pGO1 = *it1;
-			std::shared_ptr<GameObject> pGO2 = *it2;
+			std::pair<const std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>> pair1 = *it1;
+			std::pair<const std::shared_ptr<GameObject>, std::shared_ptr<ICollidableObject>> pair2 = *it2;
 
-			// Check that both objects exist and are active
-			if (!pGO1 || !pGO2 || !pGO1->IsActive() || !pGO2->IsActive())
-				continue;
+			std::shared_ptr<GameObject> pGO1 = pair1.first;
+			std::shared_ptr<GameObject> pGO2 = pair2.first;
+			std::shared_ptr<ICollidableObject> pCO1 = pair1.second;
+			std::shared_ptr<ICollidableObject> pCO2 = pair2.second;
 
-			std::shared_ptr<ICollidableObject> pCO1 = mObjectsCollidableMap[pGO1];
-			std::shared_ptr<ICollidableObject> pCO2 = mObjectsCollidableMap[pGO2];
-
-			// Check that both objects are collidable.
-			if (!pCO1 || !pCO2)
+			// Check that both objects exist, are collidable, and are active
+			if (!pGO1 || !pGO2 
+				|| !pCO1 || !pCO2
+				|| !pGO1->IsActive() || !pGO2->IsActive() 
+				)
 				continue;
 
 			std::shared_ptr<IShape2D> shape1 = pCO1->GetShape().lock();
