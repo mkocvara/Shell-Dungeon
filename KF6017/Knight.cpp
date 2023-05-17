@@ -9,6 +9,7 @@
 #include "myinputs.h"
 #include "MousePointer.h"
 #include "EventManager.h"
+#include "DungeonSFXManager.h"
 
 #include "Weapon.h"
 #include "Attack.h"
@@ -84,6 +85,16 @@ void Knight::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 		{
 			Damage(pAttack->GetDamage());
 			pAttack->AddHitEntity(pThis);
+
+			const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+			if (typeid(*pSFX) == typeid(DungeonSFXManager))
+			{
+				std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+				if (pSFXManager)
+				{
+					pSFXManager->PlayKnightHit();
+				}
+			}
 		}
 	}
 

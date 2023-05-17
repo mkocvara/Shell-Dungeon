@@ -5,6 +5,7 @@
 #include "ServiceManager.h"
 #include "mydrawengine.h"
 #include "DungeonGameManager.h"
+#include "DungeonSFXManager.h"
 
 #include "Club.h"
 
@@ -120,4 +121,19 @@ void Orc::Attack()
 	pWeapon->Attack(std::static_pointer_cast<Creature>(shared_from_this()), mAttackDirection.angle());
 
 	Super::Attack();
+}
+
+void Orc::ProcessHit(const std::shared_ptr<class Attack>& pAttack)
+{
+	Super::ProcessHit(pAttack);
+
+	const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+	if (typeid(*pSFX) == typeid(DungeonSFXManager))
+	{
+		std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+		if (pSFXManager)
+		{
+			pSFXManager->PlayOrcHit();
+		}
+	}
 }

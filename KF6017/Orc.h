@@ -21,6 +21,8 @@ public:
 protected:
 	std::shared_ptr<Rectangle2D> mpBoundingShape;
 
+	virtual void ProcessHit(const std::shared_ptr<class Attack>& pAttack) override;
+
 private:
 	const wchar_t* mRenderSpritePath = L"Assets/Enemies/Orcs/Orc Warrior/walk_down1.png";
 	const float mBaseSpriteScale = 1.5f;

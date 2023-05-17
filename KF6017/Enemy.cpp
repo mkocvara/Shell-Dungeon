@@ -13,15 +13,6 @@ Enemy::Enemy(const std::weak_ptr<ServiceManager> pServiceManager)
 	SetZIndex(RenderLayer::EnemyLayer);
 }
 
-void Enemy::Die()
-{
-	Super::Die();
-
-	std::shared_ptr<EventManager> pEventManager = mpServiceManager.lock()->GetEventManager().lock();
-	Event e(EventType::enemyKilled, mPosition, this);
-	pEventManager->DispatchEvent(e);
-}
-
 
 // PUBLIC
 
@@ -39,7 +30,7 @@ void Enemy::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 
 		if (pAttacker->GetObjectType() == ObjectType::knight && !pAttack->HasEntityBeenHit(pThis))
 		{
-			Damage(pAttack->GetDamage());
+			ProcessHit(pAttack);
 			pAttack->AddHitEntity(pThis);
 		}
 	}
@@ -47,3 +38,19 @@ void Enemy::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 	Super::HandleCollision(pOtherObject);
 }
 
+
+// PROTECTED
+
+void Enemy::ProcessHit(const std::shared_ptr<class Attack>& pAttack)
+{
+	Damage(pAttack->GetDamage());
+}
+
+void Enemy::Die()
+{
+	Super::Die();
+
+	std::shared_ptr<EventManager> pEventManager = mpServiceManager.lock()->GetEventManager().lock();
+	Event e(EventType::enemyKilled, mPosition, this);
+	pEventManager->DispatchEvent(e);
+}

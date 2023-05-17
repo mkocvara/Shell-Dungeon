@@ -9,6 +9,7 @@
 #include "GameObjectFactory.h"
 #include "GameObject.h"
 #include "ObjectManager.h"
+#include "DungeonSFXManager.h"
 
 #include "Knight.h"
 #include "Sword.h"
@@ -73,6 +74,16 @@ void DungeonGameManager::StartLevel(LevelId level)
 	mEnemiesRemaining = mActiveLevel->GetTotalEnemies();
 
 	mGameState = GameState::playerAlive;
+
+	const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+	if (typeid(*pSFX) == typeid(DungeonSFXManager))
+	{
+		std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+		if (pSFXManager)
+		{
+			pSFXManager->PlaySwordUnsheath();
+		}
+	}
 }
 
 void DungeonGameManager::RestartLevel()
@@ -103,11 +114,29 @@ void DungeonGameManager::HandleEvent(const Event& rEvent)
 		else 
 		{
 			mGameState = GameState::levelCleared;
+			const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+			if (typeid(*pSFX) == typeid(DungeonSFXManager))
+			{
+				std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+				if (pSFXManager)
+				{
+					pSFXManager->PlayLevelCleared();
+				}
+			}
 		}
 	}
 	if (rEvent.type == EventType::playerDied)
 	{
 		mGameState = GameState::playerDead;
+		const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+		if (typeid(*pSFX) == typeid(DungeonSFXManager))
+		{
+			std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+			if (pSFXManager)
+			{
+				pSFXManager->PlayKnightDeath();
+			}
+		}
 	}
 }
 
@@ -268,6 +297,17 @@ bool DungeonGameManager::HandleBoonSelection()
 	if (selectedBoon)
 	{
 		mSelectedBoons.push_back(std::move(selectedBoon));
+
+		const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+		if (typeid(*pSFX) == typeid(DungeonSFXManager))
+		{
+			std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+			if (pSFXManager)
+			{
+				pSFXManager->PlayBoonAcquired();
+			}
+		}
+
 		return true;
 	}
 	else

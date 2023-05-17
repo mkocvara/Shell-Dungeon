@@ -1,7 +1,9 @@
 #include "Menu.h"
 #include "mydrawengine.h"
 #include "myinputs.h"
+
 #include "ServiceManager.h"
+#include "DungeonSFXManager.h"
 
 
 // PUBLIC
@@ -62,14 +64,18 @@ ErrorType Menu::HandleInput()
 	if (!pInputs)
 		return FAILURE;
 
+	bool anyNavigation = false;
+
 	// Get keyboard input
 	if (pInputs->NewKeyPressed(DIK_UP))
 	{
 		mCurrentItem--;
+		anyNavigation = true;
 	}
 	if (pInputs->NewKeyPressed(DIK_DOWN))
 	{
 		mCurrentItem++;
+		anyNavigation = true;
 	}
 	if (mCurrentItem < 0)
 	{
@@ -85,6 +91,20 @@ ErrorType Menu::HandleInput()
 	{
 		mItemsList[mCurrentItem].callback();
 		mCurrentItem = 0; // ensures the top option is always selected by default when we reopen a menu
+		anyNavigation = true;
+	}
+
+	if (anyNavigation)
+	{
+		const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+		if (typeid(*pSFX) == typeid(DungeonSFXManager))
+		{
+			std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+			if (pSFXManager)
+			{
+				pSFXManager->PlayInterface();
+			}
+		}
 	}
 
 	return SUCCESS;

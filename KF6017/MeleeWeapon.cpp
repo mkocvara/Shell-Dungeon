@@ -3,6 +3,7 @@
 #include "ServiceManager.h"
 #include "GameObjectFactory.h"
 #include "mydrawengine.h"
+#include "DungeonSFXManager.h"
 
 #include "Attack.h"
 #include "Creature.h"
@@ -35,5 +36,15 @@ void MeleeWeapon::Attack(const std::shared_ptr<Creature> pAttacker, float attack
 	reachOffset.setBearing(attackAngle, GetBaseAttackReach() - height/2); // position is in the centre of the image, so this means the far edge is as far as range demands
 	const Vector2D spawnPosition = pAttacker->GetPosition() + reachOffset;
 	pAsAttack->Initialise(spawnPosition, attackAngle, GetBaseAttackSpriteScale(), GetAttackSprite(), shared_from_this(), pAttacker, 0.f);
+
+	const std::shared_ptr<SFXManager> pSFX = mpServiceManager.lock()->GetSFXManager().lock();
+	if (typeid(*pSFX) == typeid(DungeonSFXManager))
+	{
+		std::shared_ptr<DungeonSFXManager> pSFXManager = std::static_pointer_cast<DungeonSFXManager>(pSFX);
+		if (pSFXManager)
+		{
+			pSFXManager->PlaySwing();
+		}
+	}
 }
 

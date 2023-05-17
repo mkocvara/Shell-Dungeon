@@ -1,0 +1,9 @@
+"Spell 1" (boon.wav) by Bart Kelsey used under the CC-BY-SA 3.0 licence. Available at:
+https://opengameart.org/content/spell-1
+
+"Win Sound 2-3" (level_cleared.wav) by remaxim used under the CC-BY-SA 3.0 licence. Available at:
+https://opengameart.org/content/win-sound-2
+
+All other sounds belong in the public domain. Available at:
+https://opengameart.org/content/rpg-sound-pack
+https://opengameart.org/content/death-sounds-0
