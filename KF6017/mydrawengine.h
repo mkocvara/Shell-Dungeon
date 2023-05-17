@@ -1,3 +1,15 @@
+// mydrawengine.h
+// Shell engine version 2023
+// Chris Rook
+// modified 06/09/2019
+//		Updating LoadPicture, FindPicture, AddFont to const wchar_t to support string literals in parameters
+
+// modified 04/02/2022
+//		Changes to ReleasePicture and ReleaseBitmaps to fix a bug where filenames were not being removed from the filename map
+
+// Modified 25/4/2023
+//		Added DrawAt overload with two scales - X and Y.
+
 #pragma once
 
 #pragma comment(lib, "d3d9.lib")
@@ -434,17 +446,18 @@ public:
 	//  OR FAILURE has been returned. (Usually means an invalid FontIndex)
 	// Parameters:
 	//  x,y Screen coordinates to write the text (these will be the position of the top
-	//		left position of the writing rectangle.
+	//		left position of the writing rectangle (except if centre is true).
 	//  text - A null terminated string containing the text to be written.
 	//  colour - 32-bit colour for the colour of the text to be written (no transparency).
 	//  fontIndex - the index of the font to be used. 0 uses a default 24-point Arial font.
+	//  centre - if true, the rectangle with text is centred on the passed coordinates
 	// Returns:
 	//	FAILURE if rendering failed or the fontIndex was invalid.
 	// SUCCESS otherwise
 	// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
 	//    but will not scale
-	ErrorType WriteText(int x, int y, const wchar_t text[], int colour, FontIndex fontIndex = 0);
-	ErrorType WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex = 0);
+	ErrorType WriteText(int x, int y, const wchar_t text[], int colour, FontIndex fontIndex = 0, bool centre = false);
+	ErrorType WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex = 0, bool centre = false);
 
 
 	// These methods writes a  number to the screen at the specified coordinates.
@@ -456,19 +469,20 @@ public:
 	//  OR FAILURE has been returned. (Usually means an invalid FontIndex)
 	// Parameters:
 	//  x,y Screen coordinates to write the text (these will be the position of the top
-	//		left position of the writing rectangle.
+	//		left position of the writing rectangle (except if centre is true).
 	//  num - The number to the written
 	//  colour - 32-bit colour for the colour of the number to be written (no transparency).
 	//  fontIndex - the index of the font to be used. 0 uses a default 24-point Arial font.
+	//  centre - if true, the rectangle with text is centred on the passed coordinates
 	// Returns:
 	//	FAILURE if rendering failed or the fontIndex was invalid.
 	// SUCCESS otherwise
 	// NOTE: x,y version uses raw screen coordinates. position version uses camera if active
 	//     but will not scale
-	ErrorType WriteInt(int x, int y, int num, int colour, FontIndex fontIndex = 0);
-	ErrorType WriteDouble(int x, int y, double num, int colour, FontIndex fontIndex = 0);
-	ErrorType WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex = 0);
-	ErrorType WriteDouble(Vector2D position, double num, int colour, FontIndex fontIndex = 0);
+	ErrorType WriteInt(int x, int y, int num, int colour, FontIndex fontIndex = 0, bool centre = false);
+	ErrorType WriteDouble(int x, int y, double num, int colour, FontIndex fontIndex = 0, bool centre = false);
+	ErrorType WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex = 0, bool centre = false);
+	ErrorType WriteDouble(Vector2D position, double num, int colour, FontIndex fontIndex = 0, bool centre = false);
 
 	// Returns a string describing the directDraw error for most HRESULTs sent to it
 	//static const char* ErrorString(HRESULT err);
