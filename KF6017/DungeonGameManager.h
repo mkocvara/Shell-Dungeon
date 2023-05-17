@@ -9,7 +9,8 @@ class Level;
 enum class GameState {
 	playerAlive,
 	playerDead,
-	levelCleared
+	levelCleared,
+	victory
 };
 
 class DungeonGameManager final : public GameManager 
@@ -29,18 +30,25 @@ public:
 
 	virtual void HandleEvent(const Event& rEvent) override;
 
+	void RestartGame();
+
 	Vector2D GetPlayerLocation() const;
 	std::weak_ptr<Rectangle2D> GetPlayerBounds() const;
 
 protected:
 	virtual void Render() override;
+	bool ContinuePressed();
 
 private:
-	float mTimer = 0.f;
-	GameState mGameState = GameState::playerDead;
+	GameState mGameState = GameState::playerAlive;
 	Vector2D mLastClickLocation;
 
 	int mEnemiesRemaining = 0;
+
+	double mTimer = 0.f;
+	double mTimeAtLevelStart = 0.f;
+
+	const int mNumLevels = 4; // TODO could be determined automatically from the Levels folder, but there're more important things to do
 
 	std::shared_ptr<Level> mActiveLevel;
 	std::weak_ptr<Knight> mpPlayerKnight;
