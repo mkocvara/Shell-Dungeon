@@ -10,6 +10,10 @@ public:
 
 	virtual ErrorType Update(double deltaTime) override;
 
+	float GetMovementSpeed() const;
+	float GetTimeToFullSpeed() const;
+	float GetTimeToStop() const;
+
 	void SetMovementSpeed(float speed);
 	void SetTimeToFullSpeed(float time);
 	void SetTimeToStop(float time);

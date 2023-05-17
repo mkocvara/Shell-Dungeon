@@ -44,6 +44,21 @@ ErrorType MovingGameObject::Update(double deltaTime)
 	return Super::Update(deltaTime);
 }
 
+float MovingGameObject::GetMovementSpeed() const
+{
+	return mMaxMovementSpeed;
+}
+
+float MovingGameObject::GetTimeToFullSpeed() const
+{
+	return mTimeToFullSpeed;
+}
+
+float MovingGameObject::GetTimeToStop() const
+{
+	return mTimeToStop;
+}
+
 void MovingGameObject::SetMovementSpeed(float speed)
 {
 	mMaxMovementSpeed = speed;
