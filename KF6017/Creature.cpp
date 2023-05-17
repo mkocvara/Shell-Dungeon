@@ -135,7 +135,7 @@ void Creature::Move(double deltaTime)
 
 		if (std::abs(std::abs(colObjToThis.XValue) - std::abs(colObjToThis.YValue)) < marginOfError) // adjusts for small error caused by sinking slightly into walls on first contact
 			collisionSideNormal.set(1, 1);
-		else if (colObjToThis.XValue > std::abs(colObjToThis.YValue))		// right of tile
+		else if (colObjToThis.XValue > std::abs(colObjToThis.YValue))	// right of tile
 			collisionSideNormal.set(1, 0);
 		else if (std::abs(colObjToThis.XValue) < colObjToThis.YValue)	// above tile
 			collisionSideNormal.set(0, 1);
