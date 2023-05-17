@@ -1,6 +1,8 @@
 A level file's content begins with a line as such:
 MAP
 
+Before it, comments can be written preceded by a #.
+
 A grid of symbols follows. Must be rectangular. Does not have to be square. Example:
 .####.
 ##__##
@@ -30,7 +32,7 @@ After that is a second grid, which should be matching in size (though shorter li
 K is knight
 O is an orc
 
-Other symbols are ignored, but are used to place the above symbols.
+Other symbols are ignored, but are used to place the above symbols. They must not be placed where walls are and placing them outside of the walls may cause the level to be impossible to complete.
 
 E.g.1:
 .####.

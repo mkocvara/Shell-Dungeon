@@ -155,7 +155,7 @@ void Creature::Move(double deltaTime)
 		
 		Vector2D collisionSideNormal;
 
-		const float marginOfError = 15.f;
+		const float marginOfError = 10.f;
 
 		if (std::abs(std::abs(colObjToThis.XValue) - std::abs(colObjToThis.YValue)) < marginOfError) // adjusts for small error caused by sinking slightly into walls on first contact
 			collisionSideNormal.set(1, 1);

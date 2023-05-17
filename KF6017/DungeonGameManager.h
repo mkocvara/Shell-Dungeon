@@ -57,7 +57,7 @@ private:
 	double mTimer = 0.f;
 	double mTimeAtLevelStart = 0.f;
 
-	const int mNumLevels = 4; // TODO could be determined automatically from the Levels folder, but there're more important things to do
+	const int mNumLevels = 9; // TODO could be determined automatically from the Levels folder, but there're more important things to do
 
 	std::shared_ptr<Level> mActiveLevel;
 	std::weak_ptr<Knight> mpPlayerKnight;

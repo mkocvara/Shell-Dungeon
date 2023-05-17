@@ -25,7 +25,7 @@ private:
 
 	const wchar_t* mRenderSpritePath = L"Assets/Enemies/Orcs/Orc Warrior/walk_down1.png";
 	const float mBaseSpriteScale = 1.5f;
-	const int mMaxHP = 14;
+	const int mMaxHP = 13;
 
 	Vector2D mAttackDirection;
 };

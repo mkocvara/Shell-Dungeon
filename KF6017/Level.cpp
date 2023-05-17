@@ -203,10 +203,11 @@ Level::Level(const std::weak_ptr<ServiceManager> pServiceManager, const int leve
 
 					// turn / inner-outer corner
 					if (numFloorsCardinal == 2
-						&& adjacentFloors.topLeft
-						&& adjacentFloors.topRight
-						&& adjacentFloors.bottomLeft
-						&& adjacentFloors.bottomRight)
+						&& ((adjacentFloors.top && adjacentFloors.right && adjacentFloors.bottomLeft)
+						|| (adjacentFloors.right && adjacentFloors.bottom && adjacentFloors.topLeft)
+						|| (adjacentFloors.bottom && adjacentFloors.left && adjacentFloors.topRight)
+						|| (adjacentFloors.left && adjacentFloors.top && adjacentFloors.bottomRight))
+						)
 						{
 							tilePath += fileOuterWallAdd;
 						}
