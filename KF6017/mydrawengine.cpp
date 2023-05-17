@@ -802,7 +802,7 @@ FontIndex MyDrawEngine::AddFont(const wchar_t* FontName, int height, bool bold, 
 // ********************************************************************************
 
 // Writes text to the screen
-ErrorType MyDrawEngine::WriteText(int x, int y, const wchar_t text[], int colour, FontIndex fontIndex )
+ErrorType MyDrawEngine::WriteText(int x, int y, const wchar_t text[], int colour, FontIndex fontIndex, bool centre)
 {
 	// Find the requested font
 	std::map<FontIndex, MyFont>::iterator fit;	// Iterator to point to the font requested
@@ -823,6 +823,17 @@ ErrorType MyDrawEngine::WriteText(int x, int y, const wchar_t text[], int colour
 	// Nonna-Raymond call to DrawText. Calculates the rect, but does not draw
 	fit->second.mFont->DrawText(NULL, text, -1, &rect, DT_CALCRECT , colour);
 
+	if (centre)
+	{
+		const int width = rect.right - rect.left;
+		rect.left -= width / 2;
+		rect.right -= width / 2;
+
+		const int height = rect.top - rect.bottom;
+		rect.top -= height / 2;
+		rect.bottom -= height / 2;
+	}
+
 	// Now make the real call.
 	HRESULT err;
 	err = fit->second.mFont->DrawText(NULL, text, -1, &rect, 0 , colour);
@@ -839,52 +850,52 @@ ErrorType MyDrawEngine::WriteText(int x, int y, const wchar_t text[], int colour
 // **********************************************************
 
 // Writes a floating point number to the screen
-ErrorType MyDrawEngine::WriteDouble(int x, int y, double num, int colour, FontIndex fontIndex )
+ErrorType MyDrawEngine::WriteDouble(int x, int y, double num, int colour, FontIndex fontIndex, bool centre)
 {
 	wchar_t buffer[32];			// To store the text when converted
 	swprintf_s( buffer, 32, L"%.8g", num );	// Convert the number to text
 
 	// Write it
-	return WriteText(x,y, buffer, colour, fontIndex);
+	return WriteText(x,y, buffer, colour, fontIndex, centre);
 }	// WriteDouble
 
 // **********************************************************
 // Writes an integer point number to the screen
-ErrorType MyDrawEngine::WriteInt(int x, int y, int num, int colour, FontIndex fontIndex )
+ErrorType MyDrawEngine::WriteInt(int x, int y, int num, int colour, FontIndex fontIndex, bool centre)
 {
 	wchar_t buffer[32];
 	swprintf_s( buffer,32, L"%i", num );
 
-	return WriteText(x,y, buffer, colour, fontIndex);
+	return WriteText(x,y, buffer, colour, fontIndex, centre);
 }	// WriteInt
 
 // *******************************************************************
 
-ErrorType MyDrawEngine::WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex)
+ErrorType MyDrawEngine::WriteText(Vector2D position, const wchar_t text[], int colour, FontIndex fontIndex, bool centre)
 {
 	if (mCameraActive)
 	{
 		position = mpCamera->Transform(position);
 	}
-	return WriteText(int(position.XValue), int(position.YValue), text, colour, fontIndex);
+	return WriteText(int(position.XValue), int(position.YValue), text, colour, fontIndex, centre);
 }
 
-ErrorType MyDrawEngine::WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex )
+ErrorType MyDrawEngine::WriteInt(Vector2D position, int num, int colour, FontIndex fontIndex, bool centre)
 {
 	if (mCameraActive)
 	{
 		position = mpCamera->Transform(position);
 	}
-	return WriteInt(int(position.XValue), int(position.YValue), num, colour, fontIndex);
+	return WriteInt(int(position.XValue), int(position.YValue), num, colour, fontIndex, centre);
 }
 
-ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, FontIndex fontIndex )
+ErrorType MyDrawEngine::WriteDouble(Vector2D position, double num, int colour, FontIndex fontIndex, bool centre)
 {
 	if (mCameraActive)
 	{
 		position = mpCamera->Transform(position);
 	}
-	return WriteDouble(int(position.XValue), int(position.YValue), num, colour, fontIndex);
+	return WriteDouble(int(position.XValue), int(position.YValue), num, colour, fontIndex, centre);
 }
 
 
