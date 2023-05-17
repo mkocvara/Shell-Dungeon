@@ -4,6 +4,7 @@
 #include "ErrorLogger.h"
 #endif
 
+
 // PUBLIC
 
 int RandUtil::randRangeInt(int min, int max)
@@ -20,6 +21,12 @@ double RandUtil::randRangeDouble(double min, double max)
     return distr(sGen);
 }
 
+Vector2D RandUtil::randDirectionVector()
+{
+    Vector2D dir((float)randRangeDouble(-1.0, 1.0), (float)randRangeDouble(-1.0, 1.0));
+    return dir.unitVector();
+}
+
 #if _DEBUG
 void RandUtil::Debug()
 {
@@ -31,6 +38,7 @@ void RandUtil::Debug()
     }
 }
 #endif
+
 
 // PRIVATE
 
