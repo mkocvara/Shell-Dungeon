@@ -80,10 +80,12 @@ ErrorType Menu::HandleInput()
 	if (mCurrentItem < 0)
 	{
 		mCurrentItem = 0;
+		anyNavigation = false;
 	}
 	else if (mCurrentItem >= (int)mItemsList.size())
 	{
 		mCurrentItem = mItemsList.size() - 1;
+		anyNavigation = false;
 	}
 
 	// User selects an option
