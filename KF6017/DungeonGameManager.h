@@ -32,6 +32,8 @@ public:
 
 	void RestartGame();
 
+	GameState GetGameState() const;
+
 	Vector2D GetPlayerLocation() const;
 	std::weak_ptr<Rectangle2D> GetPlayerBounds() const;
 

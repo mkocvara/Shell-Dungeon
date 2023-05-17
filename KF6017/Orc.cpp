@@ -9,6 +9,15 @@
 #include "Club.h"
 
 
+namespace {
+	float baseMovementSpeed = 6.f;
+	float baseTimeToFullSpeed = 0.03f;
+	float baseTimeToStop = 0.03f;
+	
+	double idleMovementDirectionChangeInterval = 5.0; // only if player died
+}
+
+
 // PUBLIC
 
 Orc::Orc(const std::weak_ptr<ServiceManager> pServiceManager)
@@ -37,9 +46,9 @@ void Orc::Initialise(Vector2D position, float angle, float scale)
 	mpBoundingShape = std::make_shared<Rectangle2D>();
 	mpBoundingShape->PlaceAt(position, (float)spriteHeight * scale, (float)spriteWidth * scale);
 	
-	SetMovementSpeed(6.f);
-	SetTimeToFullSpeed(0.03f);
-	SetTimeToStop(0.03f);
+	SetMovementSpeed(baseMovementSpeed);
+	SetTimeToFullSpeed(baseTimeToFullSpeed);
+	SetTimeToStop(baseTimeToStop);
 
 	EquipWeapon(std::shared_ptr<Weapon>(new Club(mpServiceManager)));
 
@@ -56,27 +65,43 @@ ErrorType Orc::Update(double deltaTime)
 	const std::shared_ptr<GameManager> pGameManager = mpServiceManager.lock()->GetGameManager().lock();
 	const std::shared_ptr<DungeonGameManager> pDungeonGameManager = std::static_pointer_cast<DungeonGameManager>(pGameManager);
 	
-	const Vector2D playerPosition = pDungeonGameManager->GetPlayerLocation();
-	const Vector2D orcToPlayer = playerPosition - mPosition;
-	const std::shared_ptr<Weapon> equippedWeapon = GetEquippedWeapon();
-
-	if (equippedWeapon)
+	if (pDungeonGameManager->GetGameState() == GameState::playerAlive)
 	{
-		const float attackRange = GetEquippedWeapon()->GetBaseAttackReach();
-		const float shapeOffset = pDungeonGameManager->GetPlayerBounds().lock()->GetWidth() / 2;
-		const float attackDistanceVariability = (float)RandUtil::randRangeDouble(-attackRange/4, attackRange/4);
+		const Vector2D playerPosition = pDungeonGameManager->GetPlayerLocation();
+		const Vector2D orcToPlayer = playerPosition - mPosition;
+		const std::shared_ptr<Weapon> equippedWeapon = GetEquippedWeapon();
 
-		if (orcToPlayer.magnitude() <= attackRange + shapeOffset + attackDistanceVariability)
+		if (equippedWeapon)
 		{
-			mMoveDirection.set(0, 0);
-			mAttackDirection = orcToPlayer;
-			Attack();
-		}
-		else if (!IsAttackOnCooldown())
-		{
-			mMoveDirection = orcToPlayer;
+			const float attackRange = GetEquippedWeapon()->GetBaseAttackReach();
+			const float shapeOffset = pDungeonGameManager->GetPlayerBounds().lock()->GetWidth() / 2;
+			const float attackDistanceVariability = (float)RandUtil::randRangeDouble(-attackRange / 4, attackRange / 4);
+
+			if (orcToPlayer.magnitude() <= attackRange + shapeOffset + attackDistanceVariability)
+			{
+				mMoveDirection.set(0, 0);
+				mAttackDirection = orcToPlayer;
+				Attack();
+			}
+			else if (!IsAttackOnCooldown())
+			{
+				mMoveDirection = orcToPlayer;
+			}
 		}
 	}
+	else // currently only reached if player is dead
+	{
+		SetMovementSpeed(baseMovementSpeed / 2);
+		static double interval = idleMovementDirectionChangeInterval;
+		interval += deltaTime;
+		if (interval > idleMovementDirectionChangeInterval)
+		{
+			interval -= idleMovementDirectionChangeInterval;
+			mMoveDirection = RandUtil::randDirectionVector();
+		}
+
+	}
+	
 
 	return Super::Update(deltaTime);
 }

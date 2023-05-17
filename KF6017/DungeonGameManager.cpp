@@ -115,6 +115,11 @@ void DungeonGameManager::RestartGame()
 	mGameState = GameState::playerAlive;
 }
 
+GameState DungeonGameManager::GetGameState() const
+{
+	return mGameState;
+}
+
 Vector2D DungeonGameManager::GetPlayerLocation() const
 {
 	return mpPlayerKnight.lock()->GetPosition();
