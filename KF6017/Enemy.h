@@ -13,7 +13,7 @@ public:
 protected:
 	Enemy(const std::weak_ptr<ServiceManager> pServiceManager);
 
-	virtual void ProcessHit(const std::shared_ptr<class Attack>& pAttack);
+	virtual void ProcessHit(const std::shared_ptr<class Attack>& rpAttack);
 
 	virtual void Die() override;
 };

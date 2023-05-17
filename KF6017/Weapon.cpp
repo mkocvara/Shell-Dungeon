@@ -5,11 +5,11 @@
 Weapon::Weapon(const std::weak_ptr<ServiceManager> pServiceManager, int baseAttackDamage, double baseAttackDelay, float baseAttackReach, float attackSpriteScale, PictureIndex attackSprite)
 {
 	mpServiceManager = pServiceManager;
-	mBaseAttackDamage = baseAttackDamage;
-	mBaseAttackDelay = baseAttackDelay;
-	mBaseAttackReach = baseAttackReach;
+	mAttackDamage = baseAttackDamage;
+	mAttackDelay = baseAttackDelay;
+	mAttackReach = baseAttackReach;
 	mAttackSprite = attackSprite;
-	mBaseAttackSpriteScale = attackSpriteScale;
+	mAttackSpriteScale = attackSpriteScale;
 }
 
 
@@ -26,22 +26,22 @@ PictureIndex Weapon::GetAttackSprite() const
 
 int Weapon::GetBaseAttackDamage() const
 {
-	return mBaseAttackDamage;
+	return mAttackDamage;
 }
 
 double Weapon::GetBaseAttackDelay() const
 {
-	return mBaseAttackDelay;
+	return mAttackDelay;
 }
 
 float Weapon::GetBaseAttackReach() const
 {
-	return mBaseAttackReach;
+	return mAttackReach;
 }
 
 float Weapon::GetBaseAttackSpriteScale() const
 {
-	return mBaseAttackSpriteScale;
+	return mAttackSpriteScale;
 }
 
 
@@ -54,20 +54,20 @@ void Weapon::SetAttackSprite(PictureIndex pictureIndex)
 
 void Weapon::SetBaseAttackDamage(int damage)
 {
-	mBaseAttackDamage = damage;
+	mAttackDamage = damage;
 }
 
 void Weapon::SetBaseAttackDelay(double delay)
 {
-	mBaseAttackDelay = delay;
+	mAttackDelay = delay;
 }
 
 void Weapon::SetBaseAttackReach(float reach)
 {
-	mBaseAttackReach = reach;
+	mAttackReach = reach;
 }
 
 void Weapon::SetBaseAttackSpriteScale(float scale)
 {
-	mBaseAttackSpriteScale = scale;
+	mAttackSpriteScale = scale;
 }

@@ -6,7 +6,6 @@ class Knight;
 class Boon
 {
 public:
-	Boon(const std::weak_ptr<Knight> pPlayerKnight);
 	virtual ~Boon();
 
 	// Must be implemented to give something (a bonus) to the Knight
@@ -18,6 +17,8 @@ public:
 	void SetKnight(const std::weak_ptr<Knight> pPlayerKnight);
 
 protected:
+	Boon(const std::weak_ptr<Knight> pPlayerKnight);
+
 	std::weak_ptr<Knight> mpPlayerKnight;
 };
 

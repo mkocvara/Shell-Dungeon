@@ -11,9 +11,9 @@ public:
 	virtual ~Club();
 
 private:
-	static const int mBaseAttackDamage;
-	static const double mBaseAttackDelay;
-	static const float mBaseAttackReach;
+	static const int mAttackDamage;
+	static const double mAttackDelay;
+	static const float mAttackReach;
 	static const wchar_t* mAttackSpritePath;
 	static const float mAttackSpriteScale;
 };

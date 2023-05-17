@@ -8,7 +8,7 @@ class ServiceManager;
 
 typedef unsigned int Colour;
 
-class MenuItem
+struct MenuItem
 {
 public:
 	//MenuItem(std::wstring text, std::function<void()> callback);

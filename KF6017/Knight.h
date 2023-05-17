@@ -3,7 +3,7 @@
 
 class Rectangle2D;
 
-class Knight final : public Creature
+class Knight : public Creature
 {
 	typedef Creature Super;
 

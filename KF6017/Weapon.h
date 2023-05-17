@@ -31,9 +31,9 @@ protected:
 	void SetBaseAttackSpriteScale(float scale);
 
 private:
-	int mBaseAttackDamage;
-	double mBaseAttackDelay;
+	int mAttackDamage;
+	double mAttackDelay;
+	float mAttackReach;
 	PictureIndex mAttackSprite;
-	float mBaseAttackReach;
-	float mBaseAttackSpriteScale;
+	float mAttackSpriteScale;
 };
