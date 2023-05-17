@@ -96,6 +96,7 @@ std::weak_ptr<Rectangle2D> Knight::GetBounds() const
 }
 
 
+
 // PROTECTED
 
 void Knight::Attack()
@@ -107,7 +108,7 @@ void Knight::Attack()
 	Vector2D attackDirection = pMousePointer->GetPosition() - mPosition;
 
 	const std::shared_ptr<Weapon> pWeapon = GetEquippedWeapon();
-	pWeapon->Attack(shared_from_this(), attackDirection.angle());
+	pWeapon->Attack(std::static_pointer_cast<Creature>(shared_from_this()), attackDirection.angle());
 
 	Super::Attack();
 }

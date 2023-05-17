@@ -5,6 +5,8 @@
 #include "ServiceManager.h"
 #include "mydrawengine.h"
 
+#include "Creature.h"
+
 
 // PUBLIC
 
@@ -17,7 +19,7 @@ Attack::~Attack()
 {
 }
 
-void Attack::Initialise(Vector2D position, float angle, float scale, PictureIndex sprite, std::shared_ptr<Weapon> pSourceWeapon, std::shared_ptr<GameObject> pAttacker, float moveSpeed)
+void Attack::Initialise(Vector2D position, float angle, float scale, PictureIndex sprite, std::shared_ptr<Weapon> pSourceWeapon, std::shared_ptr<Creature> pAttacker, float moveSpeed)
 {
 	Super::Initialise(position, angle, scale);
 
@@ -64,7 +66,7 @@ void Attack::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 
 int Attack::GetDamage() const
 {
-	return mpSourceWeapon->GetBaseAttackDamage();
+	return mpSourceWeapon->GetBaseAttackDamage() + mpAttacker->GetBonusDamage();
 }
 
 std::shared_ptr<GameObject> Attack::GetAttacker() const

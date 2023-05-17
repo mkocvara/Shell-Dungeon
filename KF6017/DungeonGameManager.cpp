@@ -12,6 +12,9 @@
 
 #include "Knight.h"
 #include "Sword.h"
+#include "HealthBoon.h"
+#include "DamageBoon.h"
+#include "SpeedBoon.h"
 
 // PUBLIC
 
@@ -36,7 +39,7 @@ void DungeonGameManager::Update(double deltaTime)
 		break;
 
 	case GameState::levelCleared:
-		if (continuePressed)
+		if (HandleBoonSelection() && continuePressed)
 		{
 			EndLevel();
 			StartLevel(mActiveLevelId + 1);
@@ -64,6 +67,7 @@ void DungeonGameManager::StartLevel(LevelId level)
 	const std::shared_ptr<Knight> pKnightAsKnight = std::static_pointer_cast<Knight>(pKnight);
 	pKnightAsKnight->EquipWeapon(std::make_shared<Sword>(mpServiceManager)); // TODO May wish to implement a WeaponFactory when/if many more weapons are added.
 	mpPlayerKnight = pKnightAsKnight;
+	ApplyBoons(mpPlayerKnight);
 
 	mActiveLevel = std::make_shared<Level>(mpServiceManager, level, pKnightAsKnight);
 	mEnemiesRemaining = mActiveLevel->GetTotalEnemies();
@@ -113,6 +117,7 @@ void DungeonGameManager::RestartGame()
 	mTimer = 0.f;
 	StartLevel(1);
 	mGameState = GameState::playerAlive;
+	mSelectedBoons.clear();
 }
 
 GameState DungeonGameManager::GetGameState() const
@@ -163,7 +168,8 @@ void DungeonGameManager::Render()
 		const std::wstring levelClearedText = L"You have prevailed and slain your enemies.";
 		const std::wstring levelClearedText2 = L"The level is clear, but prepare for more...";
 		const std::wstring bottomText = L"Level : " + std::to_wstring(mActiveLevelId) + L"  |  Time so far: " + std::to_wstring((int)mTimer);
-		const std::wstring continueText = L"Press [Spacebar] to continue.";
+		const std::wstring continueText = (BoonSelected()) ? L"Press [Spacebar] to continue." : L"Select a boon before proceeding:";
+		const std::wstring boonText = L"1. Boon of Health     2. Boon of Strength     3. Boon of Speed";
 
 		const int screenWidth = pDrawEngine->GetScreenWidth();
 		const int screenHeight = pDrawEngine->GetScreenHeight();
@@ -176,6 +182,11 @@ void DungeonGameManager::Render()
 			err = FAILURE;
 		if (FAILED(pDrawEngine->WriteText(screenWidth / 2, screenHeight / 2 + 80, continueText.c_str(), MyDrawEngine::CYAN, 0, true)))
 			err = FAILURE;
+		if (!BoonSelected())
+		{
+			if (FAILED(pDrawEngine->WriteText(screenWidth / 2, screenHeight / 2 + 100, boonText.c_str(), MyDrawEngine::CYAN, 0, true)))
+				err = FAILURE;
+		}
 
 		if (FAILED(err))
 		{
@@ -237,4 +248,44 @@ void DungeonGameManager::Render()
 bool DungeonGameManager::ContinuePressed()
 {
 	return mpServiceManager.lock()->GetInputs().lock()->NewKeyPressed(DIK_SPACE);
+}
+
+bool DungeonGameManager::HandleBoonSelection()
+{
+	if (BoonSelected())
+		return true;
+
+	const std::shared_ptr<MyInputs> pInputs = mpServiceManager.lock()->GetInputs().lock();
+
+	std::unique_ptr<Boon> selectedBoon;
+	if (pInputs->NewKeyPressed(DIK_1))
+		selectedBoon = std::make_unique<HealthBoon>(mpPlayerKnight, 3);
+	else if (pInputs->NewKeyPressed(DIK_2))
+		selectedBoon = std::make_unique<DamageBoon>(mpPlayerKnight, 1);
+	else if (pInputs->NewKeyPressed(DIK_3))
+		selectedBoon = std::make_unique<SpeedBoon>(mpPlayerKnight, 2.f);
+
+	if (selectedBoon)
+	{
+		mSelectedBoons.push_back(std::move(selectedBoon));
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool DungeonGameManager::BoonSelected()
+{
+	return mSelectedBoons.size() == mActiveLevelId;
+}
+
+void DungeonGameManager::ApplyBoons(const std::weak_ptr<Knight>& pPlayerKnight)
+{
+	for (const std::unique_ptr<Boon>& boon : mSelectedBoons)
+	{
+		boon->SetKnight(pPlayerKnight);
+		boon->Apply();
+	}
 }

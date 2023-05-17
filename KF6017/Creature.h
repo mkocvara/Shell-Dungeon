@@ -16,6 +16,7 @@ public:
 	virtual ErrorType Update(double deltaTime) override;
 
 	int GetCurrentHealth() const;
+	void SetCurrentHealth(int newHealth);
 	virtual void Damage(int damageAmount);
 	virtual void Heal(int healAmount);
 	int GetMaxHealth() const;
@@ -26,6 +27,10 @@ public:
 	bool IsAttackOnCooldown() const;
 
 	virtual void HandleCollision(const std::shared_ptr<GameObject> pOtherObject) override;
+
+	int GetBonusDamage() const;
+	void SetBonusDamage(int newBonusDamage);
+	int ChangeBonusDamage(int bonusDamage);
 
 protected:
 	Creature(const std::weak_ptr<ServiceManager> pServiceManager);
@@ -46,6 +51,8 @@ private:
 	bool mShowHealthBar = true;
 	std::shared_ptr<Weapon> mpEquippedWeapon;
 	float mAttackCooldown = 0.f;
+
+	int mBonusDamage = 0;
 
 	std::list<std::weak_ptr<GameObject>> mCollidedObstacles;
 };

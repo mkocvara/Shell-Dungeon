@@ -5,6 +5,7 @@
 #include "mydrawengine.h"
 
 #include "Attack.h"
+#include "Creature.h"
 
 
 MeleeWeapon::MeleeWeapon(const std::weak_ptr<ServiceManager> pServiceManager, int baseAttackDamage, double baseAttackDelay, float baseAttackReach, float attackSpriteScale, PictureIndex attackSprite)
@@ -19,7 +20,7 @@ MeleeWeapon::~MeleeWeapon()
 {
 }
 
-void MeleeWeapon::Attack(const std::shared_ptr<GameObject> pAttacker, float attackAngle)
+void MeleeWeapon::Attack(const std::shared_ptr<Creature> pAttacker, float attackAngle)
 {
 	const std::shared_ptr<ServiceManager> pServiceManager = mpServiceManager.lock();
 	const std::shared_ptr<GameObjectFactory> pObjectFactory = pServiceManager->GetObjectFactory().lock();

@@ -6,6 +6,7 @@
 
 class Weapon;
 class AngledRectangle2D;
+class Creature;
 
 class Attack : public MovingGameObject, public ICollidableObject
 {
@@ -15,7 +16,7 @@ public:
 	Attack(const std::weak_ptr<ServiceManager> pServiceManager);
 	virtual ~Attack();
 
-	virtual void Initialise(Vector2D position, float angle, float scale, PictureIndex sprite, const std::shared_ptr<Weapon> pSourceWeapon, const std::shared_ptr<GameObject> pAttacker, float moveSpeed = 0.f);
+	virtual void Initialise(Vector2D position, float angle, float scale, PictureIndex sprite, const std::shared_ptr<Weapon> pSourceWeapon, const std::shared_ptr<Creature> pAttacker, float moveSpeed = 0.f);
 	virtual ErrorType Update(double deltaTime) override;
 
 	virtual std::weak_ptr<IShape2D> GetShape() const override;
@@ -29,7 +30,7 @@ public:
 
 private:
 	std::shared_ptr<Weapon> mpSourceWeapon;
-	std::shared_ptr<GameObject> mpAttacker;
+	std::shared_ptr<Creature> mpAttacker;
 
 	const double mDuration = 0.08f;
 	double mTimer = 0.f;

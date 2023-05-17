@@ -36,6 +36,11 @@ int Creature::GetCurrentHealth() const
 	return mHealth;
 }
 
+void Creature::SetCurrentHealth(int newHealth)
+{
+	mHealth = newHealth;
+}
+
 void Creature::Damage(int damageAmount)
 {
 	mHealth = std::max(0, mHealth - damageAmount);
@@ -56,6 +61,11 @@ int Creature::GetMaxHealth() const
 
 void Creature::SetMaxHealth(int newMaxHealth)
 {
+	if (newMaxHealth < mMaxHealth)
+	{
+		SetCurrentHealth(newMaxHealth);
+	}
+
 	mMaxHealth = newMaxHealth;
 }
 
@@ -82,6 +92,20 @@ void Creature::HandleCollision(const std::shared_ptr<GameObject> pOtherObject)
 	}
 }
 
+int Creature::GetBonusDamage() const
+{
+	return mBonusDamage;
+}
+
+void Creature::SetBonusDamage(int newBonusDamage)
+{
+	mBonusDamage = newBonusDamage;
+}
+
+int Creature::ChangeBonusDamage(int bonusDamage)
+{
+	return mBonusDamage += bonusDamage;
+}
 
 // PROTECTED
 

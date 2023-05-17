@@ -1,10 +1,13 @@
 #pragma once
 #include "GameManager.h"
 #include "vector2D.h"
+#include <memory>
+#include <list>
 
 class Knight;
 class Rectangle2D;
 class Level;
+class Boon;
 
 enum class GameState {
 	playerAlive,
@@ -40,6 +43,10 @@ public:
 protected:
 	virtual void Render() override;
 	bool ContinuePressed();
+	bool HandleBoonSelection();
+	bool BoonSelected();
+
+	void ApplyBoons(const std::weak_ptr<Knight>& pPlayerKnight);
 
 private:
 	GameState mGameState = GameState::playerAlive;
@@ -54,5 +61,7 @@ private:
 
 	std::shared_ptr<Level> mActiveLevel;
 	std::weak_ptr<Knight> mpPlayerKnight;
+
+	std::list<std::unique_ptr<Boon>> mSelectedBoons;
 };
 

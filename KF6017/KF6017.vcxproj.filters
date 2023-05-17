@@ -67,6 +67,12 @@
     <Filter Include="Source Files\Game\Items">
       <UniqueIdentifier>{9d4601f6-7177-49c5-85fb-8cdd28a77eba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game\Boons">
+      <UniqueIdentifier>{e67f8126-bfce-4889-b293-43a2332c6ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Boons">
+      <UniqueIdentifier>{50261edd-1ec1-48e6-b522-eef38e8a10de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RandUtil.cpp">
@@ -185,6 +191,18 @@
     </ClCompile>
     <ClCompile Include="CollidableMapTile.cpp">
       <Filter>Source Files\Game\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Boon.cpp">
+      <Filter>Source Files\Game\Boons</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthBoon.cpp">
+      <Filter>Source Files\Game\Boons</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageBoon.cpp">
+      <Filter>Source Files\Game\Boons</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedBoon.cpp">
+      <Filter>Source Files\Game\Boons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +337,18 @@
     </ClInclude>
     <ClInclude Include="RenderLayers.h">
       <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Boon.h">
+      <Filter>Header Files\Game\Boons</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBoon.h">
+      <Filter>Header Files\Game\Boons</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageBoon.h">
+      <Filter>Header Files\Game\Boons</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedBoon.h">
+      <Filter>Header Files\Game\Boons</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

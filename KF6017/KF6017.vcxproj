@@ -154,9 +154,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Attack.cpp" />
+    <ClCompile Include="Boon.cpp" />
     <ClCompile Include="Club.cpp" />
     <ClCompile Include="CollidableMapTile.cpp" />
     <ClCompile Include="Creature.cpp" />
+    <ClCompile Include="DamageBoon.cpp" />
     <ClCompile Include="DungeonGameManager.cpp" />
     <ClCompile Include="DungeonObjectFactory.cpp" />
     <ClCompile Include="DungeonServiceManager.cpp" />
@@ -170,6 +172,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="gametimer.cpp" />
+    <ClCompile Include="HealthBoon.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="MapTile.cpp" />
@@ -187,6 +190,7 @@
     <ClCompile Include="ServiceManager.cpp" />
     <ClCompile Include="SFXManager.cpp" />
     <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="SpeedBoon.cpp" />
     <ClCompile Include="StringUtil.cpp" />
     <ClCompile Include="Sword.cpp" />
     <ClCompile Include="vector2D.cpp" />
@@ -195,9 +199,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attack.h" />
+    <ClInclude Include="Boon.h" />
     <ClInclude Include="Club.h" />
     <ClInclude Include="CollidableMapTile.h" />
     <ClInclude Include="Creature.h" />
+    <ClInclude Include="DamageBoon.h" />
     <ClInclude Include="DungeonGameManager.h" />
     <ClInclude Include="DungeonObjectFactory.h" />
     <ClInclude Include="DungeonServiceManager.h" />
@@ -208,6 +214,7 @@
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="EventType.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="HealthBoon.h" />
     <ClInclude Include="ICollidableObject.h" />
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="errortype.h" />
@@ -234,6 +241,7 @@
     <ClInclude Include="ServiceManager.h" />
     <ClInclude Include="SFXManager.h" />
     <ClInclude Include="Shapes.h" />
+    <ClInclude Include="SpeedBoon.h" />
     <ClInclude Include="StringUtil.h" />
     <ClInclude Include="Sword.h" />
     <ClInclude Include="vector2D.h" />

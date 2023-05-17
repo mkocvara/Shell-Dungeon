@@ -2,7 +2,7 @@
 #include <memory>
 
 class ServiceManager;
-class GameObject;
+class Creature;
 
 typedef int PictureIndex;
 
@@ -11,7 +11,7 @@ class Weapon : public std::enable_shared_from_this<Weapon>
 public:
 	virtual ~Weapon();
 
-	virtual void Attack(const std::shared_ptr<GameObject> pAttacker, float attackAngle) = 0;
+	virtual void Attack(const std::shared_ptr<Creature> pAttacker, float attackAngle) = 0;
 
 	PictureIndex GetAttackSprite() const;
 	int GetBaseAttackDamage() const;

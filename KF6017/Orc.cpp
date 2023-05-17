@@ -117,7 +117,7 @@ void Orc::Attack()
 		return;
 
 	const std::shared_ptr<Weapon> pWeapon = GetEquippedWeapon();
-	pWeapon->Attack(shared_from_this(), mAttackDirection.angle());
+	pWeapon->Attack(std::static_pointer_cast<Creature>(shared_from_this()), mAttackDirection.angle());
 
 	Super::Attack();
 }
