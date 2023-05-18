@@ -9,12 +9,10 @@ public:
 
 	typedef GameObjectFactory Super;
 
-	/// <summary>
-	/// Creates an object of specified type and adds it to the object manager in the passed service manager.
-	/// </summary>
-	/// <param name="type">Type of object to create</param>
-	/// <param name="serviceManager">Service manager instance for the game</param>
-	/// <returns>A weak_ptr to the created object.</returns>
+	
+	// Creates an object of specified type and adds it to the object manager. 
+	// Initialises the object by default, but this is optional (second parameter).
+	// Returns a weak_ptr to the created object.
 	virtual std::weak_ptr<GameObject> Create(ObjectType type, bool initialise, Vector2D initPosition, float initAngle, float initScale) override;
 
 private:

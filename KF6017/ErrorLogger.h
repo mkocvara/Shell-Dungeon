@@ -19,7 +19,7 @@
 // The error logger allows the user to write error messages to a log file
 // Due to changes in DirectX messaging, some features of the log system
 // have been removed from earlier versions.
-// See errorlogger.cpp for the file name of the log file (probably "error.log")
+// See ErrorLogger.cpp for the file name of the log file (probably "error.log")
 class ErrorLogger
 {
 private:

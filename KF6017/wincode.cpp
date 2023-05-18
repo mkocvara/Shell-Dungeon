@@ -4,7 +4,7 @@
 
 #include "errortype.h"
 #include "gamecode.h"
-#include "errorlogger.h"
+#include "ErrorLogger.h"
 
 
 // Includes *************************************************************************************

@@ -1,9 +1,10 @@
 // mysoundengine.cpp	Version 10		9/5/05
 // The definition file for the methods in MySoundEngine, declared in mysoundengine.h
+
 #define DSBCAPS_CTRLDEFAULT 0x000000E0
 
 #include "mysoundengine.h"
-#include "errorlogger.h"
+#include "ErrorLogger.h"
 
 MySoundEngine::MySoundEngine(HWND hwnd)
 {

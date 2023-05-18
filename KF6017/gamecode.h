@@ -38,7 +38,7 @@ public:
 	// Called each frame when in the RUNNING state.
 	ErrorType GameUpdate();
 
-	// Called from Update() to handle game object agnostic player input.
+	// Called from GameUpdate() to handle game object agnostic player input.
 	// Checks for user pressing escape (which puts the game in the PAUSED state)
 	ErrorType HandleInput();
 
