@@ -3,6 +3,7 @@
 #include "RandUtil.h"
 #include "ServiceManager.h"
 #include "mydrawengine.h"
+#include "camera.h"
 #include "EventManager.h"
 
 

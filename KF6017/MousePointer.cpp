@@ -50,7 +50,7 @@ void MousePointer::Update(double deltaTime)
 
 void MousePointer::Render()
 {
-	if (mPointerVisible)
+	if (mPointerEnabled && mPointerVisible)
 	{
 		const std::shared_ptr<MyDrawEngine> pDrawEngine = mpServiceManager.lock()->GetDrawEngine().lock();
 		const Rectangle2D viewport = pDrawEngine->GetViewport();
