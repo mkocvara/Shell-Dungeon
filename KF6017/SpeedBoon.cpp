@@ -1,3 +1,10 @@
+/*
+* SpeedBoon.cpp
+* 19002175
+*
+* Speed boon; increases Knight's movement speed when applied.
+*/
+
 #include "SpeedBoon.h"
 #include "Knight.h"
 #include "ErrorLogger.h"

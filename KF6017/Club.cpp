@@ -1,3 +1,10 @@
+/*
+* Club.cpp
+* 19002175
+*
+* Concrete subclass of a MeleeWeapon. Determines stats and the sprite of its attacks.
+*/
+
 #include "Club.h"
 
 #include "ServiceManager.h"

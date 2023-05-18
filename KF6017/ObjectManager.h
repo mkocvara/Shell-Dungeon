@@ -1,3 +1,10 @@
+/*
+* ObjectManager.h
+* 19002175
+*
+* Service owning all GameObjects. Updates all objects and detects collisions.
+*/
+
 #pragma once
 #include "Service.h"
 #include <memory>

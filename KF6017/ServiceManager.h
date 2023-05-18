@@ -1,3 +1,12 @@
+/*
+* ServiceManager.h
+* 19002175
+*
+* Abstract base ServiceManager. Keeps a reference to all services and IO engines. 
+* Used to access all services by game objects via dependency injection.
+* Intended to be inherited from by a game-specific subclass.
+*/
+
 #pragma once
 #include <memory>
 #include <list>

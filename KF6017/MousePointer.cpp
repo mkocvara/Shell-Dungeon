@@ -1,3 +1,10 @@
+/*
+* MousePointer.cpp
+* 19002175
+*
+* Service for tracking and displaying the mouse pointer. Dispatches click events on click.
+*/
+
 #include "MousePointer.h"
 #include <algorithm>
 

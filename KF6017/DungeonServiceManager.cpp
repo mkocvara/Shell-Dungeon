@@ -1,3 +1,12 @@
+/*
+* DungeonServiceManager.cpp
+* 19002175
+*
+* Game-specific ServiceManager. Keeps a reference to all services and IO engines.
+* Used to access all services by game objects via dependency injection.
+* Creates game-specific services.
+*/
+
 #include "DungeonServiceManager.h"
 #include "ErrorLogger.h"
 #include "DungeonObjectFactory.h"

@@ -1,3 +1,12 @@
+/*
+* Level.h
+* 19002175
+*
+* Represents a level. Is constructed with level number. Loads a level file, parses it, and constructs the map
+* based on its formatting, algorithmically determining what type of sprite to use for each tile in order to
+* achieve continuous walls and floors. Also places the Knight and creates enemies based on the same file.
+*/
+
 #pragma once
 #include "errortype.h"
 #include <vector>

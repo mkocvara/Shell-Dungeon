@@ -1,3 +1,15 @@
+// Chris Rook. Northumbria University
+// 24/04/2012	Added magnitudeSquared.
+// Modified 04/11/2018
+// Changed rotatedBy to use angles clockwise
+// Modified 06/09/2019
+//	Added type double use of *, / , *= and /=
+//   Also int for division
+ 
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+//		
+
 #ifndef VECTOR_H
 #define VECTOR_H
 

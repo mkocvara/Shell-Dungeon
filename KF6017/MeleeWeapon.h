@@ -1,3 +1,10 @@
+/*
+* MeleeWeapon.h
+* 19002175
+*
+* Abstract class for a melee weapons. Implements specifics of creating Attacks. Stats must be given it.
+*/
+
 #pragma once
 #include "Weapon.h"
 

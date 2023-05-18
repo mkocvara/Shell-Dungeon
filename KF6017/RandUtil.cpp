@@ -1,3 +1,9 @@
+/*
+* RandUtil.cpp
+* 19002175
+*
+* Static utility class which uses the mt19937 random generator for a uniformly distributed range number generation.
+*/
 #include "RandUtil.h"
 
 #if _DEBUG

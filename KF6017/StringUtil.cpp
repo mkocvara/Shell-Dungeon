@@ -1,5 +1,11 @@
-#include "StringUtil.h"
+/*
+* StringUtil.cpp
+* 19002175
+*
+* Static utility function for helpful string manipulation functions.
+*/
 
+#include "StringUtil.h"
 
 // Trim functions adapted from https://stackoverflow.com/a/217605
  

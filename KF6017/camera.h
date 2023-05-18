@@ -3,6 +3,9 @@
 // Chris Rook
 // Last modified 20/09/2018
 
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+//		Fixed PlaceAt() function using wrong Y coordinate.
 
 #pragma once
 

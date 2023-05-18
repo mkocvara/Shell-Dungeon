@@ -1,3 +1,11 @@
+/*
+* Enemy.h
+* 19002175
+*
+* An abstract subclass of Creature specifically for creatures hostile to the player.
+* Can be hit by the Knight. It's death is transmitted as an event.
+*/
+
 #pragma once
 #include "Creature.h"
 

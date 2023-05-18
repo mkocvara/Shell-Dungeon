@@ -1,3 +1,11 @@
+/*
+* Knight.h
+* 19002175
+*
+* A concrete subclass of Creature. The Knight is the player character and includes input handling, stats, collisions. 
+* Hurt by attacks from enemies.
+*/
+
 #pragma once
 #include "Creature.h"
 

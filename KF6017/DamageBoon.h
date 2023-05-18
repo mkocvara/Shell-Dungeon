@@ -1,3 +1,10 @@
+/*
+* DamageBoon.h
+* 19002175
+*
+* Damage boon; increases Knight's damage dealt when applied.
+*/
+
 #pragma once
 #include "Boon.h"
 

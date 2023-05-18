@@ -1,3 +1,10 @@
+/*
+* DungeonSFXManager.cpp
+* 19002175
+*
+* Game-specific service for handling sound effects. Loads all sounds at launch and plays them on demans.
+*/
+
 #include "DungeonSFXManager.h"
 #include "mysoundengine.h"
 #include "RandUtil.h"

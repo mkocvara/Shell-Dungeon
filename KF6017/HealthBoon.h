@@ -1,3 +1,10 @@
+/*
+* HealthBoon.h
+* 19002175
+*
+* Health boon; increases Knight's health when applied.
+*/
+
 #pragma once
 #include "Boon.h"
 

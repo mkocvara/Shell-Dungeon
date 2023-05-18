@@ -1,3 +1,10 @@
+/*
+* DungeonObjectFactory.cpp
+* 19002175
+*
+* Game-specific service for creating objects. Has weak dependencies on all game objects, so that others don't have to.
+*/
+
 #include "ErrorLogger.h"
 
 #include "ServiceManager.h"

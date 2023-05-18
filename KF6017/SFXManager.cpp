@@ -1,3 +1,12 @@
+/*
+* SFXManager.cpp
+* 19002175
+*
+* Abstract service superclass for managing game's sound effects.
+* Provides general volume controls.
+* Intended to be inherited from by a game-specific subclass.
+*/
+
 #include "SFXManager.h"
 #include "mysoundengine.h"
 #include <algorithm>

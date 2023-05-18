@@ -1,3 +1,10 @@
+/*
+* DamageBoon.cpp
+* 19002175
+*
+* Damage boon; increases Knight's damage dealt when applied.
+*/
+
 #include "DamageBoon.h"
 #include "Knight.h"
 #include "ErrorLogger.h"

@@ -1,3 +1,10 @@
+/*
+* GameObject.cpp
+* 19002175
+*
+* Base abstract superclass for all objects within the game world
+*/
+
 #include "GameObject.h"
 #include "mydrawengine.h"
 #include "ServiceManager.h"

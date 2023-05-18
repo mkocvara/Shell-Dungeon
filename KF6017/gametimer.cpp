@@ -5,6 +5,9 @@
 // Added experimental throttle component to gradually restore frame rate after a dip
 //	Intention is to smooth frame rate osscilation
 
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+
 #include "GameTimer.h"
 
 GameTimer::GameTimer()

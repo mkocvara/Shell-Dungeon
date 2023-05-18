@@ -1,3 +1,11 @@
+/*
+* GameObjectFactory.cpp
+* 19002175
+*
+* Abstract class for a service for creating objects.
+* Intended to be inherited from by a game-specific class.
+*/
+
 #include "GameObjectFactory.h"
 
 

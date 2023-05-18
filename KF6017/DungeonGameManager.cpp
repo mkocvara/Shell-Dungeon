@@ -1,3 +1,11 @@
+/*
+* DungeonGameManager.cpp
+* 19002175
+*
+* Game-specific service for managing levels and time. Handles transitions between levels, death, and victory.
+* Keeps track of and gives the player Boons. Creates (as per level) and keeps a reference to the Knight and exposes some of its information.
+*/
+
 #include "DungeonGameManager.h"
 #include "ErrorLogger.h"
 #include "Level.h"

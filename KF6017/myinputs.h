@@ -1,3 +1,13 @@
+// myinputs.h
+// Shell engine version 2020
+// Chris Rook
+// Modified 08/11/2018
+//		Start() now returns an ErrorType, to be consistent with MyDrawEngine
+
+// Modified by 19002175
+//		Changed from singleton to normal instanced when implementing ServiceManager.
+//		Renamed variables to a style consistent with other work.
+
 #pragma once
 #pragma comment(lib, "dinput8.lib")
 
@@ -62,8 +72,6 @@ public:
 
 	// Destructor. Calls Release().
 	~MyInputs();
-
-	// ***** Class management functions **********************************************
 
 	// ***** Mouse functions ********************************************************
 

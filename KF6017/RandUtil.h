@@ -1,3 +1,10 @@
+/*
+* RandUtil.h
+* 19002175
+*
+* Static utility class which uses the mt19937 random generator for a uniformly distributed range number generation.
+*/
+
 #pragma once
 #include <random>
 #include <memory>

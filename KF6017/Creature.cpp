@@ -1,3 +1,11 @@
+/*
+* Creature.cpp
+* 19002175
+*
+* An abstract class of a game object representing a living creature. Can move and collide.
+* Has health, can wield and swing weapons. Can have a health bar. Determines behaviour on collisions with walls.
+*/
+
 #include "Creature.h"
 #include "winerror.h"
 #include <algorithm>

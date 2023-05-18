@@ -1,3 +1,10 @@
+/*
+* MousePointer.h
+* 19002175
+*
+* Service for tracking and displaying the mouse pointer. Dispatches click events on click.
+*/
+
 #pragma once
 #include "Service.h"
 #include "vector2D.h"

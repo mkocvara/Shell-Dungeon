@@ -1,3 +1,11 @@
+/*
+* Event.h
+* 19002175
+*
+* Event struct with a simple overloaded constructor.
+* Represents an event that can be dispached via the EventManager.
+*/
+
 #pragma once
 
 #include "EventType.h"

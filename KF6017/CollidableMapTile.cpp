@@ -1,3 +1,10 @@
+/*
+* CollidableMapTile.cpp
+* 19002175
+*
+* A static, but collidable map tile (e.g., wall).
+*/
+
 #include "CollidableMapTile.h"
 #include "Shapes.h"
 

@@ -1,8 +1,14 @@
-
 // Shapes.cpp
 // Chris Rook
 // Last modified 06/11/2018
 //	Added AngledRectangle2D and Intersects(AngledRectangle2D) method for other classes
+
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+//		Added PlaceAt() overload for Circle2D to place it using just centre while retaining previous radius.
+//		Added PlaceAt() overload for Rectangle2D to place it using centre, height, and width.
+//		Added SetCentre() method for Rectangle2D to place it using centre, while retaining previous height and width.
+//		Added height and width getters for Rectangle2D.
 
 #include "Shapes.h"
 #include <limits.h>

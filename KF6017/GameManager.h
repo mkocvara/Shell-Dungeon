@@ -1,3 +1,11 @@
+/*
+* GameManager.h
+* 19002175
+*
+* Abstract class for a service managing levels and objectives.
+* Intended to be inherited from by a game-specific class.
+*/
+
 #pragma once
 #include "Service.h"
 #include <memory>

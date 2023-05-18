@@ -1,3 +1,11 @@
+/*
+* Orc.h
+* 19002175
+*
+* Concrete Enemy subclass. Has specific stats, sprite, and collision shape. Plays a sound on being hit.
+* Has behaviour to move to, and attack the player/Knight.
+*/
+
 #pragma once
 #include "Enemy.h"
 

@@ -1,3 +1,10 @@
+/*
+* CollidableMapTile.h
+* 19002175
+*
+* A static, but collidable map tile (e.g., wall).
+*/
+
 #pragma once
 #include "MapTile.h"
 #include "ICollidableObject.h"

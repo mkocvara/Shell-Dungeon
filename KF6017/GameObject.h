@@ -1,3 +1,10 @@
+/*
+* GameObject.h
+* 19002175
+* 
+* Base abstract superclass for all objects within the game world
+*/
+
 #pragma once
 #include "vector2D.h"
 #include "errortype.h"

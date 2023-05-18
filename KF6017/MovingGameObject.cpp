@@ -1,3 +1,10 @@
+/*
+* MovingGameObject.cpp
+* 19002175
+*
+* Abstract subclass of GameObject objects that can move within the game world.
+*/
+
 #include "MovingGameObject.h"
 #include "ErrorLogger.h"
 #include <cmath>

@@ -1,3 +1,9 @@
+// Modified 04/11/2018
+//		Changed rotatedBy to use angles clockwise
+
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+
 #include "vector2D.h"
 #include "math.h"
 

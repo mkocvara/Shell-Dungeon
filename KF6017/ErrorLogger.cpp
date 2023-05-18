@@ -3,7 +3,11 @@
 // Chris Rook
 // Last modified 20/09/2018
 
-#include "errorlogger.h"
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+//		Added a header to the log file.
+
+#include "ErrorLogger.h"
 #include <math.h>
 #include <string>
 

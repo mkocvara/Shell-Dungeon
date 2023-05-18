@@ -1,3 +1,10 @@
+/*
+* EventManager.h
+* 19002175
+*
+* Service class for dispatching events (messages).
+*/
+
 #pragma once
 #include "Service.h"
 #include "Event.h"

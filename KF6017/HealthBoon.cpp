@@ -1,3 +1,10 @@
+/*
+* HealthBoon.cpp
+* 19002175
+*
+* Health boon; increases Knight's health when applied.
+*/
+
 #include "HealthBoon.h"
 #include "Knight.h"
 #include "ErrorLogger.h"

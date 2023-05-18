@@ -1,3 +1,13 @@
+// gamecode.cpp
+
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+//		Updated from direct IO engine references to ServiceManager.
+//		Removed Shutdown in favour of smart pointers.
+//		Reimplemented menus using the Menu class.
+//		Restructured methods organisation.
+//		Updated descriptions in comments where appropriate.
+
 #include "gamecode.h"
 #include <time.h>
 #include "gametimer.h"

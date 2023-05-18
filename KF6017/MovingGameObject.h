@@ -1,3 +1,10 @@
+/*
+* MovingGameObject.h
+* 19002175
+*
+* Abstract subclass of GameObject objects that can move within the game world.
+*/
+
 #pragma once
 #include "GameObject.h"
 

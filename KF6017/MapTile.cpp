@@ -1,3 +1,10 @@
+/*
+* MapTile.cpp
+* 19002175
+*
+* A static map tile with no collisions (e.g., floor, ground).
+*/
+
 #include "MapTile.h"
 #include "RenderLayers.h"
 

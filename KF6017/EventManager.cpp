@@ -1,3 +1,10 @@
+/*
+* EventManager.cpp
+* 19002175
+*
+* Service class for dispatching events (messages).
+*/
+
 #include "EventManager.h"
 #include "ServiceManager.h"
 #include "ObjectManager.h"

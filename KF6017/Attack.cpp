@@ -1,3 +1,11 @@
+/*
+* Attack.cpp
+* 19002175
+*
+* A moving and collidable game object representing a weapon attack (e.g., sword slash, club swing).
+* Created by a weapon. Should be relatively easily expanded to allow moving ranged attacks.
+*/
+
 #include "Attack.h"
 #include "Weapon.h"
 #include "ObjectType.h"

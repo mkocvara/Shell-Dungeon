@@ -1,3 +1,10 @@
+/*
+* Menu.cpp
+* 19002175
+*
+* Menu class with a dynamic list of options. Used for main and pause menus.
+*/
+
 #include "Menu.h"
 #include "mydrawengine.h"
 #include "myinputs.h"

@@ -1,3 +1,11 @@
+/*
+* Weapon.cpp
+* 19002175
+*
+* Abstract class representing a weapon usable by creatures. Has to be constructed with stats.
+* Specifics of how it creates Attacks are individual to types of weapons.
+*/
+
 #include "Weapon.h"
 #include "ErrorLogger.h"
 

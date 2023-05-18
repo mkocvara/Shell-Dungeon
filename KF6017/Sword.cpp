@@ -1,3 +1,10 @@
+/*
+* Sword.cpp
+* 19002175
+*
+* Concrete subclass of a MeleeWeapon. Determines stats and the sprite of its attacks.
+*/
+
 #include "Sword.h"
 
 #include "ServiceManager.h"

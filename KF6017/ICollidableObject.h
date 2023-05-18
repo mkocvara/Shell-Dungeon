@@ -1,3 +1,11 @@
+/*
+* ICollidableObject.h
+* 19002175
+*
+* Interface-like abstract class implemented by game objects to enable collisions.
+*/
+
+
 #pragma once
 #include <memory>
 

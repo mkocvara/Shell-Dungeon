@@ -1,3 +1,21 @@
+// MySoundEngine.cpp
+// Shell engine version 2020
+// Chris Rook
+// Modified 8/11/2018
+//		Start() now returns an ErrorType, to be consistent with MyDrawEngine
+
+// Modified 4/2/2022
+//		Major rewrite. MySound is now a class and handles more functionality
+//		Each sound buffer is loaded four times to allow simultaneous playing
+//		Each sound can only be loaded once. If the same sound is loaded a second time,
+//		LoadWAV will return the index of the existing sound
+
+// Modified by 19002175
+//		Changed from singleton to normal instanced when implementing ServiceManager.
+//		Renamed variables to a style consistent with other work.
+//		Changed constant number of sound buffers to a dynamic one using std::vector<>, 
+//			creating new ones when there's demand for them and reusing ones that aren't active at the time.
+
 #pragma once
 
 #include <string>

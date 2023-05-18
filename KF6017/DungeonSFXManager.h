@@ -1,3 +1,10 @@
+/*
+* DungeonSFXManager.h
+* 19002175
+*
+* Game-specific service for handling sound effects. Loads all sounds at launch and plays them on demans.
+*/
+
 #pragma once
 #include "SFXManager.h"
 

@@ -1,3 +1,10 @@
+/*
+* Menu.h
+* 19002175
+*
+* Menu class with a dynamic list of options. Used for main and pause menus.
+*/
+
 #pragma once
 #include <string>
 #include <vector>

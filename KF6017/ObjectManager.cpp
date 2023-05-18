@@ -1,3 +1,10 @@
+/*
+* ObjectManager.cpp
+* 19002175
+*
+* Service owning all GameObjects. Updates all objects and detects collisions.
+*/
+
 #include "ObjectManager.h"
 #include "GameObject.h"
 #include "ICollidableObject.h"
