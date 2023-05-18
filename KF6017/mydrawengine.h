@@ -10,6 +10,12 @@
 // Modified 25/4/2023
 //		Added DrawAt overload with two scales - X and Y.
 
+// Modified by 19002175
+//		Changed from singleton to normal instanced when implementing ServiceManager.
+//		Renamed variables to a style consistent with other work.
+//		Camera now held as a pointer to reduce coupling.
+//		Added a boolean parameter to write functions to optionally centre text to the passed point.
+
 #pragma once
 
 #pragma comment(lib, "d3d9.lib")

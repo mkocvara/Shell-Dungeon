@@ -1,3 +1,17 @@
+// gamecode.h
+// Shell engine version 2020
+// Chris Rook
+// Last modified 25/09/2018
+//		Update to prevent game loop from flipping twice
+
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+//		Updated from direct IO engine references to ServiceManager.
+//		Removed Shutdown in favour of smart pointers.
+//		Reimplemented menus using the Menu class.
+//		Restructured methods organisation.
+//		Updated descriptions in comments where appropriate.
+
 #pragma once
 #include <memory>
 #include "errortype.h"

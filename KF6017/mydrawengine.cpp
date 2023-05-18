@@ -8,6 +8,11 @@
 // Modified 06/09/2019
 //		Updating LoadPicture, FindPicture, AddFont to const wchar_t to support string literals in parameters
 
+// Modified by 19002175
+//		Changed from singleton to normal instanced when implementing ServiceManager.
+//		Renamed variables to a style consistent with other work.
+//		Camera now held as a pointer to reduce coupling.
+//		Added a boolean parameter to write functions to optionally centre text to the passed point.
 
 #include "mydrawengine.h"
 #include <algorithm>			// Using find() in DeregisterPicture

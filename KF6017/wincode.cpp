@@ -1,3 +1,13 @@
+// wincode.cpp
+// Shell engine version 2023
+// Chris Rook
+// Last modified 06/09/2019
+//		Updating to const wchar_t to support string literals in parameters
+//		Added assumption of windowed when in DEBUG config, using _DEBUG macro in WinMain
+
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>

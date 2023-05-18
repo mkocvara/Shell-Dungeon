@@ -1,3 +1,12 @@
+// Errorlogger.h
+// Shell engine version 2020
+// Chris Rook
+// Last modified 20/09/2018
+
+// Modified by 19002175
+//		Renamed variables to a style consistent with other work.
+//		Added a header to the log file.
+
 #pragma once
 
 #include <fstream>

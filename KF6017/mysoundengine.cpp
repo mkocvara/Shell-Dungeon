@@ -1,6 +1,12 @@
 // mysoundengine.cpp	Version 10		9/5/05
 // The definition file for the methods in MySoundEngine, declared in mysoundengine.h
 
+// Modified by 19002175
+//		Changed from singleton to normal instanced when implementing ServiceManager.
+//		Renamed variables to a style consistent with other work.
+//		Changed constant number of sound buffers to a dynamic one using std::vector<>, 
+//			creating new ones when there's demand for them and reusing ones that aren't active at the time.
+
 #define DSBCAPS_CTRLDEFAULT 0x000000E0
 
 #include "mysoundengine.h"

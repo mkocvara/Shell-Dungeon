@@ -3,6 +3,10 @@
 // Chris Rook
 // Last modified 20/09/2018
 
+// Modified by 19002175
+//		Changed from singleton to normal instanced when implementing ServiceManager.
+//		Renamed variables to a style consistent with other work.
+
 #include "myinputs.h"
 #include "ErrorLogger.h"
 
