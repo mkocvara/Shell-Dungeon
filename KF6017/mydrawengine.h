@@ -18,16 +18,16 @@
 
 #include <d3d9.h>		// directX draw
 #include <d3dx9.h>		// extra directX draw stuff   
-#include "errorlogger.h"
+#include "ErrorLogger.h"
 #include "vector2d.h"
 #include "shapes.h"
 #include <vector>
 #include <map>
 #include "errortype.h"
 #include "string"
-#include "camera.h"
 #include <memory>
 
+class Camera;
 
 // Macros ***************************************************
 // Colour system

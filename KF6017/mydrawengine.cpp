@@ -11,6 +11,7 @@
 
 #include "mydrawengine.h"
 #include <algorithm>			// Using find() in DeregisterPicture
+#include "camera.h"
 
 // *************************************************************
 // Constructors and singleton management
@@ -1507,8 +1508,6 @@ ErrorType MyDrawEngine::DrawPointList(Vector2D points[], unsigned int colours[],
 	vertexBuffer->Release();
 	return SUCCESS;
 }	// DrawPointList
-
-
 
 
 // **************************************************************

@@ -4,7 +4,7 @@
 // Last modified 20/09/2018
 
 #include "myinputs.h"
-#include "errorlogger.h"
+#include "ErrorLogger.h"
 
 // *************************************************************************************
 // Implementation of the global EnumerateJoystick function 
