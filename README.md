@@ -60,7 +60,7 @@ After that is a second grid, which should be matching in size (though shorter li
 
 Other symbols are ignored, but are used to place the above symbols. They must not be placed where walls are and placing them outside of the walls may cause the level to be impossible to complete. The following examples are equivalent
 
-E.g.1:
+Example 1:
 ```
 ENTITIES
 ...#####...
@@ -76,7 +76,7 @@ ENTITIES
 ...#####...
 ```
 
-E.g.2:
+Example 2:
 ```
 ENTITIES
 ...........
@@ -93,4 +93,5 @@ ENTITIES
 ```
 
 The level:
+
 ![image](https://github.com/mkocvara/KF6017/assets/28301057/61009e3f-4615-4c89-bce2-c9896ff7f5b8)
